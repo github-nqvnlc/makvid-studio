@@ -1,0 +1,47 @@
+name: makvid-database
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: makvid-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgrespassword}
+      POSTGRES_DB: ${POSTGRES_DB:-makvid_studio_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-makvid_studio_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - database-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: makvid-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - database-network
+
+volumes:
+  postgres_data:
+    name: makvid_postgres_data
+
+networks:
+  database-network:
+    name: makvid_database_network
+    driver: bridge
