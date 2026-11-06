@@ -73,9 +73,41 @@ Theme được trích xuất trực tiếp từ [tweakcn.com/themes/cmn3m3u33000
 
 ---
 
-## 🚀 Hướng dẫn khởi chạy từng dịch vụ
+## 🚀 Hướng dẫn khởi chạy
 
-### 1. Khởi động Database Host (PostgreSQL & pgAdmin)
+### Cách 1: Chạy trực tiếp từ Root Folder (`platform-makvid-studio/`)
+
+Bạn có thể điều khiển toàn bộ hệ thống ngay tại thư mục gốc thông qua các `npm scripts` trong [`package.json`](file:///c:/Users/Admin/Documents/2.%20locnv/platform-makvid-studio/package.json):
+
+```bash
+# Khởi động toàn bộ (Database Docker + Backend + Frontend)
+npm run dev:all
+
+# Chạy song song cả Backend (3001) & Frontend (3002)
+npm run dev
+
+# Chạy riêng từng dịch vụ
+npm run dev:fe       # Frontend Next.js (Port 3002)
+npm run dev:be       # Backend NestJS (Port 3001)
+
+# Quản lý Database (Docker Compose)
+npm run db:up        # Khởi động PostgreSQL & pgAdmin
+npm run db:down      # Tắt containers Database
+npm run db:logs      # Xem logs Database
+npm run db:ps        # Xem trạng thái containers
+
+# Build, Lint & Cài đặt dependencies
+npm run install:all  # Cài đặt packages cho cả Backend & Frontend
+npm run build        # Build cả Backend & Frontend
+npm run lint         # Kiểm tra lint cho cả Backend & Frontend
+npm run test:be      # Chạy unit test cho Backend
+```
+
+---
+
+### Cách 2: Khởi chạy thủ công từng dịch vụ
+
+#### 1. Khởi động Database Host (PostgreSQL & pgAdmin)
 ```bash
 cd database
 docker compose up -d
@@ -83,7 +115,7 @@ docker compose up -d
 - PostgreSQL: `localhost:5432` (user: `postgres`, password: `postgrespassword`, db: `makvid_studio_db`)
 - pgAdmin 4: [http://localhost:5050](http://localhost:5050) (email: `admin@admin.com`, password: `admin`)
 
-### 2. Khởi động Backend API (NestJS - Port 3001)
+#### 2. Khởi động Backend API (NestJS - Port 3001)
 Mở một terminal mới:
 ```bash
 cd backend
@@ -93,7 +125,7 @@ npm run start:dev
 - **Tài liệu Swagger API**: [http://localhost:3001/api/docs](http://localhost:3001/api/docs)
 - Endpoint test kết nối DB: [http://localhost:3001/api/status](http://localhost:3001/api/status)
 
-### 3. Khởi động Frontend Web (NextJS - Port 3002)
+#### 3. Khởi động Frontend Web (NextJS - Port 3002)
 Mở một terminal khác:
 ```bash
 cd frontend

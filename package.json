@@ -1,0 +1,33 @@
+{
+  "name": "platform-makvid-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Root workspace scripts for Platform Makvid Studio (Frontend, Backend, Database)",
+  "scripts": {
+    "dev": "node -e \"const {spawn}=require('child_process');['dev:be','dev:fe'].forEach(s=>spawn('npm',['run',s],{stdio:'inherit',shell:true}))\"",
+    "dev:all": "npm run db:up && npm run dev",
+    "dev:fe": "npm --prefix frontend run dev",
+    "dev:be": "npm --prefix backend run start:dev",
+    "build": "npm run build:be && npm run build:fe",
+    "build:fe": "npm --prefix frontend run build",
+    "build:be": "npm --prefix backend run build",
+    "start": "node -e \"const {spawn}=require('child_process');['start:be','start:fe'].forEach(s=>spawn('npm',['run',s],{stdio:'inherit',shell:true}))\"",
+    "start:fe": "npm --prefix frontend run start",
+    "start:be": "npm --prefix backend run start:prod",
+    "lint": "npm run lint:be && npm run lint:fe",
+    "lint:fe": "npm --prefix frontend run lint",
+    "lint:be": "npm --prefix backend run lint",
+    "format:be": "npm --prefix backend run format",
+    "test:be": "npm --prefix backend run test",
+    "test:be:e2e": "npm --prefix backend run test:e2e",
+    "db:up": "docker compose --project-directory database -f database/docker-compose.yml up -d",
+    "db:down": "docker compose --project-directory database -f database/docker-compose.yml down",
+    "db:restart": "docker compose --project-directory database -f database/docker-compose.yml restart",
+    "db:logs": "docker compose --project-directory database -f database/docker-compose.yml logs -f",
+    "db:ps": "docker compose --project-directory database -f database/docker-compose.yml ps",
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "install:fe": "npm --prefix frontend install",
+    "install:be": "npm --prefix backend install"
+  }
+}
+
