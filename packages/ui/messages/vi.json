@@ -1,0 +1,58 @@
+{
+  "errors": {
+    "INPUT_INVALID": {
+      "message": "Thông tin bạn nhập chưa hợp lệ.",
+      "hint": "Kiểm tra lại các ô được đánh dấu rồi thử lại."
+    },
+    "SPEC_INVALID": {
+      "message": "Kịch bản video có chỗ chưa đúng.",
+      "hint": "Thử hoàn tác thay đổi gần nhất hoặc tạo lại cảnh đó."
+    },
+    "SLOT_TOO_LONG": {
+      "message": "Đoạn chữ \"{slot}\" dài quá {max} ký tự.",
+      "hint": "Rút gọn câu để chữ hiển thị rõ trên video."
+    },
+    "STYLE_UNAVAILABLE": {
+      "message": "Phong cách này hiện không dùng được.",
+      "hint": "Chọn một phong cách khác trong thư viện."
+    },
+    "RENDER_FAILED": {
+      "message": "Chưa xuất được video.",
+      "hint": "Hệ thống sẽ tự thử lại. Nếu vẫn lỗi, hãy thử đổi phong cách cho cảnh này."
+    },
+    "RENDER_TIMEOUT": {
+      "message": "Xuất video mất quá nhiều thời gian.",
+      "hint": "Thử lại sau ít phút hoặc rút ngắn video."
+    },
+    "QA_FAILED": {
+      "message": "Một số cảnh chưa đạt kiểm tra chất lượng hình ảnh.",
+      "hint": "Xem các cảnh được đánh dấu và rút gọn chữ hoặc đổi bố cục."
+    },
+    "VOICE_FAILED": { "message": "Chưa tạo được giọng đọc.", "hint": "Thử lại hoặc chọn giọng đọc khác." },
+    "AI_FAILED": {
+      "message": "Trợ lý chưa xử lý được yêu cầu.",
+      "hint": "Thử diễn đạt lại yêu cầu ngắn gọn hơn."
+    },
+    "QUOTA_EXCEEDED": {
+      "message": "Bạn đã dùng hết lượt của gói hiện tại.",
+      "hint": "Nâng cấp gói hoặc chờ sang chu kỳ mới."
+    },
+    "PAYMENT_REQUIRED": {
+      "message": "Cần thanh toán để tiếp tục.",
+      "hint": "Cập nhật phương thức thanh toán trong mục Gói & thanh toán."
+    },
+    "NOT_FOUND": {
+      "message": "Không tìm thấy nội dung này.",
+      "hint": "Có thể nội dung đã bị xóa hoặc đường dẫn không đúng."
+    },
+    "FORBIDDEN": {
+      "message": "Bạn không có quyền thực hiện thao tác này.",
+      "hint": "Liên hệ quản trị viên không gian làm việc."
+    },
+    "RATE_LIMITED": { "message": "Bạn thao tác hơi nhanh.", "hint": "Đợi vài giây rồi thử lại." },
+    "INTERNAL": {
+      "message": "Đã có lỗi xảy ra.",
+      "hint": "Chúng tôi đã ghi nhận sự cố. Vui lòng thử lại sau."
+    }
+  }
+}

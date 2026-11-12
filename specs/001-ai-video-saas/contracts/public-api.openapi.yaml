@@ -1,0 +1,219 @@
+openapi: 3.1.0
+info:
+  title: MakVid Studio Public API
+  version: 1.0.0-draft
+  description: >
+    Draft contract for /api/v1 (milestone M5). Auth via workspace API key.
+    Rate-limited per key; 429 responses include Retry-After.
+servers:
+  - url: https://{host}/api/v1
+    variables:
+      host: { default: app.example.com }
+security:
+  - apiKey: []
+paths:
+  /videos:
+    post:
+      summary: Create a video from prompt, script or URL
+      parameters:
+        - { name: Idempotency-Key, in: header, required: false, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateVideoRequest" }
+      responses:
+        "202":
+          {
+            description: Accepted,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Job" } } },
+          }
+        "402": { $ref: "#/components/responses/QuotaExceeded" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /videos/{id}:
+    get:
+      summary: Get video status and outputs
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          {
+            description: OK,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Video" } } },
+          }
+        "404": { description: Not found }
+  /videos/{id}/download:
+    get:
+      summary: Get signed download URLs (expiring)
+      parameters:
+        - { $ref: "#/components/parameters/Id" }
+        - { name: aspect, in: query, schema: { $ref: "#/components/schemas/Aspect" } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mp4: { type: string, format: uri }
+                  srt: { type: string, format: uri }
+                  thumbnail: { type: string, format: uri }
+                  expiresAt: { type: string, format: date-time }
+  /templates/{id}/videos:
+    post:
+      summary: Create a video from a template with variables
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [variables]
+              properties:
+                variables: { type: object, additionalProperties: true }
+                aspects: { type: array, items: { $ref: "#/components/schemas/Aspect" } }
+      responses:
+        "202":
+          {
+            description: Accepted,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Job" } } },
+          }
+  /batches:
+    post:
+      summary: Run a batch from a template and CSV
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [templateId, file]
+              properties:
+                templateId: { type: string }
+                file: { type: string, format: binary }
+      responses:
+        "202":
+          {
+            description: Accepted,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Batch" } } },
+          }
+  /batches/{id}:
+    get:
+      summary: Batch progress
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          {
+            description: OK,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Batch" } } },
+          }
+  /batches/{id}/retry-failed:
+    post:
+      summary: Retry only failed rows
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "202": { description: Accepted }
+  /styles:
+    get:
+      summary: List style packs
+      responses:
+        "200": { description: OK }
+  /voices:
+    get:
+      summary: List voices
+      responses:
+        "200": { description: OK }
+webhooks:
+  video.completed:
+    post:
+      summary: Sent when a video finishes or fails
+      parameters:
+        - {
+            name: X-MakVid-Signature,
+            in: header,
+            required: true,
+            schema: { type: string },
+            description: 't=<unix>,v1=<hex HMAC-SHA256 of "t.body">',
+          }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event: { type: string, enum: [video.completed, video.failed, batch.completed] }
+                videoId: { type: string }
+                batchId: { type: string }
+                status: { type: string }
+                message: { type: string, description: User-friendly message (no technical detail) }
+      responses:
+        "2XX": { description: Acknowledged }
+components:
+  securitySchemes:
+    apiKey: { type: http, scheme: bearer, description: "Workspace API key: mk_live_..." }
+  parameters:
+    Id: { name: id, in: path, required: true, schema: { type: string } }
+  responses:
+    QuotaExceeded:
+      {
+        description: Plan quota exceeded,
+        content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+      }
+    ValidationError:
+      {
+        description: Invalid input,
+        content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+      }
+    RateLimited: { description: Too many requests, headers: { Retry-After: { schema: { type: integer } } } }
+  schemas:
+    Aspect: { type: string, enum: ["16:9", "9:16", "1:1", "4:5"] }
+    CreateVideoRequest:
+      type: object
+      required: [source]
+      properties:
+        source:
+          oneOf:
+            - { type: object, required: [prompt], properties: { prompt: { type: string, maxLength: 4000 } } }
+            - { type: object, required: [script], properties: { script: { type: string, maxLength: 20000 } } }
+            - { type: object, required: [url], properties: { url: { type: string, format: uri } } }
+        aspects: { type: array, items: { $ref: "#/components/schemas/Aspect" }, default: ["9:16"] }
+        targetDurationSec: { type: integer, minimum: 30, maximum: 600 }
+        styleId: { type: string }
+        voiceId: { type: string }
+        captions: { type: boolean, default: true }
+    Job:
+      type: object
+      properties:
+        id: { type: string }
+        status: { type: string }
+    Video:
+      type: object
+      properties:
+        id: { type: string }
+        status: { type: string, enum: [queued, processing, ready, needs_attention, failed] }
+        progress: { type: number, minimum: 0, maximum: 1 }
+        message: { type: string }
+        outputs:
+          type: array
+          items:
+            type: object
+            properties:
+              aspect: { $ref: "#/components/schemas/Aspect" }
+              durationMs: { type: integer }
+    Batch:
+      type: object
+      properties:
+        id: { type: string }
+        status: { type: string }
+        total: { type: integer }
+        succeeded: { type: integer }
+        failed: { type: integer }
+        zipUrl: { type: string, format: uri }
+    Error:
+      type: object
+      properties:
+        code: { type: string }
+        message: { type: string }
+        hint: { type: string }

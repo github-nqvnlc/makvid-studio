@@ -1,0 +1,346 @@
+/* Infographic / data — night blue, SVG charts, counting numbers. */
+.a-16x9 {
+  --cap-band: 170px;
+  --gap: 34px;
+  --chart-h: 320px;
+}
+.a-9x16 {
+  --cap-band: 200px;
+  --gap: 38px;
+  --chart-h: 360px;
+}
+.a-1x1 {
+  --cap-band: 150px;
+  --gap: 26px;
+  --chart-h: 170px;
+}
+.a-4x5 {
+  --cap-band: 160px;
+  --gap: 30px;
+  --chart-h: 240px;
+}
+
+.pack-infographic {
+  background:
+    linear-gradient(90deg, #ffffff08 1px, transparent 1px) 0 0 / 60px 60px,
+    linear-gradient(#ffffff08 1px, transparent 1px) 0 0 / 60px 60px,
+    var(--c-bg);
+}
+.pack-infographic h1,
+.pack-infographic h2,
+.pack-infographic p,
+.pack-infographic blockquote,
+.pack-infographic ol,
+.pack-infographic ul,
+.pack-infographic li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.region {
+  position: absolute;
+  left: var(--safe-left);
+  top: var(--safe-top);
+  width: var(--safe-w);
+  height: calc(var(--safe-h) - var(--cap-band));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap);
+  box-sizing: border-box;
+}
+.headline,
+.title-text,
+.hl-text,
+.list-title,
+.cmp-title,
+.q-text,
+.cta-head,
+.card-label,
+.stat-value,
+.cta-btn {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--c-fg);
+}
+.kicker,
+.subtitle,
+.item-text,
+.ci,
+.stat-label,
+.q-author,
+.cta-handle {
+  font-family: var(--f-body);
+  font-weight: var(--fw-body);
+  color: var(--c-muted);
+}
+.kicker {
+  color: var(--accent);
+  font-weight: 600;
+}
+.rule {
+  width: 220px;
+  height: 6px;
+  background: linear-gradient(90deg, var(--accent), var(--c-accent2));
+  border-radius: 3px;
+  transform-origin: 0 50%;
+}
+.deco {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 26%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 18px solid var(--c-line);
+  border-top-color: var(--accent);
+}
+.a-9x16 .deco,
+.a-4x5 .deco {
+  width: 40%;
+  top: -3%;
+}
+
+.hl-text .w.em {
+  color: var(--accent);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.55);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  position: relative;
+  padding-bottom: 14px;
+}
+.item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--c-line);
+}
+.item .progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  z-index: 1;
+}
+.bullet {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--f-display);
+  font-weight: 800;
+}
+.a-16x9 .bullet {
+  font-size: 36px;
+}
+.a-9x16 .bullet {
+  font-size: 38px;
+}
+.a-1x1 .bullet {
+  font-size: 30px;
+}
+.a-4x5 .bullet {
+  font-size: 32px;
+}
+.pack-infographic .item-text {
+  color: var(--c-fg);
+}
+
+.cards {
+  display: flex;
+  gap: 48px;
+}
+.a-9x16 .cards {
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.7);
+}
+.card {
+  box-sizing: border-box;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.card.left .card-label {
+  color: var(--c-accent2);
+}
+.card.right .card-label {
+  color: var(--accent);
+}
+.card-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pack-infographic .ci {
+  position: relative;
+  padding-left: 36px;
+  color: var(--c-fg);
+}
+.pack-infographic .ci::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.4em;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--c-accent2);
+}
+.card.right .ci::before {
+  background: var(--accent);
+}
+
+.stat-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.stat-value .suffix,
+.stat-value .prefix {
+  color: var(--c-fg);
+}
+.a-16x9 .stat-value .suffix {
+  font-size: 76px;
+}
+.a-9x16 .stat-value .suffix {
+  font-size: 70px;
+}
+.a-1x1 .stat-value .suffix {
+  font-size: 56px;
+}
+.a-4x5 .stat-value .suffix {
+  font-size: 60px;
+}
+.chart {
+  position: relative;
+  height: var(--chart-h);
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  border-bottom: 2px solid var(--c-line);
+}
+.a-16x9 .chart {
+  position: absolute;
+  right: 0;
+  bottom: 30px;
+  width: 40%;
+}
+.chart .bar-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+}
+.chart .bar {
+  background: linear-gradient(180deg, #2dd4bf66, #2dd4bf1a);
+  border-top: 3px solid var(--accent);
+  transform-origin: 50% 100%;
+}
+.chart .bar-label {
+  position: absolute;
+  bottom: -36px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--f-body);
+  font-size: 24px;
+  color: var(--c-muted);
+}
+.chart svg.line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+.chart svg.line path {
+  fill: none;
+  stroke: var(--c-accent2);
+  stroke-width: 5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.chart svg.line circle {
+  fill: var(--c-bg);
+  stroke: var(--c-accent2);
+  stroke-width: 4;
+}
+.donut {
+  width: var(--chart-h);
+  height: var(--chart-h);
+}
+.donut circle {
+  fill: none;
+  stroke-width: 22;
+}
+
+.qmark {
+  font-family: var(--f-display);
+  font-weight: 800;
+  color: var(--accent);
+  font-size: 200px;
+  line-height: 0.7;
+  height: 0.45em;
+}
+.q-author::before {
+  content: "— ";
+}
+.q-author .fit {
+  display: inline-block;
+}
+
+.cta-btn {
+  align-self: flex-start;
+  background: var(--accent);
+  color: var(--c-bg);
+  border-radius: 12px;
+  padding: 0.35em 0.9em;
+}
+.cta-btn .fit {
+  color: var(--c-bg);
+}
+
+#captions .fit {
+  font-family: var(--f-caption);
+  font-weight: var(--fw-caption);
+  color: var(--c-captionFg);
+  background: var(--c-captionBg);
+  padding: 0.18em 0.55em;
+  border-radius: 12px;
+  border: 1px solid var(--c-line);
+}
+#captions .cap-w.on {
+  color: var(--accent);
+}
+.a-1x1 .card,
+.a-4x5 .card {
+  padding: 32px;
+}

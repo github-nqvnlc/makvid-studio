@@ -1,0 +1,58 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm license:check
+
+  # T055: build the render container and render the sample spec with network disabled; checks frame
+  # determinism (two renders, identical frame hashes) and runs the renderer contract + overflow tests.
+  render-smoke:
+    runs-on: ubuntu-24.04
+    needs: check
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build -f docker/worker-render.Dockerfile -t makvid-render:ci .
+      - name: Render sample twice (no network)
+        run: |
+          mkdir -p out
+          for run in a b; do
+            docker run --rm --network none --shm-size 2g -v "$PWD/out:/out" makvid-render:ci \
+              render /app/fixtures/specs/sample-vi.json --aspect 9:16 --out /out/$run --no-cache --frame-hashes
+          done
+          diff out/a/9x16/frames.sha256 out/b/9x16/frames.sha256
+      - name: Renderer contract + overflow tests (in container)
+        run: |
+          docker run --rm --network none --shm-size 2g -e MAKVID_RENDER_TESTS=1 -e MAKVID_VISUAL_TESTS=1 \
+            --entrypoint pnpm makvid-render:ci -r --filter @makvid/renderer --filter @makvid/tests test
+      - name: Golden frames
+        run: |
+          for s in minimal kinetic infographic; do
+            docker run --rm --network none --shm-size 2g \
+              -v "$PWD/packages/styles/$s/golden:/app/packages/styles/$s/golden:ro" makvid-render:ci golden $s --out /tmp/golden
+          done
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: render-smoke
+          path: out/**/9x16/video.mp4

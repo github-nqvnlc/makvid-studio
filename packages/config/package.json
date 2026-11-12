@@ -1,0 +1,16 @@
+{
+  "name": "@makvid/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.config.mjs",
+    "./prettier": "./prettier.config.mjs",
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./vitest": "./vitest.shared.mjs"
+  },
+  "peerDependencies": {
+    "@eslint/js": "*",
+    "typescript-eslint": "*"
+  }
+}

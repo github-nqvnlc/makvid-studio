@@ -1,0 +1,14 @@
+{
+  "slots": {
+    "headline": {
+      "type": "text",
+      "required": true,
+      "maxLength": 48
+    },
+    "kicker": {
+      "type": "text",
+      "required": false,
+      "maxLength": 24
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "spike-player-next",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "spikes/player-next", "run", "start"],
+      "port": 3100
+    },
+    {
+      "name": "scene-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/static-serve.mjs", "tests/visual/out/compile", "3200"],
+      "port": 3200
+    }
+  ]
+}

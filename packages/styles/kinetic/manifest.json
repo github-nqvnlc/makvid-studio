@@ -1,0 +1,16 @@
+{
+  "id": "kinetic",
+  "version": "1.0.0",
+  "name": { "vi": "Chữ chuyển động", "en": "Kinetic typography" },
+  "description": {
+    "vi": "Nền tối, chữ cực đậm, từng ký tự bật lên theo nhịp. Hợp video ngắn TikTok/Reels, hook mạnh.",
+    "en": "Dark background, heavy type, letters pop on the beat. For short-form TikTok/Reels with strong hooks."
+  },
+  "contentTypes": ["social", "motivation", "tips", "hook"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [{ "name": "gsap", "version": "3.15.1", "license": "GSAP-Standard" }],
+  "musicMoods": ["energetic", "upbeat"],
+  "perfBudget": { "maxMsPerFrame": 90 }
+}

@@ -1,0 +1,1 @@
+{ "extends": "@makvid/config/tsconfig.base.json", "include": ["templates"] }

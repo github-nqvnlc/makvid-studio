@@ -1,0 +1,25 @@
+{
+  "name": "@makvid/renderer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Renderer interface + HyperFrames and fallback renderers, capture, mux",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@makvid/compiler": "workspace:*",
+    "@makvid/config": "workspace:*",
+    "@makvid/spec": "workspace:*"
+  },
+  "dependencies": {
+    "@hyperframes/producer": "0.9.34",
+    "@makvid/style-kit": "workspace:*",
+    "puppeteer-core": "25.11.0"
+  }
+}

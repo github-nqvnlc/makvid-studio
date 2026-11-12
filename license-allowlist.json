@@ -1,0 +1,60 @@
+{
+  "$comment": "Production packages whose license needs review but is accepted. Each entry needs a reason and, when relevant, an ADR.",
+  "packages": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "reason": "Webflow standard no-charge license; ADR 0001 (AnimationRuntime abstraction, written confirmation before M5)"
+    },
+    {
+      "name": "@fontsource/be-vietnam-pro",
+      "version": "*",
+      "reason": "OFL-1.1 font; embedding in videos and web allowed; LICENSE kept with font files"
+    },
+    {
+      "name": "@img/sharp-libvips-linux-x64",
+      "version": "*",
+      "reason": "LGPL-3.0 libvips, dynamically linked, server-side only (spike T011)"
+    },
+    {
+      "name": "@img/sharp-libvips-linuxmusl-x64",
+      "version": "*",
+      "reason": "LGPL-3.0 libvips, dynamically linked, server-side only (spike T011)"
+    },
+    {
+      "name": "@img/sharp-win32-x64",
+      "version": "*",
+      "reason": "Apache-2.0 AND LGPL-3.0 (libvips), dynamically linked, server-side only (spike T011)"
+    },
+    {
+      "name": "@hyperframes/core",
+      "version": "0.9.34",
+      "reason": "package.json has no license field; bundled LICENSE file is Apache License 2.0 (verified 2026-11-12, M0 T011)"
+    },
+    {
+      "name": "@hyperframes/engine",
+      "version": "0.9.34",
+      "reason": "package.json has no license field; bundled LICENSE file is Apache License 2.0 (verified 2026-11-12, M0 T011)"
+    },
+    {
+      "name": "@hyperframes/lint",
+      "version": "0.9.34",
+      "reason": "package.json has no license field; bundled LICENSE file is Apache License 2.0 (verified 2026-11-12, M0 T011)"
+    },
+    {
+      "name": "@hyperframes/parsers",
+      "version": "0.9.34",
+      "reason": "package.json has no license field; bundled LICENSE file is Apache License 2.0 (verified 2026-11-12, M0 T011)"
+    },
+    {
+      "name": "@hyperframes/producer",
+      "version": "0.9.34",
+      "reason": "package.json has no license field; bundled LICENSE file is Apache License 2.0 (verified 2026-11-12, M0 T011)"
+    },
+    {
+      "name": "@hyperframes/studio-server",
+      "version": "0.9.34",
+      "reason": "package.json has no license field; bundled LICENSE file is Apache License 2.0 (verified 2026-11-12, M0 T011)"
+    }
+  ]
+}

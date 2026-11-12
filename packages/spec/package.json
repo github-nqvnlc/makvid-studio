@@ -1,0 +1,21 @@
+{
+  "name": "@makvid/spec",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "VideoSpec schema, NFC text utilities, RFC 6902 patches, migrations",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  }
+}

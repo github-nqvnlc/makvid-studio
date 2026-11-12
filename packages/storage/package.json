@@ -1,0 +1,22 @@
+{
+  "name": "@makvid/storage",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ObjectStore over the S3 API",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1159.0",
+    "@aws-sdk/s3-request-presigner": "3.1159.0"
+  }
+}

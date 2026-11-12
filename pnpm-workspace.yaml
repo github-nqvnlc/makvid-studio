@@ -1,0 +1,19 @@
+packages:
+  - apps/*
+  - packages/*
+  - packages/styles/*
+  - tests
+allowBuilds:
+  esbuild: true
+  # Chrome is pinned separately (chrome-headless-shell 153, render container); no download on install.
+  puppeteer: false
+  # Optional native msgpack accelerator for BullMQ; prebuilt binaries or pure JS fallback suffice.
+  msgpackr-extract: false
+# HyperFrames 0.9.34 is the version validated in M0 (pinned on purpose, ADR/plan).
+minimumReleaseAgeExclude:
+  - "@hyperframes/core@0.9.34"
+  - "@hyperframes/lint@0.9.34"
+  - "@hyperframes/parsers@0.9.34"
+  - "@hyperframes/studio-server@0.9.34"
+  - "@hyperframes/engine@0.9.34"
+  - "@hyperframes/producer@0.9.34"

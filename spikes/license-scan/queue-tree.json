@@ -1,0 +1,168 @@
+{
+    "@esbuild/win32-x64@0.28.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/evanw/esbuild",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\@esbuild\\win32-x64",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\@esbuild\\win32-x64\\README.md"
+    },
+    "@ioredis/commands@1.10.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/ioredis/commands",
+        "publisher": "Zihua Li",
+        "email": "i@zihua.li",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\@ioredis\\commands",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\@ioredis\\commands\\LICENSE"
+    },
+    "@msgpackr-extract/msgpackr-extract-win32-x64@3.0.7": {
+        "licenses": "MIT",
+        "repository": "https://github.com/kriszyp/msgpackr-extract",
+        "publisher": "Kris Zyp",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\@msgpackr-extract\\msgpackr-extract-win32-x64",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\@msgpackr-extract\\msgpackr-extract-win32-x64\\README.md"
+    },
+    "bullmq@5.81.5": {
+        "licenses": "MIT",
+        "repository": "https://github.com/taskforcesh/bullmq",
+        "publisher": "Taskforce.sh Inc.",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\bullmq",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\bullmq\\LICENSE"
+    },
+    "cluster-key-slot@1.1.1": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/Salakar/cluster-key-slot",
+        "publisher": "Mike Diarmid",
+        "email": "mike.diarmid@gmail.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\cluster-key-slot",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\cluster-key-slot\\LICENSE"
+    },
+    "cron-parser@4.9.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/harrisiirak/cron-parser",
+        "publisher": "Harri Siirak",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\cron-parser",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\cron-parser\\LICENSE"
+    },
+    "debug@4.4.3": {
+        "licenses": "MIT",
+        "repository": "https://github.com/debug-js/debug",
+        "publisher": "Josh Junon",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\debug",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\debug\\LICENSE"
+    },
+    "denque@2.1.0": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/invertase/denque",
+        "publisher": "Invertase",
+        "email": "oss@invertase.io",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\denque",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\denque\\LICENSE"
+    },
+    "detect-libc@2.1.2": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/lovell/detect-libc",
+        "publisher": "Lovell Fuller",
+        "email": "npm@lovell.info",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\detect-libc",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\detect-libc\\LICENSE"
+    },
+    "esbuild@0.28.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/evanw/esbuild",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\esbuild",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\esbuild\\LICENSE.md"
+    },
+    "ioredis@5.11.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/luin/ioredis",
+        "publisher": "Zihua Li",
+        "email": "i@zihua.li",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\ioredis",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\ioredis\\LICENSE"
+    },
+    "luxon@3.7.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/moment/luxon",
+        "publisher": "Isaac Cambron",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\luxon",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\luxon\\LICENSE.md"
+    },
+    "ms@2.1.3": {
+        "licenses": "MIT",
+        "repository": "https://github.com/vercel/ms",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\ms",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\ms\\license.md"
+    },
+    "msgpackr-extract@3.0.7": {
+        "licenses": "MIT",
+        "repository": "https://github.com/kriszyp/msgpackr-extract",
+        "publisher": "Kris Zyp",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\msgpackr-extract",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\msgpackr-extract\\LICENSE"
+    },
+    "msgpackr@2.0.5": {
+        "licenses": "MIT",
+        "repository": "https://github.com/kriszyp/msgpackr",
+        "publisher": "Kris Zyp",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\msgpackr",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\msgpackr\\LICENSE"
+    },
+    "node-abort-controller@3.1.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/southpolesteve/node-abort-controller",
+        "publisher": "Steve Faulkner",
+        "email": "southpolesteve@gmail.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\node-abort-controller",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\node-abort-controller\\LICENSE"
+    },
+    "node-gyp-build-optional-packages@5.2.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/prebuild/node-gyp-build",
+        "publisher": "Mathias Buus",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\node-gyp-build-optional-packages",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\node-gyp-build-optional-packages\\LICENSE"
+    },
+    "redis-errors@1.2.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/NodeRedis/redis-errors",
+        "publisher": "Ruben Bridgewater",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\redis-errors",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\redis-errors\\LICENSE"
+    },
+    "redis-parser@3.0.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/NodeRedis/node-redis-parser",
+        "publisher": "Ruben Bridgewater",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\redis-parser",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\redis-parser\\LICENSE"
+    },
+    "semver@7.8.5": {
+        "licenses": "ISC",
+        "repository": "https://github.com/npm/node-semver",
+        "publisher": "GitHub Inc.",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\semver",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\semver\\LICENSE"
+    },
+    "standard-as-callback@2.1.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/luin/asCallback",
+        "publisher": "luin",
+        "email": "i@zihua.li",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\standard-as-callback",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\standard-as-callback\\LICENSE"
+    },
+    "tslib@2.8.1": {
+        "licenses": "0BSD",
+        "repository": "https://github.com/Microsoft/tslib",
+        "publisher": "Microsoft Corp.",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\tslib",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\tslib\\LICENSE.txt"
+    },
+    "tsx@4.23.15": {
+        "licenses": "MIT",
+        "repository": "https://github.com/privatenumber/tsx",
+        "publisher": "Hiroki Osame",
+        "email": "hiroki.osame@gmail.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\tsx",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\queue\\node_modules\\tsx\\LICENSE"
+    }
+}

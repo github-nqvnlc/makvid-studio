@@ -1,0 +1,25 @@
+{
+  "name": "@makvid/compiler",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "VideoSpec + style pack -> per-scene HTML, captions, SRT, scene hashing",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*"
+  },
+  "dependencies": {
+    "@hyperframes/core": "0.9.34",
+    "@makvid/spec": "workspace:*",
+    "@makvid/style-kit": "workspace:*",
+    "esbuild": "0.28.2",
+    "gsap": "3.15.1"
+  }
+}

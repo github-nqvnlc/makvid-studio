@@ -1,0 +1,16 @@
+{
+  "id": "infographic",
+  "version": "1.0.0",
+  "name": { "vi": "Infographic / dữ liệu", "en": "Infographic / data" },
+  "description": {
+    "vi": "Nền xanh đêm, biểu đồ SVG (cột, đường, tròn) và số đếm. Hợp video số liệu, tài chính, báo cáo.",
+    "en": "Night-blue background, SVG charts (bar, line, pie) and counting numbers. For data, finance and reports."
+  },
+  "contentTypes": ["data", "finance", "report", "explainer"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [{ "name": "gsap", "version": "3.15.1", "license": "GSAP-Standard" }],
+  "musicMoods": ["calm", "tech", "corporate"],
+  "perfBudget": { "maxMsPerFrame": 80 }
+}

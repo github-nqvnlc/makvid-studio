@@ -1,0 +1,15 @@
+**/node_modules
+**/.next
+**/dist
+**/.turbo
+.git
+.env
+.env.*
+spikes
+bench
+docs
+tests/visual/out
+apps/cli/scratch
+out
+**/*.log
+**/golden

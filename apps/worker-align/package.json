@@ -1,0 +1,18 @@
+{
+  "name": "@makvid/worker-align",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Worker: forced alignment service",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*"
+  }
+}

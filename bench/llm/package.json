@@ -1,0 +1,13 @@
+{
+  "name": "bench-llm",
+  "private": true,
+  "type": "module",
+  "description": "M2 prep: compare LLM providers on Vietnamese storyboard generation",
+  "scripts": { "bench": "tsx run.ts" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.3.0",
+    "openai": "7.45.1",
+    "tsx": "4.23.15",
+    "zod": "4.6.7"
+  }
+}

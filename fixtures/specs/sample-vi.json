@@ -1,0 +1,143 @@
+{
+  "specVersion": "0.1.0",
+  "meta": {
+    "language": "vi",
+    "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+    "fps": 30,
+    "resolution": "1080p",
+    "primaryStyleId": "minimal",
+    "voice": { "voiceId": "fpt:banmai" },
+    "targetDurationSec": 30,
+    "seed": 20261112
+  },
+  "script": [
+    { "id": "s1", "text": "Bạn có biết tiền có thể tự đẻ ra tiền?" },
+    { "id": "s2", "text": "Đó chính là sức mạnh của lãi kép." },
+    { "id": "s3", "text": "Lãi kép là khi tiền lãi tiếp tục sinh ra tiền lãi." },
+    { "id": "s4", "text": "Bạn chỉ cần ba thứ: vốn ban đầu, lãi suất và thời gian." },
+    { "id": "s5", "text": "So với lãi đơn, lãi kép tăng nhanh hơn mỗi năm." },
+    {
+      "id": "s6",
+      "text": "Gửi mười triệu với lãi tám phần trăm, sau mười năm bạn có hai mươi mốt triệu sáu."
+    },
+    { "id": "s7", "text": "Albert Einstein từng gọi lãi kép là kỳ quan thứ tám của thế giới." },
+    { "id": "s8", "text": "Hãy bắt đầu tiết kiệm ngay hôm nay. Ẩn số quan trọng nhất là thời gian." }
+  ],
+  "scenes": [
+    {
+      "id": "hook",
+      "styleId": "minimal",
+      "templateId": "hook",
+      "slots": { "headline": "Tiền có thể tự đẻ ra tiền?", "kicker": "Bạn có biết" },
+      "scriptRefs": ["s1"],
+      "assets": [],
+      "timing": { "startMs": 0, "durationMs": 3000 }
+    },
+    {
+      "id": "title",
+      "styleId": "minimal",
+      "templateId": "title",
+      "slots": { "title": "Sức mạnh của lãi kép", "subtitle": "Ẩn Ỹ Ự — hiểu trong 30 giây" },
+      "scriptRefs": ["s2"],
+      "assets": [],
+      "transitionIn": { "presetId": "fade", "durationMs": 400 },
+      "timing": { "startMs": 3000, "durationMs": 3000 }
+    },
+    {
+      "id": "highlight",
+      "styleId": "minimal",
+      "templateId": "highlight",
+      "slots": {
+        "text": "Lãi kép là khi tiền lãi tiếp tục sinh ra tiền lãi",
+        "highlight": "sinh ra tiền lãi"
+      },
+      "scriptRefs": ["s3"],
+      "assets": [],
+      "transitionIn": { "presetId": "slide", "durationMs": 400 },
+      "timing": { "startMs": 6000, "durationMs": 3500 }
+    },
+    {
+      "id": "list",
+      "styleId": "minimal",
+      "templateId": "list",
+      "slots": {
+        "title": "Ba thứ bạn cần",
+        "items": ["Vốn ban đầu", "Lãi suất ổn định", "Thời gian đủ dài"]
+      },
+      "scriptRefs": ["s4"],
+      "assets": [],
+      "transitionIn": { "presetId": "fade", "durationMs": 400 },
+      "timing": { "startMs": 9500, "durationMs": 4000 }
+    },
+    {
+      "id": "compare",
+      "styleId": "minimal",
+      "templateId": "compare",
+      "slots": {
+        "title": "Lãi đơn và lãi kép",
+        "leftLabel": "Lãi đơn",
+        "leftItems": ["Lãi tính trên vốn gốc", "Tăng đều mỗi năm"],
+        "rightLabel": "Lãi kép",
+        "rightItems": ["Lãi tính cả trên lãi", "Tăng nhanh dần"]
+      },
+      "scriptRefs": ["s5"],
+      "assets": [],
+      "transitionIn": { "presetId": "slide", "durationMs": 400 },
+      "timing": { "startMs": 13500, "durationMs": 4000 }
+    },
+    {
+      "id": "stat",
+      "styleId": "minimal",
+      "templateId": "stat",
+      "slots": {
+        "value": 21.6,
+        "suffix": "triệu",
+        "label": "10 triệu, lãi 8%/năm, sau 10 năm",
+        "series": {
+          "series": [
+            { "label": "0", "value": 10 },
+            { "label": "2", "value": 11.7 },
+            { "label": "4", "value": 13.6 },
+            { "label": "6", "value": 15.9 },
+            { "label": "8", "value": 18.5 },
+            { "label": "10", "value": 21.6 }
+          ]
+        }
+      },
+      "scriptRefs": ["s6"],
+      "assets": [],
+      "transitionIn": { "presetId": "fade", "durationMs": 400 },
+      "timing": { "startMs": 17500, "durationMs": 5000 }
+    },
+    {
+      "id": "quote",
+      "styleId": "minimal",
+      "templateId": "quote",
+      "slots": {
+        "quote": "Lãi kép là kỳ quan thứ tám của thế giới.",
+        "author": "Albert Einstein (tương truyền)"
+      },
+      "scriptRefs": ["s7"],
+      "assets": [],
+      "transitionIn": { "presetId": "fade", "durationMs": 500 },
+      "timing": { "startMs": 22500, "durationMs": 4000 }
+    },
+    {
+      "id": "cta",
+      "styleId": "minimal",
+      "templateId": "cta",
+      "slots": { "headline": "Bắt đầu tiết kiệm ngay hôm nay", "action": "Theo dõi để học thêm" },
+      "scriptRefs": ["s8"],
+      "assets": [],
+      "transitionIn": { "presetId": "slide", "durationMs": 400 },
+      "timing": { "startMs": 26500, "durationMs": 4000 }
+    }
+  ],
+  "audio": {
+    "sfx": [],
+    "ducking": { "enabled": true, "reductionDb": 12 },
+    "loudnessTargetLufs": -14
+  },
+  "captions": { "enabled": true, "maxLines": 2 },
+  "variables": {}
+}

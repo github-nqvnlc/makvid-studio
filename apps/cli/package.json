@@ -1,0 +1,33 @@
+{
+  "name": "@makvid/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "makvid CLI (render, qa, golden, lint-style, validate)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "makvid": "tsx src/main.ts"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*",
+    "tsx": "4.23.15"
+  },
+  "dependencies": {
+    "@makvid/ai": "workspace:*",
+    "@makvid/compiler": "workspace:*",
+    "@makvid/media": "workspace:*",
+    "@makvid/pipeline": "workspace:*",
+    "@makvid/renderer": "workspace:*",
+    "@makvid/spec": "workspace:*",
+    "@makvid/style-kit": "workspace:*",
+    "@makvid/tts": "workspace:*"
+  },
+  "bin": {
+    "makvid": "./src/main.ts"
+  }
+}

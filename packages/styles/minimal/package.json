@@ -1,0 +1,17 @@
+{
+  "name": "@makvid/style-minimal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Style pack: minimal / corporate",
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@makvid/style-kit": "workspace:*"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*"
+  }
+}

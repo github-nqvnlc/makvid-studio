@@ -1,0 +1,44 @@
+# Local dev infra. Usage: docker compose -f docker/compose.dev.yml up -d
+# Credentials here are dev-only defaults; real values come from .env (see .env.example).
+name: makvid-dev
+services:
+  postgres:
+    image: postgres:17.11-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-makvid}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-makvid-dev}
+      POSTGRES_DB: ${POSTGRES_DB:-makvid}
+    ports: ["${POSTGRES_PORT:-5432}:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U makvid -d makvid"]
+      interval: 5s
+      retries: 20
+
+  valkey:
+    image: valkey/valkey:8.1.11-alpine
+    command: ["valkey-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    ports: ["${VALKEY_PORT:-6379}:6379"]
+    volumes: [valkeydata:/data]
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      retries: 20
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.48
+    command: ["server", "-dir=/data", "-s3", "-s3.port=8333", "-s3.config=/etc/seaweedfs/s3.json"]
+    ports: ["${S3_PORT:-8333}:8333"]
+    volumes:
+      - seaweeddata:/data
+      - ./seaweedfs/s3.dev.json:/etc/seaweedfs/s3.json:ro
+
+  worker-align:
+    build: { context: .., dockerfile: docker/worker-align.Dockerfile }
+    image: makvid-align:dev
+    ports: ["${ALIGN_PORT:-8090}:8090"]
+
+volumes:
+  pgdata:
+  valkeydata:
+  seaweeddata:

@@ -1,0 +1,494 @@
+{
+    "@babel/helper-string-parser@7.29.13": {
+        "licenses": "MIT",
+        "repository": "https://github.com/babel/babel",
+        "publisher": "The Babel Team",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@babel\\helper-string-parser",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@babel\\helper-string-parser\\LICENSE"
+    },
+    "@babel/helper-validator-identifier@7.29.7": {
+        "licenses": "MIT",
+        "repository": "https://github.com/babel/babel",
+        "publisher": "The Babel Team",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@babel\\helper-validator-identifier",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@babel\\helper-validator-identifier\\LICENSE"
+    },
+    "@babel/parser@7.29.13": {
+        "licenses": "MIT",
+        "repository": "https://github.com/babel/babel",
+        "publisher": "The Babel Team",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@babel\\parser",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@babel\\parser\\LICENSE"
+    },
+    "@babel/types@7.29.11": {
+        "licenses": "MIT",
+        "repository": "https://github.com/babel/babel",
+        "publisher": "The Babel Team",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@babel\\types",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@babel\\types\\LICENSE"
+    },
+    "@chenglou/pretext@0.0.5": {
+        "licenses": "MIT",
+        "repository": "https://github.com/chenglou/pretext",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@chenglou\\pretext",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@chenglou\\pretext\\LICENSE"
+    },
+    "@esbuild/win32-x64@0.28.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/evanw/esbuild",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@esbuild\\win32-x64",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@esbuild\\win32-x64\\README.md"
+    },
+    "@hyperframes/core@0.9.34": {
+        "licenses": "Apache-2.0*",
+        "repository": "https://github.com/heygen-com/hyperframes",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\core",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\core\\LICENSE"
+    },
+    "@hyperframes/lint@0.9.34": {
+        "licenses": "Apache-2.0*",
+        "repository": "https://github.com/heygen-com/hyperframes",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\lint",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\lint\\LICENSE"
+    },
+    "@hyperframes/parsers@0.9.34": {
+        "licenses": "Apache-2.0*",
+        "repository": "https://github.com/heygen-com/hyperframes",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\parsers",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\parsers\\LICENSE"
+    },
+    "@hyperframes/player@0.9.34": {
+        "licenses": "MIT*",
+        "repository": "https://github.com/heygen-com/hyperframes",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\player",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\player\\LICENSE"
+    },
+    "@hyperframes/studio-server@0.9.34": {
+        "licenses": "Apache-2.0*",
+        "repository": "https://github.com/heygen-com/hyperframes",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\studio-server",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@hyperframes\\studio-server\\LICENSE"
+    },
+    "@img/colour@1.1.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/lovell/colour",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@img\\colour",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@img\\colour\\LICENSE.md"
+    },
+    "@img/sharp-win32-x64@0.35.5": {
+        "licenses": "Apache-2.0 AND LGPL-3.0-or-later",
+        "repository": "https://github.com/lovell/sharp",
+        "publisher": "Lovell Fuller",
+        "email": "npm@lovell.info",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@img\\sharp-win32-x64",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@img\\sharp-win32-x64\\LICENSE"
+    },
+    "@jridgewell/sourcemap-codec@1.6.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/jridgewell/sourcemaps",
+        "publisher": "Justin Ridgewell",
+        "email": "justin@ridgewell.name",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@jridgewell\\sourcemap-codec",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@jridgewell\\sourcemap-codec\\LICENSE"
+    },
+    "@next/env@16.4.6": {
+        "licenses": "MIT",
+        "repository": "https://github.com/vercel/next.js",
+        "publisher": "Next.js Team",
+        "email": "support@vercel.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@next\\env",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@next\\env\\README.md"
+    },
+    "@next/swc-win32-x64-msvc@16.4.6": {
+        "licenses": "MIT",
+        "repository": "https://github.com/vercel/next.js",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@next\\swc-win32-x64-msvc",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@next\\swc-win32-x64-msvc\\README.md"
+    },
+    "@swc/helpers@0.5.23": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/swc-project/swc",
+        "publisher": "강동윤",
+        "email": "kdy1997.dev@gmail.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@swc\\helpers",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\@swc\\helpers\\LICENSE"
+    },
+    "acorn-walk@8.3.5": {
+        "licenses": "MIT",
+        "repository": "https://github.com/acornjs/acorn",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\acorn-walk",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\acorn-walk\\LICENSE"
+    },
+    "acorn@8.19.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/acornjs/acorn",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\acorn",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\acorn\\LICENSE"
+    },
+    "argparse@2.0.1": {
+        "licenses": "Python-2.0",
+        "repository": "https://github.com/nodeca/argparse",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\argparse",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\argparse\\LICENSE"
+    },
+    "ast-types@0.16.3": {
+        "licenses": "MIT",
+        "repository": "https://github.com/benjamn/ast-types",
+        "publisher": "Ben Newman",
+        "email": "bn@cs.stanford.edu",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\ast-types",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\ast-types\\LICENSE"
+    },
+    "baseline-browser-mapping@2.11.35": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/web-platform-dx/baseline-browser-mapping",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\baseline-browser-mapping",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\baseline-browser-mapping\\LICENSE.txt"
+    },
+    "boolbase@2.0.0": {
+        "licenses": "ISC",
+        "repository": "https://github.com/fb55/boolbase",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\boolbase",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\boolbase\\LICENSE"
+    },
+    "caniuse-lite@1.0.30001826": {
+        "licenses": "CC-BY-4.0",
+        "repository": "https://github.com/browserslist/caniuse-lite",
+        "publisher": "Ben Briggs",
+        "email": "beneb.info@gmail.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\caniuse-lite",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\caniuse-lite\\LICENSE"
+    },
+    "client-only@0.0.1": {
+        "licenses": "MIT",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\client-only"
+    },
+    "css-select@7.0.0": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/css-select",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\LICENSE"
+    },
+    "css-what@8.0.0": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/css-what",
+        "publisher": "Felix Böhm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-what",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-what\\LICENSE"
+    },
+    "cssomnom@0.1.11": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/GoogleChromeLabs/cssomnom",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\cssomnom",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\cssomnom\\LICENSE"
+    },
+    "detect-libc@2.1.2": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/lovell/detect-libc",
+        "publisher": "Lovell Fuller",
+        "email": "npm@lovell.info",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\detect-libc",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\detect-libc\\LICENSE"
+    },
+    "dom-serializer@2.0.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/cheeriojs/dom-serializer",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\dom-serializer",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\dom-serializer\\LICENSE"
+    },
+    "dom-serializer@3.1.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/cheeriojs/dom-serializer",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\dom-serializer",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\dom-serializer\\LICENSE"
+    },
+    "domelementtype@2.3.0": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/domelementtype",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\domelementtype",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\domelementtype\\LICENSE"
+    },
+    "domelementtype@3.0.0": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/domelementtype",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\domelementtype",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\domelementtype\\LICENSE"
+    },
+    "domhandler@5.0.3": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/domhandler",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\domhandler",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\domhandler\\LICENSE"
+    },
+    "domhandler@6.0.1": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/domhandler",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\domhandler",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\domhandler\\LICENSE"
+    },
+    "domutils@3.2.2": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/domutils",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\domutils",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\domutils\\LICENSE"
+    },
+    "domutils@4.0.2": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/domutils",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\domutils",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\domutils\\LICENSE"
+    },
+    "entities@4.5.0": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/entities",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\dom-serializer\\node_modules\\entities",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\dom-serializer\\node_modules\\entities\\LICENSE"
+    },
+    "entities@7.0.1": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/entities",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\entities",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\entities\\LICENSE"
+    },
+    "entities@8.1.0": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/entities",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\entities",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\css-select\\node_modules\\entities\\LICENSE"
+    },
+    "esbuild@0.28.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/evanw/esbuild",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\esbuild",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\esbuild\\LICENSE.md"
+    },
+    "esprima@4.0.1": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/jquery/esprima",
+        "publisher": "Ariya Hidayat",
+        "email": "ariya.hidayat@gmail.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\esprima",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\esprima\\LICENSE.BSD"
+    },
+    "hono@4.13.18": {
+        "licenses": "MIT",
+        "repository": "https://github.com/honojs/hono",
+        "publisher": "Yusuke Wada",
+        "email": "yusuke@kamawada.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\hono",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\hono\\LICENSE"
+    },
+    "html-escaper@3.0.3": {
+        "licenses": "MIT",
+        "repository": "https://github.com/WebReflection/html-escaper",
+        "publisher": "Andrea Giammarchi",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\html-escaper",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\html-escaper\\LICENSE.txt"
+    },
+    "htmlparser2@10.1.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/fb55/htmlparser2",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\htmlparser2",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\htmlparser2\\LICENSE"
+    },
+    "ignore@5.3.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/kaelzhang/node-ignore",
+        "publisher": "kael",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\ignore",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\ignore\\LICENSE-MIT"
+    },
+    "linkedom@0.18.15": {
+        "licenses": "ISC",
+        "repository": "https://github.com/WebReflection/linkedom",
+        "publisher": "Andrea Giammarchi",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\linkedom",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\linkedom\\LICENSE"
+    },
+    "magic-string@0.30.21": {
+        "licenses": "MIT",
+        "repository": "https://github.com/Rich-Harris/magic-string",
+        "publisher": "Rich Harris",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\magic-string",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\magic-string\\LICENSE"
+    },
+    "nanoid@3.3.20": {
+        "licenses": "MIT",
+        "repository": "https://github.com/ai/nanoid",
+        "publisher": "Andrey Sitnik",
+        "email": "andrey@sitnik.ru",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\nanoid",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\nanoid\\LICENSE"
+    },
+    "next@16.4.6": {
+        "licenses": "MIT",
+        "repository": "https://github.com/vercel/next.js",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\next",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\next\\license.md"
+    },
+    "nth-check@3.0.1": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/fb55/nth-check",
+        "publisher": "Felix Boehm",
+        "email": "me@feedic.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\nth-check",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\nth-check\\LICENSE"
+    },
+    "picocolors@1.1.1": {
+        "licenses": "ISC",
+        "repository": "https://github.com/alexeyraspopov/picocolors",
+        "publisher": "Alexey Raspopov",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\picocolors",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\picocolors\\LICENSE"
+    },
+    "postcss-selector-parser@7.2.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/postcss/postcss-selector-parser",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\postcss-selector-parser",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\postcss-selector-parser\\LICENSE-MIT"
+    },
+    "postcss@8.5.23": {
+        "licenses": "MIT",
+        "repository": "https://github.com/postcss/postcss",
+        "publisher": "Andrey Sitnik",
+        "email": "andrey@sitnik.es",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\next\\node_modules\\postcss",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\next\\node_modules\\postcss\\LICENSE"
+    },
+    "postcss@8.5.32": {
+        "licenses": "MIT",
+        "repository": "https://github.com/postcss/postcss",
+        "publisher": "Andrey Sitnik",
+        "email": "andrey@sitnik.es",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\postcss",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\postcss\\LICENSE"
+    },
+    "react-dom@19.3.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react/react",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\react-dom",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\react-dom\\LICENSE"
+    },
+    "react@19.3.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react/react",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\react",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\react\\LICENSE"
+    },
+    "recast@0.23.21": {
+        "licenses": "MIT",
+        "repository": "https://github.com/benjamn/recast",
+        "publisher": "Ben Newman",
+        "email": "bn@cs.stanford.edu",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\recast",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\recast\\LICENSE"
+    },
+    "scheduler@0.28.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react/react",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\scheduler",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\scheduler\\LICENSE"
+    },
+    "semver@7.8.6": {
+        "licenses": "ISC",
+        "repository": "https://github.com/npm/node-semver",
+        "publisher": "GitHub Inc.",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\semver",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\semver\\LICENSE"
+    },
+    "sharp@0.35.5": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/lovell/sharp",
+        "publisher": "Lovell Fuller",
+        "email": "npm@lovell.info",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\sharp",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\sharp\\LICENSE"
+    },
+    "source-map-js@1.2.2": {
+        "licenses": "BSD-3-Clause",
+        "repository": "https://github.com/7rulnik/source-map-js",
+        "publisher": "Valentin 7rulnik Semirulnik",
+        "email": "v7rulnik@gmail.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\source-map-js",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\source-map-js\\LICENSE"
+    },
+    "source-map@0.6.1": {
+        "licenses": "BSD-3-Clause",
+        "repository": "https://github.com/mozilla/source-map",
+        "publisher": "Nick Fitzgerald",
+        "email": "nfitzgerald@mozilla.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\source-map",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\source-map\\LICENSE"
+    },
+    "styled-jsx@5.1.6": {
+        "licenses": "MIT",
+        "repository": "https://github.com/vercel/styled-jsx",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\styled-jsx",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\styled-jsx\\license.md"
+    },
+    "tiny-invariant@1.3.3": {
+        "licenses": "MIT",
+        "repository": "https://github.com/alexreardon/tiny-invariant",
+        "publisher": "Alex Reardon",
+        "email": "alexreardon@gmail.com",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\tiny-invariant",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\tiny-invariant\\LICENSE"
+    },
+    "tslib@2.9.1": {
+        "licenses": "0BSD",
+        "repository": "https://github.com/Microsoft/tslib",
+        "publisher": "Microsoft Corp.",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\tslib",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\tslib\\LICENSE.txt"
+    },
+    "uhyphen@0.2.0": {
+        "licenses": "ISC",
+        "repository": "https://github.com/WebReflection/uhyphen",
+        "publisher": "Andrea Giammarchi",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\uhyphen",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\uhyphen\\LICENSE"
+    },
+    "util-deprecate@1.0.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/TooTallNate/util-deprecate",
+        "publisher": "Nathan Rajlich",
+        "email": "nathan@tootallnate.net",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\util-deprecate",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\util-deprecate\\LICENSE"
+    },
+    "wawoff2@2.0.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/fontello/wawoff2",
+        "path": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\wawoff2",
+        "licenseFile": "C:\\Users\\ADMIN\\Documents\\makvid-studio\\spikes\\player-next\\node_modules\\wawoff2\\LICENSE"
+    }
+}

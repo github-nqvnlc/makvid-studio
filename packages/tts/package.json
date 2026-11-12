@@ -1,0 +1,23 @@
+{
+  "name": "@makvid/tts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TtsProvider and Aligner",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*"
+  },
+  "dependencies": {
+    "@makvid/spec": "workspace:*",
+    "@makvid/style-kit": "workspace:*",
+    "openai": "7.45.1"
+  }
+}

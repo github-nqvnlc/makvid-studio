@@ -1,0 +1,53 @@
+{
+  "description": "M2 acceptance (US1): 10 diverse Vietnamese prompts, automatic mode, 9:16, 45 s target.",
+  "aspect": "9:16",
+  "durationSec": 45,
+  "prompts": [
+    {
+      "id": "edu-photosynthesis",
+      "kind": "education",
+      "prompt": "Giải thích quá trình quang hợp của cây xanh cho học sinh lớp 6"
+    },
+    {
+      "id": "edu-compound-interest",
+      "kind": "education",
+      "prompt": "Lãi kép là gì và vì sao nên tiết kiệm từ sớm"
+    },
+    {
+      "id": "news-ev-motorbike",
+      "kind": "news",
+      "prompt": "Bản tin ngắn: xu hướng người dân thành phố chuyển sang xe máy điện"
+    },
+    {
+      "id": "news-scam-sms",
+      "kind": "news",
+      "prompt": "Cảnh báo các chiêu lừa đảo qua tin nhắn mạo danh ngân hàng đang phổ biến"
+    },
+    {
+      "id": "github-repo",
+      "kind": "github",
+      "prompt": "Giới thiệu một thư viện mã nguồn mở giúp lập trình viên tạo video bằng HTML và CSS, nêu 3 tính năng chính và cách bắt đầu"
+    },
+    { "id": "social-sleep", "kind": "social", "prompt": "5 mẹo ngủ ngon cho dân văn phòng" },
+    {
+      "id": "social-english",
+      "kind": "social",
+      "prompt": "3 sai lầm phổ biến khi tự học tiếng Anh và cách sửa"
+    },
+    {
+      "id": "data-water",
+      "kind": "data",
+      "prompt": "Mỗi ngày người trưởng thành nên uống bao nhiêu nước, và điều gì xảy ra khi thiếu nước"
+    },
+    {
+      "id": "data-mekong",
+      "kind": "data",
+      "prompt": "Biến đổi khí hậu ảnh hưởng thế nào đến Đồng bằng sông Cửu Long"
+    },
+    {
+      "id": "product-launch",
+      "kind": "product",
+      "prompt": "Ra mắt tính năng mới: xuất video ở bốn tỷ lệ khung hình chỉ với một cú nhấp"
+    }
+  ]
+}

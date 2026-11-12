@@ -1,0 +1,52 @@
+{
+  "sfx": [
+    {
+      "id": "whoosh",
+      "kind": "whoosh",
+      "pack": "common",
+      "file": "whoosh.m4a",
+      "durationMs": 450,
+      "license": {
+        "source": "MakVid Studio (procedural, packages/media/scripts/gen-sfx.mjs)",
+        "terms": "Owned by the project",
+        "attribution": null
+      }
+    },
+    {
+      "id": "pop",
+      "kind": "pop",
+      "pack": "common",
+      "file": "pop.m4a",
+      "durationMs": 160,
+      "license": {
+        "source": "MakVid Studio (procedural, packages/media/scripts/gen-sfx.mjs)",
+        "terms": "Owned by the project",
+        "attribution": null
+      }
+    },
+    {
+      "id": "click",
+      "kind": "click",
+      "pack": "common",
+      "file": "click.m4a",
+      "durationMs": 60,
+      "license": {
+        "source": "MakVid Studio (procedural, packages/media/scripts/gen-sfx.mjs)",
+        "terms": "Owned by the project",
+        "attribution": null
+      }
+    },
+    {
+      "id": "rise",
+      "kind": "rise",
+      "pack": "common",
+      "file": "rise.m4a",
+      "durationMs": 700,
+      "license": {
+        "source": "MakVid Studio (procedural, packages/media/scripts/gen-sfx.mjs)",
+        "terms": "Owned by the project",
+        "attribution": null
+      }
+    }
+  ]
+}

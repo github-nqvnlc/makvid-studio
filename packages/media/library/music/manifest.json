@@ -1,0 +1,46 @@
+{
+  "tracks": [
+    {
+      "id": "calm-pads",
+      "title": "Calm pads",
+      "file": "calm-pads.m4a",
+      "durationMs": 64000,
+      "bpm": 72,
+      "moods": ["calm", "corporate"],
+      "loop": true,
+      "license": {
+        "source": "MakVid Studio (procedurally generated, packages/media/scripts/gen-beds.mjs)",
+        "terms": "Owned by the project; no third-party rights",
+        "attribution": null
+      }
+    },
+    {
+      "id": "corporate-pulse",
+      "title": "Corporate pulse",
+      "file": "corporate-pulse.m4a",
+      "durationMs": 64000,
+      "bpm": 100,
+      "moods": ["corporate", "tech", "calm"],
+      "loop": true,
+      "license": {
+        "source": "MakVid Studio (procedurally generated, packages/media/scripts/gen-beds.mjs)",
+        "terms": "Owned by the project; no third-party rights",
+        "attribution": null
+      }
+    },
+    {
+      "id": "upbeat-drive",
+      "title": "Upbeat drive",
+      "file": "upbeat-drive.m4a",
+      "durationMs": 64000,
+      "bpm": 118,
+      "moods": ["energetic", "upbeat", "tech"],
+      "loop": true,
+      "license": {
+        "source": "MakVid Studio (procedurally generated, packages/media/scripts/gen-beds.mjs)",
+        "terms": "Owned by the project; no third-party rights",
+        "attribution": null
+      }
+    }
+  ]
+}

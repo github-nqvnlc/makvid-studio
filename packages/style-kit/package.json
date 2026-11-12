@@ -1,0 +1,27 @@
+{
+  "name": "@makvid/style-kit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Style-pack SDK: AnimationRuntime, fitText, safe areas, seeded RNG, loader, lint",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node/index.ts",
+    "./mount": "./src/mount.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*",
+    "@types/fontkit": "2.0.9"
+  },
+  "dependencies": {
+    "fontkit": "2.0.4",
+    "gsap": "3.15.1",
+    "typescript": "6.0.3",
+    "zod": "4.6.7"
+  }
+}

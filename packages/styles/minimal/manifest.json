@@ -1,0 +1,16 @@
+{
+  "id": "minimal",
+  "version": "1.0.0",
+  "name": { "vi": "Tối giản / doanh nghiệp", "en": "Minimal / corporate" },
+  "description": {
+    "vi": "Nền sáng, lưới chặt, chuyển động tiết chế. Hợp video giải thích, tin tức, cập nhật sản phẩm.",
+    "en": "Light background, strict grid, restrained motion. For explainers, news and product updates."
+  },
+  "contentTypes": ["explainer", "news", "changelog", "corporate"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [{ "name": "gsap", "version": "3.15.1", "license": "GSAP-Standard" }],
+  "musicMoods": ["calm", "corporate"],
+  "perfBudget": { "maxMsPerFrame": 80 }
+}

@@ -1,0 +1,58 @@
+{
+  "errors": {
+    "INPUT_INVALID": {
+      "message": "Some of your input is not valid.",
+      "hint": "Check the highlighted fields and try again."
+    },
+    "SPEC_INVALID": {
+      "message": "The video script has a problem.",
+      "hint": "Undo the last change or regenerate that scene."
+    },
+    "SLOT_TOO_LONG": {
+      "message": "\"{slot}\" is longer than {max} characters.",
+      "hint": "Shorten it so it reads clearly on video."
+    },
+    "STYLE_UNAVAILABLE": {
+      "message": "This style is not available right now.",
+      "hint": "Pick another style from the library."
+    },
+    "RENDER_FAILED": {
+      "message": "The video could not be exported.",
+      "hint": "We will retry automatically. If it keeps failing, try another style for this scene."
+    },
+    "RENDER_TIMEOUT": {
+      "message": "Exporting took too long.",
+      "hint": "Try again in a few minutes or shorten the video."
+    },
+    "QA_FAILED": {
+      "message": "Some scenes did not pass the visual quality check.",
+      "hint": "Review the flagged scenes and shorten the text or change the layout."
+    },
+    "VOICE_FAILED": {
+      "message": "The voice-over could not be created.",
+      "hint": "Try again or choose another voice."
+    },
+    "AI_FAILED": {
+      "message": "The assistant could not handle this request.",
+      "hint": "Try rephrasing it more briefly."
+    },
+    "QUOTA_EXCEEDED": {
+      "message": "You have used all credits in your plan.",
+      "hint": "Upgrade your plan or wait for the next cycle."
+    },
+    "PAYMENT_REQUIRED": {
+      "message": "Payment is required to continue.",
+      "hint": "Update your payment method in Plan & billing."
+    },
+    "NOT_FOUND": {
+      "message": "We could not find this.",
+      "hint": "It may have been deleted or the link is wrong."
+    },
+    "FORBIDDEN": { "message": "You do not have permission to do this.", "hint": "Ask your workspace admin." },
+    "RATE_LIMITED": { "message": "You are going a bit fast.", "hint": "Wait a few seconds and try again." },
+    "INTERNAL": {
+      "message": "Something went wrong.",
+      "hint": "We have logged the problem. Please try again later."
+    }
+  }
+}

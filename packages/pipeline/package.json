@@ -1,0 +1,30 @@
+{
+  "name": "@makvid/pipeline",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Video production pipeline steps (ingest → script → style → storyboard → audio → compile → QA → render/mux)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@makvid/ai": "workspace:*",
+    "@makvid/compiler": "workspace:*",
+    "@makvid/media": "workspace:*",
+    "@makvid/queue": "workspace:*",
+    "@makvid/renderer": "workspace:*",
+    "@makvid/spec": "workspace:*",
+    "@makvid/style-kit": "workspace:*",
+    "@makvid/tts": "workspace:*",
+    "bullmq": "5.81.5",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*"
+  }
+}

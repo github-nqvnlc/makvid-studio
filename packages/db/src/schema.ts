@@ -1,0 +1,211 @@
+// Drizzle schema mirroring migrations/*.sql (SQL files are the source of truth for DDL + RLS).
+import {
+  boolean,
+  integer,
+  jsonb,
+  numeric,
+  pgEnum,
+  pgTable,
+  real,
+  text,
+  timestamp,
+  unique,
+  uuid,
+} from "drizzle-orm/pg-core";
+
+export const membershipRole = pgEnum("membership_role", ["owner", "admin", "editor", "viewer"]);
+
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  name: text("name"),
+  locale: text("locale").notNull().default("vi"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const workspaces = pgTable("workspaces", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  createdBy: uuid("created_by")
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const memberships = pgTable(
+  "memberships",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    role: membershipRole("role").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique("memberships_workspace_user_uq").on(t.workspaceId, t.userId)],
+);
+
+export type Role = (typeof membershipRole.enumValues)[number];
+
+// ---- 0002: projects & pipeline (migrations/0002_projects_pipeline.sql) ----
+
+export const projectMode = pgEnum("project_mode", ["auto", "review"]);
+export const projectStatus = pgEnum("project_status", [
+  "draft",
+  "ingesting",
+  "scripting",
+  "awaiting_script_review",
+  "styling",
+  "storyboarding",
+  "awaiting_storyboard_review",
+  "producing_audio",
+  "compiling",
+  "qa",
+  "rendering",
+  "ready",
+  "needs_attention",
+  "failed",
+]);
+export const sourceKind = pgEnum("source_kind", ["prompt", "script", "url", "github", "table", "media"]);
+export const pipelineStep = pgEnum("pipeline_step", [
+  "ingest",
+  "script",
+  "style_suggest",
+  "storyboard",
+  "tts",
+  "align",
+  "compile",
+  "qa",
+  "render_scene",
+  "mux",
+]);
+export const jobStatus = pgEnum("job_status", ["queued", "running", "succeeded", "failed", "skipped_cached"]);
+
+const ts = (name: string) => timestamp(name, { withTimezone: true });
+
+export const sourceMaterials = pgTable("source_materials", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  kind: sourceKind("kind").notNull(),
+  markdown: text("markdown").notNull(),
+  metadata: jsonb("metadata").notNull().default({}),
+  attachments: uuid("attachments").array().notNull().default([]),
+  transcript: jsonb("transcript"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+export const projects = pgTable("projects", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  title: text("title").notNull(),
+  mode: projectMode("mode").notNull().default("auto"),
+  status: projectStatus("status").notNull().default("draft"),
+  headVersionId: uuid("head_version_id"),
+  sourceMaterialId: uuid("source_material_id"),
+  primaryAspect: text("primary_aspect").notNull().default("9:16"),
+  exportAspects: text("export_aspects").array().notNull().default(["9:16"]),
+  isTemplate: boolean("is_template").notNull().default(false),
+  createdBy: uuid("created_by"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+  updatedAt: ts("updated_at").notNull().defaultNow(),
+  deletedAt: ts("deleted_at"),
+});
+
+export const projectVersions = pgTable("project_versions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  projectId: uuid("project_id").notNull(),
+  parentVersionId: uuid("parent_version_id"),
+  seq: integer("seq").notNull(),
+  spec: jsonb("spec").notNull(),
+  specVersion: text("spec_version").notNull(),
+  patch: jsonb("patch"),
+  author: text("author").notNull(),
+  message: text("message"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+export const jobs = pgTable("jobs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  projectId: uuid("project_id"),
+  versionId: uuid("version_id").notNull(),
+  step: pipelineStep("step").notNull(),
+  inputHash: text("input_hash").notNull(),
+  status: jobStatus("status").notNull().default("queued"),
+  attempt: integer("attempt").notNull().default(0),
+  priority: integer("priority").notNull().default(5),
+  progress: real("progress").notNull().default(0),
+  userMessageKey: text("user_message_key"),
+  errorCode: text("error_code"),
+  errorDetail: text("error_detail"),
+  output: jsonb("output"),
+  startedAt: ts("started_at"),
+  finishedAt: ts("finished_at"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+export const renderCache = pgTable("render_cache", {
+  cacheKey: text("cache_key").primaryKey(),
+  storageKey: text("storage_key").notNull(),
+  frames: integer("frames").notNull(),
+  durationMs: integer("duration_ms").notNull(),
+  engine: text("engine").notNull(),
+  engineVersion: text("engine_version").notNull(),
+  createdAt: ts("created_at").notNull().defaultNow(),
+  lastHitAt: ts("last_hit_at").notNull().defaultNow(),
+});
+
+export const renderOutputs = pgTable("render_outputs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  projectId: uuid("project_id").notNull(),
+  versionId: uuid("version_id").notNull(),
+  aspect: text("aspect").notNull(),
+  storageKey: text("storage_key").notNull(),
+  srtKey: text("srt_key"),
+  thumbnailKey: text("thumbnail_key"),
+  durationMs: integer("duration_ms").notNull(),
+  width: integer("width").notNull(),
+  height: integer("height").notNull(),
+  fps: integer("fps").notNull(),
+  loudnessLufs: real("loudness_lufs"),
+  watermarked: boolean("watermarked").notNull().default(false),
+  expiresAt: ts("expires_at"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+export const qaReports = pgTable("qa_reports", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  jobId: uuid("job_id").notNull(),
+  sceneId: text("scene_id").notNull(),
+  frameMs: integer("frame_ms").notNull(),
+  checks: jsonb("checks").notNull(),
+  score: real("score"),
+  passed: boolean("passed").notNull(),
+  fixAttempt: integer("fix_attempt").notNull().default(0),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+export const usageRecords = pgTable("usage_records", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  projectId: uuid("project_id"),
+  jobId: uuid("job_id"),
+  step: text("step").notNull(),
+  provider: text("provider").notNull(),
+  model: text("model"),
+  tokensIn: integer("tokens_in").notNull().default(0),
+  tokensOut: integer("tokens_out").notNull().default(0),
+  ttsChars: integer("tts_chars").notNull().default(0),
+  images: integer("images").notNull().default(0),
+  videoSecondsGenerated: real("video_seconds_generated").notNull().default(0),
+  renderSeconds: real("render_seconds").notNull().default(0),
+  costUsd: numeric("cost_usd", { precision: 12, scale: 6 }),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});

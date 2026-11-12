@@ -1,0 +1,23 @@
+{
+  "name": "@makvid/worker-ai",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Worker: LLM pipeline steps",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "start": "tsx src/index.ts"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*",
+    "tsx": "4.23.15"
+  },
+  "dependencies": {
+    "@makvid/pipeline": "workspace:*"
+  }
+}
