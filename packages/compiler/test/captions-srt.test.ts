@@ -82,3 +82,11 @@ describe("SRT", () => {
     ).toEqual([]);
   });
 });
+
+describe("SRT multi-line cues", () => {
+  it("uses CRLF inside two-line cues too", () => {
+    const srt = toSrt([{ startMs: 0, endMs: 1000, text: "Dòng một\nDòng hai" }]);
+    expect(srt).toContain("Dòng một\r\nDòng hai\r\n");
+    expect(srt.replace(/\r\n/g, "")).not.toContain("\n");
+  });
+});

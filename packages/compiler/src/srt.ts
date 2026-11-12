@@ -20,7 +20,7 @@ export function toSrt(cues: SrtCue[]): string {
     .filter((c) => c.text.trim() && c.endMs > c.startMs)
     .map(
       (c, i) =>
-        `${i + 1}\r\n${srtTime(c.startMs)} --> ${srtTime(c.endMs)}\r\n${c.text.normalize("NFC").trim()}\r\n`,
+        `${i + 1}\r\n${srtTime(c.startMs)} --> ${srtTime(c.endMs)}\r\n${c.text.normalize("NFC").trim().replace(/\r?\n/g, "\r\n")}\r\n`,
     )
     .join("\r\n");
 }
