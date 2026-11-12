@@ -6,3 +6,6 @@
 *.wav binary
 *.woff2 binary
 *.ttf binary
+*.srt -text
+*.m4a binary
+*.woff binary
