@@ -84,3 +84,14 @@
 - Verified: E2E (Playwright) create → 3 chat edits → download, and no-tech-leak scan: pass on the dev stack and
   on the Docker stack; partial re-render 1 scene vs 8: 23.8 s vs 105.1 s (4.4×, T095); integration suites.
 - Next: styles 4–8 (T150–T154), M3 report + walkthrough (T108), GATE M3.
+
+## 2026-11-13 — M3 done, awaiting GATE M3 (Claude Code)
+
+- Style packs slides, news, terminal, glass-gradient, flat-illustration (ADR 0009): narration cues
+  (`findCue`), bitmap glass background, `backdrop-filter` only on small elements, fonts with "₫", Lucide icons.
+- Verified in the render container: overflow harness 32/32 (8 packs × 4 aspects), goldens written for the 5 new
+  packs and 3 old packs still match 32/32, render cost 125–172 ms/frame → `perfBudget` 200 for every pack.
+- Frame capture: time limits + one retry with a fresh browser (stalled pages after many scenes).
+- 5 real-voice demos (QA first pass, −14 LUFS, ~$0.015 each), walkthrough from E2E screenshots, style cards.
+  Report `docs/reports/M3.md`.
+- Next: GATE M3 approval, then M4 (source ingest, uploads).

@@ -229,7 +229,7 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 - [x] T107 [US2] Add `docker/web.Dockerfile`, worker Dockerfiles and root `docker/compose.yml` running the full stack with `docker compose up -d`
 - [x] T108a [US2] Voice picker: list voices (FPT VITs / pro / ultra) with gender + region and a pre-generated preview clip per voice (`packages/tts/library/voices/`), selectable per project; default `vits:banmai` (product-owner decision 2026-11-12) — _library + catalog done (21 clips, `voiceCatalog()`); picker UI with the web app_ — _library + catalog done (21 clips, `voiceCatalog()`); picker UI comes with the web app_
 - [x] T108b [US2] Licensed music library: integrate the commercial music provider chosen by the product owner (ADR 0007) behind a `MusicProvider` interface; keep procedural beds as offline fallback (product-owner decision 2026-11-12)
-- [ ] T108 [US2] Write M3 report `docs/reports/M3.md` (non-coder walkthrough recording, E2E results, 8 style packs)
+- [x] T108 [US2] Write M3 report `docs/reports/M3.md` (non-coder walkthrough recording, E2E results, 8 style packs)
 
 **🛑 GATE M3**: Non-coder creates and edits 3 times without seeing technical info; E2E pass; 8 style packs (Phase 12 T150–T154).
 
@@ -361,11 +361,11 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 **Purpose**: Reach 8 styles by M3 and 13 by M4; each pack follows `contracts/style-pack.md`, includes a ~30 s demo from `fixtures/specs/sample-vi.json`, thumbnail and goldens for 4 aspects.
 
-- [ ] T150 [P] Create `packages/styles/flat-illustration/` with a commercially licensed SVG icon/illustration set (licenses in `THIRD_PARTY_LICENSES.md`)
-- [ ] T151 [P] Create `packages/styles/glass-gradient/` with measured `backdrop-filter` cost within `perfBudget.maxMsPerFrame`
-- [ ] T152 [P] Create `packages/styles/news/` (lower-third, ticker, "Nóng" label, source image)
-- [ ] T153 [P] Create `packages/styles/slides/` (title + bullets revealed on narration cues)
-- [ ] T154 [P] Create `packages/styles/terminal/` (typing effect, syntax highlight; for repo/changelog videos)
+- [x] T150 [P] Create `packages/styles/flat-illustration/` with a commercially licensed SVG icon/illustration set (licenses in `THIRD_PARTY_LICENSES.md`)
+- [x] T151 [P] Create `packages/styles/glass-gradient/` with measured `backdrop-filter` cost within `perfBudget.maxMsPerFrame` — _measured 172 ms/frame in the render container (ADR 0009)_
+- [x] T152 [P] Create `packages/styles/news/` (lower-third, ticker, "Nóng" label, source image) — _source image deferred to US4 (T113), ADR 0009_
+- [x] T153 [P] Create `packages/styles/slides/` (title + bullets revealed on narration cues)
+- [x] T154 [P] Create `packages/styles/terminal/` (typing effect, syntax highlight; for repo/changelog videos)
 - [ ] T155 [P] Create `packages/styles/neon/` (glow, scanline, seeded glitch)
 - [ ] T156 [P] Create `packages/styles/retro-vhs/` (noise, chroma shift, pixel font with Vietnamese glyphs)
 - [ ] T157 [P] Create `packages/styles/whiteboard/` (SVG stroke-dashoffset drawing, hand-with-pen)

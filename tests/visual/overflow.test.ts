@@ -4,7 +4,7 @@
 import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { parseVideoSpec, type AspectRatio, type Scene, type VideoSpec } from "@makvid/spec";
 import { compileVideo } from "@makvid/compiler";
 import { captureFrames, checkFrame, closeSharedBrowser, type QaIssue } from "@makvid/renderer";
@@ -58,6 +58,8 @@ function worstCaseSpec(styleId: string): VideoSpec {
 
 describe.runIf(process.env.MAKVID_VISUAL_TESTS === "1")("max-length slots never overflow (T027)", () => {
   afterAll(() => closeSharedBrowser());
+  // A fresh browser per pack: one long-lived browser stalled after ~30 tests of 8 scenes each (8 packs).
+  afterEach((ctx) => (ctx.task.name.endsWith("4:5") ? closeSharedBrowser() : undefined));
   for (const styleId of listPacks(stylesRoot))
     for (const aspect of ASPECTS)
       it(`${styleId} ${aspect}`, async () => {

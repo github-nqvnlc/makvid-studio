@@ -313,13 +313,8 @@
   color: var(--c-muted);
 }
 .cursor {
-  display: inline-block;
-  width: 0.55em;
-  height: 0.9em;
-  background: var(--accent);
-  vertical-align: -0.1em;
-  margin-left: 0.08em;
   position: absolute;
+  background: var(--accent);
 }
 .tok-kw {
   color: var(--c-kw);

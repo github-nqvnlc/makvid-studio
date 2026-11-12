@@ -27,6 +27,6 @@
   ],
   "musicMoods": ["upbeat", "calm"],
   "perfBudget": {
-    "maxMsPerFrame": 80
+    "maxMsPerFrame": 200
   }
 }

@@ -43,7 +43,7 @@ const SCALE = {
   news: {
     "16:9": [116, 88, 54, 40, 30],
     "9:16": [116, 94, 62, 46, 36],
-    "1:1": [96, 76, 50, 38, 28],
+    "1:1": [92, 72, 46, 34, 24],
     "4:5": [104, 84, 56, 40, 30],
   },
   // Monospace glyphs are ~0.6 em wide: a smaller scale keeps the same words per line.

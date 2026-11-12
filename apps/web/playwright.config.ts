@@ -17,8 +17,6 @@ export default defineConfig({
     locale: "vi-VN",
     launchOptions: { executablePath: process.env.E2E_CHROME ?? findChrome() },
     trace: "retain-on-failure",
-    // E2E_VIDEO=1 records the walkthrough (used for the milestone report).
-    video: process.env.E2E_VIDEO === "1" ? { mode: "on", size: { width: 1280, height: 800 } } : "off",
     viewport: { width: 1280, height: 800 },
   },
 });

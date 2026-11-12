@@ -80,8 +80,31 @@ export async function closeSharedBrowser(): Promise<void> {
   if (shared) {
     const b = await shared;
     shared = null;
-    await b.close();
+    await withTimeout(b.close(), 10_000, "browser close").catch(() => b.process()?.kill("SIGKILL"));
   }
+}
+
+/** Kill the shared browser outright (used after a stalled page). */
+export async function resetSharedBrowser(): Promise<void> {
+  if (!shared) return;
+  const b = await shared.catch(() => null);
+  shared = null;
+  b?.process()?.kill("SIGKILL");
+}
+
+export class StallError extends Error {
+  override name = "StallError";
+}
+
+/** Reject with StallError when `p` does not settle within `ms`. */
+export function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  return Promise.race([
+    p.finally(() => clearTimeout(timer)),
+    new Promise<never>((_, fail) => {
+      timer = setTimeout(() => fail(new StallError(`${what} did not finish within ${ms} ms`)), ms);
+    }),
+  ]);
 }
 
 export interface ScenePage {
@@ -122,8 +145,12 @@ export async function openScene(sceneDir: string, width: number, height: number)
   });
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(String(e)));
-  await page.goto(`${origin}/index.html`, { waitUntil: "load" });
-  await page.evaluate(() => document.fonts.ready.then(() => undefined));
+  await page.goto(`${origin}/index.html`, { waitUntil: "load", timeout: 30_000 });
+  await withTimeout(
+    page.evaluate(() => document.fonts.ready.then(() => undefined)),
+    15_000,
+    "font loading",
+  );
   await page.waitForFunction(
     () => !!(window as unknown as { __timelines?: { main?: unknown } }).__timelines?.main,
     { timeout: 15000 },
@@ -146,7 +173,9 @@ export async function openScene(sceneDir: string, width: number, height: number)
       }, t);
     },
     async close() {
-      await page.close();
+      await withTimeout(page.close(), 10_000, "page close").catch(() => undefined);
+      // Drop keep-alive sockets first, otherwise server.close() can wait forever.
+      server.closeAllConnections();
       await new Promise<void>((ok) => server.close(() => ok()));
     },
   };

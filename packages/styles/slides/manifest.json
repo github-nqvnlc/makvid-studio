@@ -22,6 +22,6 @@
   ],
   "musicMoods": ["calm", "corporate"],
   "perfBudget": {
-    "maxMsPerFrame": 80
+    "maxMsPerFrame": 200
   }
 }

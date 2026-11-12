@@ -1,11 +1,13 @@
 // T092: sign up -> create -> 3 chat edits -> download, as a non-technical user would.
 import { expect, test } from "@playwright/test";
-import { createVideo, signUp, waitReady } from "./helpers";
+import { createVideo, shot, signUp, waitReady } from "./helpers";
 
 test("sign up, create a video, edit it three times by chat, download it", async ({ page }) => {
   await signUp(page, "create");
   await createVideo(page, "Giải thích lãi kép cho người mới đi làm");
+  await shot(page, "progress");
   await waitReady(page);
+  await shot(page, "ready");
   await expect(page.getByTestId("preview-video")).toBeVisible();
 
   const edits = [
@@ -18,7 +20,10 @@ test("sign up, create a video, edit it three times by chat, download it", async 
     await page.getByRole("button", { name: "Gửi" }).click();
     await expect(page.getByTestId("chat-log").locator(".bubble.assistant")).toHaveCount(i + 1);
     await waitReady(page);
+    await shot(page, `edit-${i + 1}`);
   }
+  await page.getByTestId("versions").scrollIntoViewIfNeeded();
+  await shot(page, "versions");
   await expect(page.getByTestId("versions").getByText(/^Phiên bản \d+$/)).toHaveCount(4);
 
   const href = await page

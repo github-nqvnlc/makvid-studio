@@ -341,19 +341,21 @@
   width: 100%;
   height: 6px;
 }
+/* Red bar left of headlines: a pseudo element in the margin, so the text box keeps its fitted width and
+   stays inside the safe area. */
 .headline,
 .title-text {
-  border-left: 12px solid var(--accent);
-  padding-left: 28px;
-  margin-left: -40px;
+  position: relative;
 }
-.a-9x16 .headline,
-.a-9x16 .title-text,
-.a-1x1 .headline,
-.a-1x1 .title-text,
-.a-4x5 .headline,
-.a-4x5 .title-text {
-  margin-left: -40px;
+.headline::before,
+.title-text::before {
+  content: "";
+  position: absolute;
+  left: -28px;
+  top: 0.12em;
+  bottom: 0.12em;
+  width: 12px;
+  background: var(--accent);
 }
 .subtitle {
   color: var(--c-muted);

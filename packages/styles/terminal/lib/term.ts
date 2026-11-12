@@ -48,7 +48,11 @@ export function highlightSyntax(qa: TemplateContext["qa"]): void {
   }
 }
 
-/** Block cursor after the last line of `sel`, blinking deterministically until the scene ends. */
+/**
+ * Block cursor after the last line of `sel`, blinking deterministically until the scene ends. It is placed
+ * on the region (absolute, measured from the line) rather than inside the text, so the fitted line keeps
+ * exactly its compiled width.
+ */
 export function cursor(
   tl: TemplateContext["tl"],
   q: TemplateContext["q"],
@@ -56,12 +60,21 @@ export function cursor(
   from: number,
   duration: number,
 ): void {
-  const lines = q(sel)?.querySelectorAll(".ln");
+  const lines = q(sel)?.querySelectorAll<HTMLElement>(".ln");
   const last = lines?.[lines.length - 1];
-  if (!last) return;
+  const region = last?.closest<HTMLElement>(".region");
+  if (!last || !region) return;
+  const words = last.querySelectorAll<HTMLElement>(".w");
+  const end = (words[words.length - 1] ?? last).getBoundingClientRect();
+  const box = region.getBoundingClientRect();
+  const size = parseFloat(getComputedStyle(last).fontSize) || 48;
   const c = last.ownerDocument.createElement("span");
   c.className = "cursor";
-  last.appendChild(c);
+  c.style.left = `${Math.round(end.right - box.left + size * 0.12)}px`;
+  c.style.top = `${Math.round(end.top - box.top + size * 0.08)}px`;
+  c.style.width = `${Math.round(size * 0.55)}px`;
+  c.style.height = `${Math.round(size * 0.9)}px`;
+  region.appendChild(c);
   tl.set(c, { opacity: 0 }, 0);
   for (let t = from, on = true; t < duration - 0.1; t += 0.5, on = !on) tl.set(c, { opacity: on ? 1 : 0 }, t);
 }

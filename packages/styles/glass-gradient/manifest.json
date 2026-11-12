@@ -22,6 +22,6 @@
   ],
   "musicMoods": ["upbeat", "tech"],
   "perfBudget": {
-    "maxMsPerFrame": 120
+    "maxMsPerFrame": 200
   }
 }

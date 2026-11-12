@@ -295,8 +295,8 @@
   border-radius: 36px;
   background: var(--c-surface);
   border: 2px solid var(--c-line);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* No backdrop-filter on the large pane: over the already-soft background it looks the same and it
+     costs ~240 ms per frame on the CPU render path (measured, ADR 0009). */
 }
 .kicker {
   color: var(--accent);
@@ -313,6 +313,11 @@
   color: var(--c-fg);
   border: 2px solid #ffffff59;
   box-sizing: border-box;
+}
+.cta-btn {
+  /* real frosted glass only on small elements (cost scales with blurred area) */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .card {
   background: #ffffff14;

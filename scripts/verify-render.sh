@@ -6,6 +6,7 @@
 #   4. sample spec rendered twice in 4 aspects with frame hashes (determinism)
 #   5. style demos (9:16) and a full fallback-renderer + mkv-runtime render
 # Usage: scripts/verify-render.sh [--update-goldens]   (from the repo root, Docker running)
+#        PERF=1 scripts/verify-render.sh   (also measure each pack against its perfBudget)
 #        SKIP_PRE=1 scripts/verify-render.sh   (only steps 4-5: renders and demos)
 set -euo pipefail
 IMAGE=${IMAGE:-makvid-render:dev}
@@ -50,4 +51,10 @@ for s in $PACKS; do
   "${RUN[@]}" "${VOL_OUT[@]}" "$IMAGE" render /app/fixtures/specs/sample-vi.json --style "$s" --aspect 9:16 --out "/out/demo-$s" --json > "$OUT/demo-$s.ndjson"
 done
 "${RUN[@]}" "${VOL_OUT[@]}" "$IMAGE" render /app/fixtures/specs/sample-vi.json --aspect 9:16 --renderer fallback --runtime mkv --out /out/fallback-mkv --json > "$OUT/fallback-mkv.ndjson"
+if [ -n "${PERF:-}" ]; then
+  echo "== render cost per pack (ms/frame vs manifest perfBudget, 6 s hook scene)"
+  for s in $PACKS; do
+    "${RUN[@]}" -e PERF_SCENE_MS=6000 -e MAKVID_ROOT=/app -w /app/apps/cli --entrypoint node "$IMAGE" --import tsx scripts/pack-perf.ts "$s" hook 9:16 hyperframes | tail -1
+  done
+fi
 echo "done: $OUT"

@@ -1,6 +1,6 @@
 // captureFrames(): PNG + DOM metrics at given times, for QA (overflow, overlap, safe area, contrast).
 import type { CapturedFrame, DomMetrics, QaElement } from "./types";
-import { openScene } from "./browser";
+import { openScene, resetSharedBrowser, StallError, withTimeout } from "./browser";
 
 /** Runs in the page. Kept self-contained (serialized by puppeteer). */
 function collectMetrics(): Omit<DomMetrics, "blockedRequests"> {
@@ -126,6 +126,25 @@ function collectMetrics(): Omit<DomMetrics, "blockedRequests"> {
 }
 
 export async function captureFrames(input: {
+  sceneDir: string;
+  width: number;
+  height: number;
+  atMs: number[];
+}): Promise<CapturedFrame[]> {
+  // A stalled headless page (rare, seen after many scenes in one browser) must not hang the caller:
+  // bound the whole capture, kill the browser and retry once with a fresh one.
+  const limit = 60_000 + 5_000 * input.atMs.length;
+  try {
+    return await withTimeout(captureOnce(input), limit, "frame capture");
+  } catch (e) {
+    if (!(e instanceof StallError)) throw e;
+    console.warn(`frame capture stalled (${input.sceneDir}); retrying with a fresh browser`);
+    await resetSharedBrowser();
+    return withTimeout(captureOnce(input), limit, "frame capture (retry)");
+  }
+}
+
+async function captureOnce(input: {
   sceneDir: string;
   width: number;
   height: number;
