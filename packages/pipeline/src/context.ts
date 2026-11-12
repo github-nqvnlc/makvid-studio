@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { LlmProvider } from "@makvid/ai";
 import type { Renderer } from "@makvid/renderer";
+import type { MusicProvider } from "@makvid/media";
 import type { MfaAligner, TtsProvider } from "@makvid/tts";
 
 export type Step =
@@ -46,6 +47,8 @@ export interface PipelineContext {
   stylesRoot: string;
   workDir: string;
   voiceId: string;
+  /** Licensed music catalog (ADR 0007); procedural beds when absent. */
+  music?: MusicProvider;
   onUsage(u: UsageEntry): void;
   onProgress(p: Progress): void;
 }

@@ -9,14 +9,23 @@ import { join } from "node:path";
 import { CliError, EXIT, emit, loadSpec, setJson, stylesRoot } from "./io";
 import { renderVideo } from "./commands/render";
 import { qaVideo } from "./commands/qa";
-import { golden } from "./commands/golden";
+import { golden, styleThumbnail } from "./commands/golden";
 import { produce } from "./commands/produce";
+import { closeSharedBrowser } from "@makvid/renderer";
+import { existsSync, readdirSync } from "node:fs";
+
+/** Installed style packs (folders with a manifest). */
+const listStyleIds = () =>
+  readdirSync(stylesRoot(), { withFileTypes: true })
+    .filter((d) => d.isDirectory() && existsSync(join(stylesRoot(), d.name, "manifest.json")))
+    .map((d) => d.name);
 
 const USAGE = `makvid <command>
   render <spec.json> [--out <dir>] [--aspect 16:9,9:16,1:1,4:5] [--renderer hyperframes|fallback]
                      [--fps 30] [--no-cache] [--frame-hashes] [--runtime gsap|mkv] [--workers N] [--style <id>]
   qa <spec.json> [--out <dir>] [--aspect ...] [--style <id>]
   golden <style-id> [--update] [--runtime gsap|mkv] [--allow-host]
+  golden <style-id|all> --thumbnails   (style picker thumbnail -> packages/styles/<id>/demo/thumbnail.webp)
   lint-style <style-id>
   validate <spec.json>
   produce --prompt "<text>" [--aspect 9:16] [--duration 45] [--style id] [--voice vits:banmai] [--out dir]
@@ -39,6 +48,7 @@ async function main(argv: string[]): Promise<number> {
       workers: { type: "string" },
       update: { type: "boolean" },
       "allow-host": { type: "boolean" },
+      thumbnails: { type: "boolean" },
       json: { type: "boolean" },
       style: { type: "string" },
       prompt: { type: "string" },
@@ -143,6 +153,17 @@ async function main(argv: string[]): Promise<number> {
     }
     case "golden": {
       if (!arg) throw new CliError("golden needs <style-id>", EXIT.input);
+      if (values.thumbnails) {
+        const ids = arg === "all" ? listStyleIds() : [arg];
+        for (const id of ids)
+          emit(
+            "thumbnail",
+            { styleId: id, file: await styleThumbnail(id, { out }) },
+            `${id}: thumbnail written`,
+          );
+        await closeSharedBrowser();
+        return EXIT.ok;
+      }
       const res = await golden(arg, {
         update: !!values.update,
         out,

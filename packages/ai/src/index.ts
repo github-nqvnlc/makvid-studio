@@ -8,4 +8,4 @@ export * from "./prompts/style";
 export * from "./prompts/storyboard";
 
 /** Bump when any pipeline prompt or validator changes: part of the step cache keys. */
-export const PROMPT_VERSION = "m2.2";
+export const PROMPT_VERSION = "m3.1";

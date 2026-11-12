@@ -7,6 +7,7 @@ import { produceVideo, progressText, type ProduceResult } from "@makvid/pipeline
 import { createRenderer } from "@makvid/renderer";
 import type { AspectRatio } from "@makvid/spec";
 import { FptTtsProvider, MfaAligner } from "@makvid/tts";
+import { musicProviderFromEnv } from "@makvid/media";
 import { CliError, EXIT, emit, stylesRoot } from "../io";
 
 export interface ProduceOptions {
@@ -32,6 +33,7 @@ export async function produce(o: ProduceOptions): Promise<ProduceResult> {
         llm: createLlm(configFromEnv()),
         tts: new FptTtsProvider(key),
         aligner: new MfaAligner(),
+        music: musicProviderFromEnv(),
         renderer,
         stylesRoot: stylesRoot(),
         workDir,

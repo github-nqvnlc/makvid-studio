@@ -34,5 +34,12 @@ Trả về DUY NHẤT JSON: {"suggestions": [{"styleId": chuỗi, "reason": "m�
 export function validateStyle(out: StyleOutput, options: StyleOption[]): string[] {
   const ids = new Set(options.map((o) => o.id));
   const bad = out.suggestions.filter((s) => !ids.has(s.styleId)).map((s) => s.styleId);
-  return bad.length ? [`styleId không hợp lệ: ${bad.join(", ")}; chỉ dùng ${[...ids].join(", ")}`] : [];
+  const errors = bad.length
+    ? [`styleId không hợp lệ: ${bad.join(", ")}; chỉ dùng ${[...ids].join(", ")}`]
+    : [];
+  // Review mode shows 2–3 choices (US3), so ask for at least two distinct styles when the catalog has them.
+  const distinct = new Set(out.suggestions.map((s) => s.styleId)).size;
+  const need = Math.min(2, ids.size);
+  if (distinct < need) errors.push(`cần ít nhất ${need} phong cách khác nhau`);
+  return errors;
 }

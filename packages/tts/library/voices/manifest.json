@@ -1,0 +1,236 @@
+{
+  "text": "Xin chào, mình là giọng đọc của MakVid Studio. Chúc bạn có một video thật ấn tượng!",
+  "voices": [
+    {
+      "id": "vits:banmai",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "banmai",
+      "language": "vi",
+      "gender": "female",
+      "region": "north",
+      "file": "vits-banmai.mp3",
+      "durationMs": 5529
+    },
+    {
+      "id": "vits:thuminh",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "thuminh",
+      "language": "vi",
+      "gender": "female",
+      "region": "north",
+      "file": "vits-thuminh.mp3",
+      "durationMs": 5228
+    },
+    {
+      "id": "vits:leminh",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "leminh",
+      "language": "vi",
+      "gender": "male",
+      "region": "north",
+      "file": "vits-leminh.mp3",
+      "durationMs": 6083
+    },
+    {
+      "id": "vits:minhquan",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "minhquan",
+      "language": "vi",
+      "gender": "male",
+      "region": "north",
+      "file": "vits-minhquan.mp3",
+      "durationMs": 5549
+    },
+    {
+      "id": "vits:ngoclam",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "ngoclam",
+      "language": "vi",
+      "gender": "female",
+      "region": "central",
+      "file": "vits-ngoclam.mp3",
+      "durationMs": 5802
+    },
+    {
+      "id": "vits:giahuy",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "giahuy",
+      "language": "vi",
+      "gender": "male",
+      "region": "central",
+      "file": "vits-giahuy.mp3",
+      "durationMs": 5778
+    },
+    {
+      "id": "vits:kimngan",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "kimngan",
+      "language": "vi",
+      "gender": "female",
+      "region": "south",
+      "file": "vits-kimngan.mp3",
+      "durationMs": 6282
+    },
+    {
+      "id": "vits:hatieumai",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "hatieumai",
+      "language": "vi",
+      "gender": "female",
+      "region": "south",
+      "file": "vits-hatieumai.mp3",
+      "durationMs": 5923
+    },
+    {
+      "id": "vits:huyphong",
+      "provider": "fpt",
+      "model": "FPT.AI-VITs",
+      "providerVoiceId": "huyphong",
+      "language": "vi",
+      "gender": "male",
+      "region": "south",
+      "file": "vits-huyphong.mp3",
+      "durationMs": 4424
+    },
+    {
+      "id": "pro:std_banmai",
+      "provider": "fpt",
+      "model": "FPT.TTS-pro",
+      "providerVoiceId": "std_banmai",
+      "language": "vi",
+      "gender": "female",
+      "region": "north",
+      "file": "pro-std_banmai.mp3",
+      "durationMs": 4984
+    },
+    {
+      "id": "pro:std_quanganh",
+      "provider": "fpt",
+      "model": "FPT.TTS-pro",
+      "providerVoiceId": "std_quanganh",
+      "language": "vi",
+      "gender": "male",
+      "region": "north",
+      "file": "pro-std_quanganh.mp3",
+      "durationMs": 4450
+    },
+    {
+      "id": "pro:fci_phuongan",
+      "provider": "fpt",
+      "model": "FPT.TTS-pro",
+      "providerVoiceId": "fci_phuongan",
+      "language": "vi",
+      "gender": "female",
+      "region": null,
+      "file": "pro-fci_phuongan.mp3",
+      "durationMs": 5193
+    },
+    {
+      "id": "pro:fci_vietkhoa",
+      "provider": "fpt",
+      "model": "FPT.TTS-pro",
+      "providerVoiceId": "fci_vietkhoa",
+      "language": "vi",
+      "gender": "male",
+      "region": null,
+      "file": "pro-fci_vietkhoa.mp3",
+      "durationMs": 4531
+    },
+    {
+      "id": "pro:fci_xuantoan",
+      "provider": "fpt",
+      "model": "FPT.TTS-pro",
+      "providerVoiceId": "fci_xuantoan",
+      "language": "vi",
+      "gender": "male",
+      "region": null,
+      "file": "pro-fci_xuantoan.mp3",
+      "durationMs": 5205
+    },
+    {
+      "id": "ultra:std_banmai",
+      "provider": "fpt",
+      "model": "FPT.TTS-ultra",
+      "providerVoiceId": "std_banmai",
+      "language": "vi",
+      "gender": "female",
+      "region": "north",
+      "file": "ultra-std_banmai.mp3",
+      "durationMs": 5398
+    },
+    {
+      "id": "ultra:std_kimngan",
+      "provider": "fpt",
+      "model": "FPT.TTS-ultra",
+      "providerVoiceId": "std_kimngan",
+      "language": "vi",
+      "gender": "female",
+      "region": "south",
+      "file": "ultra-std_kimngan.mp3",
+      "durationMs": 5062
+    },
+    {
+      "id": "ultra:std_quanganh",
+      "provider": "fpt",
+      "model": "FPT.TTS-ultra",
+      "providerVoiceId": "std_quanganh",
+      "language": "vi",
+      "gender": "male",
+      "region": "north",
+      "file": "ultra-std_quanganh.mp3",
+      "durationMs": 5001
+    },
+    {
+      "id": "ultra:std_minhquang",
+      "provider": "fpt",
+      "model": "FPT.TTS-ultra",
+      "providerVoiceId": "std_minhquang",
+      "language": "vi",
+      "gender": "male",
+      "region": null,
+      "file": "ultra-std_minhquang.mp3",
+      "durationMs": 5393
+    },
+    {
+      "id": "ultra:std_vietkhoa",
+      "provider": "fpt",
+      "model": "FPT.TTS-ultra",
+      "providerVoiceId": "std_vietkhoa",
+      "language": "vi",
+      "gender": "male",
+      "region": null,
+      "file": "ultra-std_vietkhoa.mp3",
+      "durationMs": 4883
+    },
+    {
+      "id": "ultra:fci_phuongan",
+      "provider": "fpt",
+      "model": "FPT.TTS-ultra",
+      "providerVoiceId": "fci_phuongan",
+      "language": "vi",
+      "gender": "female",
+      "region": null,
+      "file": "ultra-fci_phuongan.mp3",
+      "durationMs": 5306
+    },
+    {
+      "id": "ultra:fci_xuantoan",
+      "provider": "fpt",
+      "model": "FPT.TTS-ultra",
+      "providerVoiceId": "fci_xuantoan",
+      "language": "vi",
+      "gender": "male",
+      "region": null,
+      "file": "ultra-fci_xuantoan.mp3",
+      "durationMs": 5220
+    }
+  ]
+}

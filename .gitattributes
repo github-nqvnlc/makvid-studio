@@ -9,3 +9,4 @@
 *.srt -text
 *.m4a binary
 *.woff binary
+*.webp binary

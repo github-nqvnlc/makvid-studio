@@ -5,3 +5,4 @@ export { FptTtsProvider, parseVoiceId } from "./providers/fpt";
 export * from "./timing";
 export * from "./aligner";
 export * from "./narrate";
+export * from "./voices";

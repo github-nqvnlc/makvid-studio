@@ -1,15 +1,17 @@
-// End-to-end automatic production (US1, mode "auto"): prompt -> MP4(s) with voice, captions, music, SFX, QA,
-// and a per-step usage/cost log. The work is split into stages that persist their state in the work dir, so
+// End-to-end production: prompt -> MP4(s) with voice, captions, music, SFX, QA, and a per-step usage/cost log.
+// Mode "auto" (US1) runs every stage; mode "review" (US3) pauses after script + style suggestions and after the
+// storyboard (thumbnail grid) until the user accepts or edits. The work is split into stages that persist their state in the work dir, so
 // the same code runs in-process (CLI) or as one BullMQ job per stage on the ai / audio / render workers.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { PROMPT_VERSION, type StoryboardOutput } from "@makvid/ai";
 import type { AspectRatio, VideoSpec } from "@makvid/spec";
-import { mixAudio, pickMusic, musicLibrary, musicPath, sfxLibrary, sfxPath } from "@makvid/media";
+import { BuiltinMusicProvider, mixAudio, sfxLibrary, sfxPath, type MusicChoice } from "@makvid/media";
 import { narrate } from "@makvid/tts";
-import { StepCache, type PipelineContext, type Step, type UsageEntry } from "./context";
-import { ingest, storyboard, suggestStyles, writeScript, type ScriptResult } from "./steps/ai";
+import { hashOf, StepCache, type PipelineContext, type Step, type UsageEntry } from "./context";
+import { ingest, storyboard, styleOptions, suggestStyles, writeScript, type ScriptResult } from "./steps/ai";
 import { applyNarration, buildSpec, musicMoods, videoDurationMs } from "./steps/build";
+import { storyboardPreview, type ScenePreview } from "./steps/preview";
 import { qaAndFix, renderAll, type RenderedAspect } from "./steps/render";
 
 export interface ProduceInput {
@@ -17,15 +19,41 @@ export interface ProduceInput {
   aspects: AspectRatio[];
   durationSec?: number;
   styleId?: string; // forces a style; otherwise the top suggestion
+  /** "auto" (default) never pauses; "review" pauses for the user twice (US3). */
+  mode?: "auto" | "review";
 }
 
 export const STAGES = ["script", "style", "storyboard", "audio", "qa", "render"] as const;
-export type Stage = (typeof STAGES)[number];
+export type Stage = (typeof STAGES)[number] | "preview";
+export type ReviewPoint = "script_review" | "storyboard_review";
+
+/**
+ * Stages grouped into segments that run without stopping. Auto: one segment. Review: script + style
+ * suggestions -> pause (script_review) -> storyboard + thumbnail grid -> pause (storyboard_review) -> the rest.
+ */
+export function produceSegments(mode: ProduceInput["mode"] = "auto"): Stage[][] {
+  return mode === "review"
+    ? [
+        ["script", "style"],
+        ["storyboard", "preview"],
+        ["audio", "qa", "render"],
+      ]
+    : [[...STAGES]];
+}
+const PAUSE_AFTER: Partial<Record<Stage, ReviewPoint>> = {
+  style: "script_review",
+  preview: "storyboard_review",
+};
+const NEEDS_APPROVAL: Partial<Record<Stage, ReviewPoint>> = {
+  storyboard: "script_review",
+  audio: "storyboard_review",
+};
 /** Which worker queue runs each stage. */
 export const STAGE_QUEUE: Record<Stage, "ai" | "audio" | "render"> = {
   script: "ai",
   style: "ai",
   storyboard: "ai",
+  preview: "render",
   audio: "audio",
   qa: "render",
   render: "render",
@@ -38,11 +66,16 @@ export interface ProduceState {
   styleId?: string;
   board?: StoryboardOutput;
   spec?: VideoSpec;
-  musicId?: string;
+  music?: MusicChoice;
   mixedWav?: string;
   loudnessLufs?: number;
   qa?: { passed: boolean; attempts: number; issues: number };
   outputs?: RenderedAspect[];
+  /** Review mode: the point the pipeline is waiting at (cleared when the user resumes). */
+  awaiting?: ReviewPoint;
+  approved?: ReviewPoint[];
+  /** Storyboard thumbnail grid (review mode). */
+  previews?: ScenePreview[];
   usage: UsageEntry[];
 }
 
@@ -66,7 +99,7 @@ export function loadState(workDir: string): ProduceState | undefined {
     ? (JSON.parse(readFileSync(stateFile(workDir), "utf8")) as ProduceState)
     : undefined;
 }
-function saveState(workDir: string, s: ProduceState) {
+export function saveState(workDir: string, s: ProduceState) {
   mkdirSync(workDir, { recursive: true });
   writeFileSync(stateFile(workDir), JSON.stringify(s, null, 2));
 }
@@ -88,6 +121,10 @@ export async function runStage(
     if (v === undefined) throw new Error(`stage "${stage}" needs ${what}; run the previous stage first`);
     return v;
   };
+
+  const gate = input.mode === "review" ? NEEDS_APPROVAL[stage] : undefined;
+  if (gate && !state.approved?.includes(gate))
+    throw new Error(`stage "${stage}" waits for the user (${gate}); resume the project first`);
 
   switch (stage) {
     case "script": {
@@ -115,8 +152,17 @@ export async function runStage(
       state.board = await cache.run("storyboard", { script, styleId, v: PROMPT_VERSION }, () =>
         storyboard(ctx, script, styleId),
       );
-      const music = pickMusic({ moods: musicMoods(ctx.stylesRoot, styleId) });
-      state.musicId = music.id;
+      const moods = musicMoods(ctx.stylesRoot, styleId);
+      const provider = ctx.music ?? new BuiltinMusicProvider();
+      const minDurationMs = durationSec * 1000;
+      const seed = Number.parseInt(hashOf(input.prompt).slice(0, 8), 16);
+      let music: MusicChoice;
+      try {
+        music = await provider.choose({ moods, minDurationMs, seed });
+      } catch {
+        music = await new BuiltinMusicProvider().choose({ moods }); // catalog unavailable -> project-owned bed
+      }
+      state.music = music;
       state.spec = buildSpec({
         prompt: input.prompt,
         script,
@@ -125,8 +171,13 @@ export async function runStage(
         aspects: input.aspects,
         durationSec,
         voiceId: ctx.voiceId,
-        musicTrackId: music.id,
+        musicTrackId: `${music.provider}:${music.trackId}`,
       });
+      break;
+    }
+    case "preview": {
+      p("storyboard", "progress.preview", 0.25);
+      state.previews = await storyboardPreview(ctx, need(state.spec, "a storyboard"));
       break;
     }
     case "audio": {
@@ -150,11 +201,23 @@ export async function runStage(
       spec = applyNarration(spec, nar.words, nar.parts, nar.durationMs);
       p("tts", "progress.mix", 0.5);
       const sfx = sfxLibrary();
-      const music = musicLibrary().find((m) => m.id === state.musicId) ?? musicLibrary()[0]!;
+      const choice = state.music ?? (await new BuiltinMusicProvider().choose({ moods: [] }));
+      let musicFile: string;
+      try {
+        musicFile = await (
+          choice.provider === "builtin"
+            ? new BuiltinMusicProvider()
+            : (ctx.music ?? new BuiltinMusicProvider())
+        ).fetchAudio(choice, join(ctx.workDir, "music.audio"));
+      } catch {
+        const fb = await new BuiltinMusicProvider().choose({ moods: [] });
+        state.music = fb;
+        musicFile = await new BuiltinMusicProvider().fetchAudio(fb);
+      }
       const mixed = await mixAudio({
         narrationWav: narrationFile,
         durationMs: videoDurationMs(spec),
-        musicFile: musicPath(music),
+        musicFile,
         sfx: spec.audio.sfx.map((s) => ({
           file: sfxPath(sfx.find((x) => x.id === s.sfxId) ?? sfx[0]!),
           atMs: s.atMs,
@@ -188,7 +251,79 @@ export async function runStage(
       break;
     }
   }
+  if (input.mode === "review" && PAUSE_AFTER[stage]) state.awaiting = PAUSE_AFTER[stage];
   saveState(ctx.workDir, state);
+  return state;
+}
+
+/** Edits the user makes at the script review (all optional: an empty object accepts as is). */
+export interface ScriptReview {
+  title?: string;
+  sentences?: string[];
+  /** One of the suggestions (or any installed style). */
+  styleId?: string;
+}
+/** Edits at the storyboard review. */
+export interface StoryboardReview {
+  /** Scenes to remove; narration used only by those scenes is removed too. */
+  dropSceneIds?: string[];
+}
+
+function awaiting(workDir: string, point: ReviewPoint): ProduceState {
+  const state = loadState(workDir);
+  if (!state || state.awaiting !== point)
+    throw new Error(`project is not waiting for ${point} (now: ${state?.awaiting ?? "nothing"})`);
+  return state;
+}
+
+/** Apply the user's script review and approve it; the next segment can then run. */
+export function applyScriptReview(stylesRoot: string, workDir: string, review: ScriptReview): ProduceState {
+  const state = awaiting(workDir, "script_review");
+  const script = state.script!;
+  if (review.sentences) {
+    const sentences = review.sentences.map((x) => x.normalize("NFC").trim()).filter(Boolean);
+    if (!sentences.length) throw new Error("the script needs at least one sentence");
+    script.sentences = sentences;
+  }
+  if (review.title?.trim()) script.title = review.title.normalize("NFC").trim();
+  if (review.styleId) {
+    if (!styleOptions(stylesRoot).some((o) => o.id === review.styleId))
+      throw new Error(`unknown style "${review.styleId}"`);
+    state.styleId = review.styleId;
+  }
+  delete state.board;
+  delete state.spec;
+  delete state.previews;
+  delete state.awaiting;
+  state.approved = [...(state.approved ?? []), "script_review"];
+  saveState(workDir, state);
+  return state;
+}
+
+/** Apply the user's storyboard review (drop scenes) and approve it. */
+export function applyStoryboardReview(workDir: string, review: StoryboardReview): ProduceState {
+  const state = awaiting(workDir, "storyboard_review");
+  const spec = state.spec!;
+  const drop = new Set(review.dropSceneIds ?? []);
+  const unknown = [...drop].filter((id) => !spec.scenes.some((s) => s.id === id));
+  if (unknown.length) throw new Error(`unknown scene ${unknown.join(", ")}`);
+  const scenes = spec.scenes.filter((s) => !drop.has(s.id));
+  if (!scenes.length) throw new Error("the video needs at least one scene");
+  const used = new Set(scenes.flatMap((s) => s.scriptRefs));
+  state.spec = {
+    ...spec,
+    script: spec.script.filter((x) => used.has(x.id)),
+    scenes: scenes.map((s, i) => {
+      if (i > 0 || !s.transitionIn) return s;
+      const first = { ...s };
+      delete first.transitionIn; // the opening scene has no transition in
+      return first;
+    }),
+  };
+  state.previews = state.previews?.filter((p) => !drop.has(p.sceneId));
+  delete state.awaiting;
+  state.approved = [...(state.approved ?? []), "storyboard_review"];
+  saveState(workDir, state);
   return state;
 }
 
@@ -209,16 +344,34 @@ export function resultFromState(state: ProduceState, seconds: number): ProduceRe
   };
 }
 
+/** In-process review callbacks (CLI, tests); the web app pauses the queue flow and resumes instead. */
+export interface Reviewer {
+  script(state: ProduceState): Promise<ScriptReview>;
+  storyboard(state: ProduceState): Promise<StoryboardReview>;
+}
+
 /** In-process run of every stage (CLI, tests). Usage counts only this run's new calls. */
 export async function produceVideo(
   ctx: PipelineContext,
   input: ProduceInput,
-  opts: { cacheDir?: string } = {},
+  opts: { cacheDir?: string; reviewer?: Reviewer } = {},
 ): Promise<ProduceResult> {
   const t0 = performance.now();
   const prev = loadState(ctx.workDir);
-  if (prev) saveState(ctx.workDir, { ...prev, input, usage: [] });
+  if (prev) {
+    const next: ProduceState = { ...prev, input, usage: [] };
+    delete next.awaiting;
+    delete next.approved;
+    saveState(ctx.workDir, next);
+  }
+  if (input.mode === "review" && !opts.reviewer) throw new Error("review mode needs a reviewer");
   let state: ProduceState | undefined;
-  for (const s of STAGES) state = await runStage(ctx, s, input, opts);
+  for (const segment of produceSegments(input.mode)) {
+    for (const s of segment) state = await runStage(ctx, s, input, opts);
+    if (state?.awaiting === "script_review")
+      state = applyScriptReview(ctx.stylesRoot, ctx.workDir, await opts.reviewer!.script(state));
+    else if (state?.awaiting === "storyboard_review")
+      state = applyStoryboardReview(ctx.workDir, await opts.reviewer!.storyboard(state));
+  }
   return resultFromState(state!, Math.round((performance.now() - t0) / 100) / 10);
 }

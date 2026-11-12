@@ -204,3 +204,4 @@ export async function levelDb(file: string, fromMs: number, toMs: number): Promi
   const m = /Overall[\s\S]*?RMS level dB:\s+(-?[\d.]+|-inf)/.exec(r.stderr);
   return m && m[1] !== "-inf" ? Number(m[1]) : -120;
 }
+export * from "./providers";

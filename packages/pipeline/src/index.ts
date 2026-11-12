@@ -6,3 +6,4 @@ export * from "./steps/ai";
 export * from "./steps/build";
 export * from "./steps/render";
 export * from "./worker";
+export * from "./steps/preview";

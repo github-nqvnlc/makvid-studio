@@ -8,11 +8,11 @@ import { MfaAligner, writeWav, type SynthesisResult, type TtsProvider, type Voic
 
 export const SENTENCES = [
   "Tiền có thể tự đẻ ra tiền không?",
-  "Đó chính là sức mạnh của lãi kép khi bạn kiên nhẫn đủ lâu với khoản tiết kiệm nhỏ mỗi tháng.",
-  "Bạn cần ba thứ là vốn ban đầu, lãi suất ổn định và thật nhiều thời gian để tiền tự lớn lên.",
-  "So với lãi đơn, lãi kép tăng nhanh hơn rõ rệt sau mỗi năm và càng về sau càng mạnh mẽ.",
-  "Albert Einstein từng gọi lãi kép là kỳ quan thứ tám của thế giới theo nhiều giai thoại.",
-  "Hãy bắt đầu tiết kiệm ngay hôm nay nhé.",
+  "Đó chính là sức mạnh của lãi kép khi bạn kiên nhẫn đủ lâu với khoản tiết kiệm nhỏ mỗi tháng của mình.",
+  "Bạn cần ba thứ là vốn ban đầu, lãi suất ổn định và thật nhiều thời gian để tiền tự lớn lên từng năm.",
+  "So với lãi đơn, lãi kép tăng nhanh hơn rõ rệt sau mỗi năm và càng về sau càng mạnh mẽ hơn nhiều lần.",
+  "Albert Einstein từng gọi lãi kép là kỳ quan thứ tám của thế giới theo nhiều giai thoại được kể lại.",
+  "Hãy bắt đầu tiết kiệm ngay hôm nay, dù chỉ là một khoản nhỏ, vì thời gian chính là người bạn tốt nhất của bạn.",
 ];
 
 export const calls = { llm: 0, tts: 0, renders: 0 };
@@ -24,7 +24,12 @@ export const mockLlm: ChatAdapter = {
     let text: string;
     if (sys.includes("LỜI ĐỌC")) text = JSON.stringify({ title: "Sức mạnh lãi kép", sentences: SENTENCES });
     else if (sys.includes("đạo diễn hình ảnh"))
-      text = JSON.stringify({ suggestions: [{ styleId: "minimal", reason: "Rõ ràng, chuyên nghiệp" }] });
+      text = JSON.stringify({
+        suggestions: [
+          { styleId: "minimal", reason: "Rõ ràng, chuyên nghiệp" },
+          { styleId: "kinetic", reason: "Chữ chuyển động, cuốn hút" },
+        ],
+      });
     else if (sys.includes("CHỮ TRÊN MÀN HÌNH"))
       text = JSON.stringify({
         scenes: [

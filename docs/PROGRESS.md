@@ -44,3 +44,20 @@
 - Acceptance (`apps/cli/scripts/m2-acceptance.ts`): 10/10 clean, caption p95 ≤ 24 ms, −14 LUFS, 42.5–49.4 s,
   avg $0.0164/video. Report `docs/reports/M2.md`.
 - Next: GATE M2 approval, then M3.
+
+## 2026-11-12 — GATE M2 approved; M3 started (Claude Code)
+
+- Product-owner decisions: music must come from a commercially licensed library (ADR 0007 pending provider
+  choice); users pick the voice from a list with preview clips (default `vits:banmai`). Tasks T108a/T108b added.
+
+## 2026-11-12 — M3 in progress: music, voices, review mode (Claude Code)
+
+- T108b: `MusicProvider` (`packages/media/src/providers.ts`): Soundstripe API + procedural fallback; ADR 0007
+  (product owner must open a Soundstripe account / trial key `SOUNDSTRIPE_API_KEY`, contract before M5).
+- T108a (library part): 21 FPT voice preview clips + `manifest.json` in `packages/tts/library/voices`
+  (`gen-voice-previews.ts`, $0.077), `voiceCatalog()` / `voicePreviewPath()`; picker UI pending (web app).
+- US3 review mode (T088–T091): `mode: "review"` splits the stages into 3 segments with pauses
+  `script_review` and `storyboard_review`; `startProduction` / `resumeProduction` (queue), `Reviewer`
+  (in-process); `preview` stage renders the storyboard thumbnail grid; `makvid golden <id|all> --thumbnails`.
+  Style suggestions now require ≥ 2 distinct styles (`PROMPT_VERSION` m3.1). Integration files run serially.
+- Next: web app (T092–T107), styles 4–8 (T150–T154), M3 report.

@@ -188,13 +188,13 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 ### Tests for User Story 3
 
-- [ ] T088 [P] [US3] Integration test for review-mode pauses and resume in `tests/integration/pipeline-review.test.ts`
+- [x] T088 [P] [US3] Integration test for review-mode pauses and resume in `tests/integration/pipeline-review.test.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T089 [US3] Add `awaiting_script_review` / `awaiting_storyboard_review` states and resume handlers to `packages/queue/src/flows/produce-video.ts`
-- [ ] T090 [P] [US3] Generate static style thumbnails from each pack's demo into `packages/styles/<id>/demo/thumbnail.webp` via `makvid golden --thumbnails`
-- [ ] T091 [US3] Implement storyboard thumbnail grid generation (one keyframe per scene) in `apps/worker-render/src/steps/storyboard-preview.ts`
+- [x] T089 [US3] Add `awaiting_script_review` / `awaiting_storyboard_review` states and resume handlers to `packages/queue/src/flows/produce-video.ts` — _done as `startProduction` / `resumeProduction` + `produceSegments` in `packages/pipeline` (queue package stays generic)_
+- [x] T090 [P] [US3] Generate static style thumbnails from each pack's demo into `packages/styles/<id>/demo/thumbnail.webp` via `makvid golden --thumbnails`
+- [x] T091 [US3] Implement storyboard thumbnail grid generation (one keyframe per scene) in `apps/worker-render/src/steps/storyboard-preview.ts` — _done as the `preview` stage, `packages/pipeline/src/steps/preview.ts` (render queue)_
 
 **Checkpoint**: Review mode works via CLI/API; UI added in US2 phase.
 
@@ -227,6 +227,8 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 - [ ] T105 [P] [US2] Build version history panel (undo, redo, restore) in `apps/web/src/components/VersionHistory.tsx`
 - [ ] T106 [US2] Build downloads (MP4 per aspect, SRT, thumbnail via signed URLs) in `apps/web/src/components/Downloads.tsx`
 - [ ] T107 [US2] Add `docker/web.Dockerfile`, worker Dockerfiles and root `docker/compose.yml` running the full stack with `docker compose up -d`
+- [ ] T108a [US2] Voice picker: list voices (FPT VITs / pro / ultra) with gender + region and a pre-generated preview clip per voice (`packages/tts/library/voices/`), selectable per project; default `vits:banmai` (product-owner decision 2026-11-12) — _library + catalog done (21 clips, `voiceCatalog()`); picker UI with the web app_ — _library + catalog done (21 clips, `voiceCatalog()`); picker UI comes with the web app_
+- [x] T108b [US2] Licensed music library: integrate the commercial music provider chosen by the product owner (ADR 0007) behind a `MusicProvider` interface; keep procedural beds as offline fallback (product-owner decision 2026-11-12)
 - [ ] T108 [US2] Write M3 report `docs/reports/M3.md` (non-coder walkthrough recording, E2E results, 8 style packs)
 
 **🛑 GATE M3**: Non-coder creates and edits 3 times without seeing technical info; E2E pass; 8 style packs (Phase 12 T150–T154).
