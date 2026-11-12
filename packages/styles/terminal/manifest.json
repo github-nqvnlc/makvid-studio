@@ -1,0 +1,27 @@
+{
+  "id": "terminal",
+  "version": "1.0.0",
+  "name": {
+    "vi": "Dòng lệnh",
+    "en": "Terminal"
+  },
+  "description": {
+    "vi": "Cửa sổ dòng lệnh, chữ gõ từng ký tự, tô màu cú pháp. Hợp video giới thiệu phần mềm, changelog.",
+    "en": "Terminal window, typed text and syntax colours. For software intros, repos and changelogs."
+  },
+  "contentTypes": ["changelog", "tech", "developer", "tutorial"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    }
+  ],
+  "musicMoods": ["tech", "calm"],
+  "perfBudget": {
+    "maxMsPerFrame": 80
+  }
+}

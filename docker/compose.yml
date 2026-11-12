@@ -1,0 +1,109 @@
+# Full stack: docker compose -f docker/compose.yml up -d --build   ->  http://localhost:3000
+# Infra (postgres, valkey, seaweedfs, worker-align) + migrate (one shot) + web + the three stage workers.
+# Secrets come from ../.env (FPT_AI_API_KEY, BETTER_AUTH_SECRET, ...). MAKVID_MOCK_PROVIDERS=1 runs the
+# whole stack without paid calls.
+name: makvid
+x-app-env: &app-env
+  DATABASE_URL: postgres://${POSTGRES_USER:-makvid}:${POSTGRES_PASSWORD:-makvid-dev}@postgres:5432/${POSTGRES_DB:-makvid}
+  VALKEY_URL: redis://valkey:6379
+  S3_REGION: us-east-1
+  S3_BUCKET: ${S3_BUCKET:-makvid-dev}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-makvid-dev-access}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-makvid-dev-secret-change-me}
+  S3_FORCE_PATH_STYLE: "true"
+  ALIGN_URL: http://worker-align:8090
+  WORK_ROOT: /work
+  MAKVID_ROOT: /app
+  MAKVID_MOCK_PROVIDERS: ${MAKVID_MOCK_PROVIDERS:-0}
+  FPT_AI_API_KEY: ${FPT_AI_API_KEY:-}
+  SOUNDSTRIPE_API_KEY: ${SOUNDSTRIPE_API_KEY:-}
+
+x-worker: &worker
+  build: { context: .., dockerfile: docker/worker-render.Dockerfile }
+  image: makvid-worker:local
+  working_dir: /app
+  volumes: [work:/work]
+  depends_on:
+    migrate: { condition: service_completed_successfully }
+  restart: unless-stopped
+
+services:
+  postgres:
+    image: postgres:17.11-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-makvid}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-makvid-dev}
+      POSTGRES_DB: ${POSTGRES_DB:-makvid}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-makvid}"]
+      interval: 5s
+      retries: 20
+
+  valkey:
+    image: valkey/valkey:8.1.11-alpine
+    command: ["valkey-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    volumes: [valkeydata:/data]
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      retries: 20
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.48
+    command: ["server", "-dir=/data", "-s3", "-s3.port=8333", "-s3.config=/etc/seaweedfs/s3.json"]
+    ports: ["${S3_PORT:-8333}:8333"] # browsers download the signed URLs from here
+    volumes:
+      - seaweeddata:/data
+      - ./seaweedfs/s3.dev.json:/etc/seaweedfs/s3.json:ro
+
+  worker-align:
+    build: { context: .., dockerfile: docker/worker-align.Dockerfile }
+    image: makvid-align:dev
+
+  migrate:
+    <<: *worker
+    restart: "no"
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment: *app-env
+    entrypoint: ["node", "--import", "tsx", "packages/db/scripts/migrate.ts"]
+
+  web:
+    build: { context: .., dockerfile: docker/web.Dockerfile }
+    image: makvid-web:local
+    ports: ["${WEB_PORT:-3000}:3000"]
+    volumes: [work:/work]
+    environment:
+      <<: *app-env
+      # The web server only signs download URLs; they must point at the browser-reachable endpoint.
+      S3_ENDPOINT: ${S3_PUBLIC_ENDPOINT:-http://localhost:8333}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET in .env}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      valkey: { condition: service_healthy }
+    restart: unless-stopped
+
+  worker-ai:
+    <<: *worker
+    environment: { <<: *app-env, S3_ENDPOINT: "http://seaweedfs:8333" }
+    entrypoint: ["node", "--import", "tsx", "apps/worker-ai/src/index.ts"]
+
+  worker-audio:
+    <<: *worker
+    environment: { <<: *app-env, S3_ENDPOINT: "http://seaweedfs:8333" }
+    entrypoint: ["node", "--import", "tsx", "apps/worker-audio/src/index.ts"]
+
+  worker-render:
+    <<: *worker
+    environment: { <<: *app-env, S3_ENDPOINT: "http://seaweedfs:8333", RENDER_WORKERS: "4" }
+    entrypoint: ["node", "--import", "tsx", "apps/worker-render/src/index.ts"]
+
+volumes:
+  pgdata:
+  valkeydata:
+  seaweeddata:
+  work:

@@ -7,3 +7,7 @@ export * from "./steps/build";
 export * from "./steps/render";
 export * from "./worker";
 export * from "./steps/preview";
+export * from "./steps/chat";
+export * from "./sink";
+export * from "./service";
+export * from "./app";

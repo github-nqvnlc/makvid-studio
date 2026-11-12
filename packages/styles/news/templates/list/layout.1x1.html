@@ -1,0 +1,7 @@
+<div class="region list">
+  <div class="ticker" aria-hidden="true"><span class="tk-label">TIN NHANH</span><span class="tk-track"><span class="tk-run">{{text title}} • {{text title}} • {{text title}} • </span></span></div>
+  <h2 class="list-title" data-qa="title">{{fit title w=928 h=170 max=76 min=50 lh=1.12 font=display lines=2}}</h2>
+  <ol class="items">{{#each items}}
+    <li class="item" data-qa="item"><span class="bullet" style="width:80px">{{@num}}</span><span class="item-text">{{fit item w=820 h=72 max=50 min=28 lh=1.25 font=body lines=2 group=items}}</span></li>{{/each}}
+  </ol>
+</div>

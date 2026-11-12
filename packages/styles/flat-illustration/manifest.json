@@ -1,0 +1,32 @@
+{
+  "id": "flat-illustration",
+  "version": "1.0.0",
+  "name": {
+    "vi": "Minh hoạ phẳng",
+    "en": "Flat illustration"
+  },
+  "description": {
+    "vi": "Màu pastel, biểu tượng minh hoạ phẳng, chữ bo tròn thân thiện. Hợp giáo dục, mẹo vặt, trẻ trung.",
+    "en": "Pastel colours, flat illustrated icons and friendly rounded type. For education and tips."
+  },
+  "contentTypes": ["education", "tips", "lifestyle", "explainer"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    },
+    {
+      "name": "lucide-static",
+      "version": "1.63.0",
+      "license": "ISC"
+    }
+  ],
+  "musicMoods": ["upbeat", "calm"],
+  "perfBudget": {
+    "maxMsPerFrame": 80
+  }
+}

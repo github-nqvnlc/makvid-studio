@@ -11,7 +11,7 @@
     "typecheck": "tsc -p .",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
-    "start": "tsx src/index.ts"
+    "start": "node --env-file-if-exists=../../.env --import tsx src/index.ts"
   },
   "devDependencies": {
     "@makvid/config": "workspace:*",

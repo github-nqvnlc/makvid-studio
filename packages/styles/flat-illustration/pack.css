@@ -1,0 +1,389 @@
+/* Flat illustration — pastel shapes, flat icons, rounded friendly type. */
+.a-16x9 {
+  --cap-band: 170px;
+  --gap: 36px;
+}
+.a-9x16 {
+  --cap-band: 200px;
+  --gap: 40px;
+}
+.a-1x1 {
+  --cap-band: 150px;
+  --gap: 28px;
+}
+.a-4x5 {
+  --cap-band: 160px;
+  --gap: 32px;
+}
+.pack-flat-illustration {
+  --reserve: 0px;
+  background: var(--c-bg);
+}
+.pack-flat-illustration h1,
+.pack-flat-illustration h2,
+.pack-flat-illustration p,
+.pack-flat-illustration blockquote,
+.pack-flat-illustration ol,
+.pack-flat-illustration ul,
+.pack-flat-illustration li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.region {
+  position: absolute;
+  left: var(--safe-left);
+  top: calc(var(--safe-top) + var(--reserve));
+  width: var(--safe-w);
+  height: calc(var(--safe-h) - var(--cap-band) - var(--reserve));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap);
+  box-sizing: border-box;
+  /* own stacking context: decorations with negative z-index stay above the stage background */
+  isolation: isolate;
+}
+.headline,
+.title-text,
+.hl-text,
+.list-title,
+.cmp-title,
+.q-text,
+.cta-head,
+.card-label,
+.stat-value,
+.cta-btn {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--c-fg);
+}
+.kicker,
+.subtitle,
+.item-text,
+.ci,
+.stat-label,
+.q-author,
+.cta-handle {
+  font-family: var(--f-body);
+  font-weight: var(--fw-body);
+  color: var(--c-muted);
+}
+.item-text,
+.ci {
+  color: var(--c-fg);
+}
+.w {
+  position: relative;
+}
+.g {
+  display: inline-block;
+}
+.kicker {
+  color: var(--accent);
+}
+.rule {
+  width: 120px;
+  height: 10px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+}
+.deco {
+  display: none;
+}
+
+.hl-text .w.em {
+  color: var(--accent);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.6);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.bullet {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background: var(--accent);
+  color: var(--c-accentInk);
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  border-radius: 50%;
+}
+.a-16x9 .bullet,
+.a-9x16 .bullet {
+  font-size: 40px;
+}
+.a-1x1 .bullet,
+.a-4x5 .bullet {
+  font-size: 34px;
+}
+
+.cards {
+  display: flex;
+  gap: 48px;
+  align-items: stretch;
+}
+.a-9x16 .cards {
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.7);
+}
+.card {
+  box-sizing: border-box;
+  background: var(--c-surface);
+  border-radius: 18px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.a-9x16 .card {
+  padding: 40px;
+}
+.a-1x1 .card,
+.a-4x5 .card {
+  padding: 32px;
+}
+.card.right .card-label {
+  color: var(--accent);
+}
+.card-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ci {
+  position: relative;
+  padding-left: 36px;
+}
+.ci::before {
+  content: "•";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  color: var(--c-muted);
+}
+.card.right .ci::before {
+  color: var(--accent);
+}
+
+.stat-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.stat-value .suffix,
+.stat-value .prefix {
+  color: var(--c-fg);
+}
+.a-16x9 .stat-value .suffix {
+  font-size: 88px;
+}
+.a-9x16 .stat-value .suffix {
+  font-size: 76px;
+}
+.a-1x1 .stat-value .suffix {
+  font-size: 60px;
+}
+.a-4x5 .stat-value .suffix {
+  font-size: 64px;
+}
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 220px;
+}
+.a-16x9 .bars {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 36%;
+  height: 300px;
+}
+.a-9x16 .bars {
+  height: 300px;
+}
+.a-4x5 .bars {
+  height: 200px;
+}
+.a-1x1 .bars {
+  height: 140px;
+}
+.bar-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.bar {
+  background: var(--c-line);
+  border-radius: 6px 6px 0 0;
+  transform-origin: 50% 100%;
+}
+.bar-col:last-child .bar {
+  background: var(--accent);
+}
+.bar-label {
+  display: none;
+}
+
+.qmark {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--accent);
+  font-size: 220px;
+  line-height: 0.7;
+  height: 0.42em;
+}
+.q-author::before {
+  content: "— ";
+}
+.q-author .fit {
+  display: inline-block;
+}
+
+.cta-btn {
+  align-self: flex-start;
+  background: var(--accent);
+  color: var(--c-accentInk);
+  border-radius: 14px;
+  padding: 0.3em 0.8em;
+}
+.cta-btn .fit {
+  color: var(--c-accentInk);
+}
+
+#captions .fit {
+  font-family: var(--f-caption);
+  font-weight: var(--fw-caption);
+  color: var(--c-captionFg);
+  background: var(--c-captionBg);
+  padding: 0.15em 0.5em;
+  border-radius: 10px;
+}
+#captions .cap-w.on {
+  color: var(--accent);
+}
+
+/* The illustration sits in the top margin (outside the text region) so it never covers text. */
+.illus {
+  position: absolute;
+  right: 0;
+  z-index: -1;
+}
+.a-9x16 .illus {
+  top: -176px;
+  width: 160px;
+  height: 160px;
+}
+.a-16x9 .illus {
+  top: -58px;
+  right: -60px;
+  width: 112px;
+  height: 112px;
+}
+.a-1x1 .illus {
+  top: -70px;
+  right: -64px;
+  width: 120px;
+  height: 120px;
+}
+.a-4x5 .illus {
+  top: -88px;
+  right: -60px;
+  width: 128px;
+  height: 128px;
+}
+.illus-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 42% 58% 55% 45% / 48% 40% 60% 52%;
+  background: var(--c-p1);
+}
+.t-title .illus-bg,
+.t-quote .illus-bg {
+  background: var(--c-p3);
+}
+.t-list .illus-bg,
+.t-cta .illus-bg {
+  background: var(--c-p2);
+}
+.t-compare .illus-bg,
+.t-highlight .illus-bg {
+  background: var(--c-p4);
+}
+.illus-icon {
+  position: absolute;
+  left: 22%;
+  top: 22%;
+  width: 56%;
+  height: 56%;
+  color: var(--c-fg);
+  stroke-width: 1.6;
+}
+.rule {
+  height: 12px;
+  border-radius: 6px;
+}
+.bullet {
+  background: var(--c-p2);
+  color: var(--c-fg);
+}
+.item:nth-child(2) .bullet {
+  background: var(--c-p3);
+}
+.item:nth-child(3) .bullet {
+  background: var(--c-p4);
+}
+.item:nth-child(4) .bullet {
+  background: var(--c-p1);
+}
+.card {
+  border-radius: 28px;
+  border: 3px solid var(--c-line);
+}
+.card.left {
+  background: #fff;
+}
+.card.right {
+  background: #fff;
+  border-color: var(--accent);
+}
+.hl-text .w.em {
+  z-index: 0;
+}
+.hl-text .w.em::before {
+  content: "";
+  position: absolute;
+  left: -0.08em;
+  right: -0.08em;
+  bottom: 0.08em;
+  height: 0.38em;
+  background: var(--c-p1);
+  border-radius: 0.2em;
+  z-index: -1;
+}
+.cta-btn {
+  border-radius: 999px;
+  box-shadow: 0 8px 0 #d9603f;
+}
+.bar {
+  background: var(--c-p4);
+}
+#captions .fit {
+  border-radius: 18px;
+}

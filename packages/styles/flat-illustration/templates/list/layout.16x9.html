@@ -1,0 +1,7 @@
+<div class="region list">
+  <div class="illus" aria-hidden="true"><span class="illus-bg"></span><svg class="illus-icon" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M13 5h8" /> <path d="M13 12h8" /> <path d="M13 19h8" /> <path d="m3 17 2 2 4-4" /> <path d="m3 7 2 2 4-4" /> </svg></div>
+  <h2 class="list-title" data-qa="title">{{fit title w=1690 h=197 max=88 min=56 lh=1.12 font=display lines=2}}</h2>
+  <ol class="items">{{#each items}}
+    <li class="item" data-qa="item"><span class="bullet" style="width:90px">{{@num}}</span><span class="item-text">{{fit item w=1572 h=82 max=56 min=32 lh=1.25 font=body lines=2 group=items}}</span></li>{{/each}}
+  </ol>
+</div>

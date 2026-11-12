@@ -1,0 +1,27 @@
+{
+  "id": "news",
+  "version": "1.0.0",
+  "name": {
+    "vi": "Bản tin",
+    "en": "News"
+  },
+  "description": {
+    "vi": "Phong cách bản tin truyền hình: dải tin chạy, nhãn NÓNG, tiêu đề chữ có chân.",
+    "en": "TV-news look: running ticker, HOT label, serif headlines and lower-thirds."
+  },
+  "contentTypes": ["news", "update", "announcement", "explainer"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    }
+  ],
+  "musicMoods": ["corporate", "tech"],
+  "perfBudget": {
+    "maxMsPerFrame": 80
+  }
+}

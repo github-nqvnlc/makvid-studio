@@ -20,7 +20,10 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   name: text("name"),
   locale: text("locale").notNull().default("vi"),
+  emailVerified: boolean("email_verified").notNull().default(false),
+  image: text("image"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const workspaces = pgTable("workspaces", {
@@ -113,6 +116,8 @@ export const projects = pgTable("projects", {
   createdAt: ts("created_at").notNull().defaultNow(),
   updatedAt: ts("updated_at").notNull().defaultNow(),
   deletedAt: ts("deleted_at"),
+  settings: jsonb("settings").notNull().default({}),
+  runId: uuid("run_id"),
 });
 
 export const projectVersions = pgTable("project_versions", {
@@ -207,5 +212,62 @@ export const usageRecords = pgTable("usage_records", {
   videoSecondsGenerated: real("video_seconds_generated").notNull().default(0),
   renderSeconds: real("render_seconds").notNull().default(0),
   costUsd: numeric("cost_usd", { precision: 12, scale: 6 }),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+// ---- 0003: auth (Better Auth) + chat (migrations/0003_auth_chat.sql) ----
+
+export const authSessions = pgTable("auth_sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  token: text("token").notNull().unique(),
+  expiresAt: ts("expires_at").notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+  updatedAt: ts("updated_at").notNull().defaultNow(),
+});
+
+export const authAccounts = pgTable("auth_accounts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: ts("access_token_expires_at"),
+  refreshTokenExpiresAt: ts("refresh_token_expires_at"),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+  updatedAt: ts("updated_at").notNull().defaultNow(),
+});
+
+export const authVerifications = pgTable("auth_verifications", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: ts("expires_at").notNull(),
+  createdAt: ts("created_at").notNull().defaultNow(),
+  updatedAt: ts("updated_at").notNull().defaultNow(),
+});
+
+export const chatRole = pgEnum("chat_role", ["user", "assistant"]);
+export const chatKind = pgEnum("chat_kind", ["edit", "clarify", "info"]);
+
+export const chatMessages = pgTable("chat_messages", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  projectId: uuid("project_id").notNull(),
+  role: chatRole("role").notNull(),
+  kind: chatKind("kind").notNull(),
+  content: text("content").notNull(),
+  targetSceneId: text("target_scene_id"),
+  versionId: uuid("version_id"),
   createdAt: ts("created_at").notNull().defaultNow(),
 });

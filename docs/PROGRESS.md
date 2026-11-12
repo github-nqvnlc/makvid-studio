@@ -61,3 +61,26 @@
   (in-process); `preview` stage renders the storyboard thumbnail grid; `makvid golden <id|all> --thumbnails`.
   Style suggestions now require ≥ 2 distinct styles (`PROMPT_VERSION` m3.1). Integration files run serially.
 - Next: web app (T092–T107), styles 4–8 (T150–T154), M3 report.
+
+## 2026-11-12 — M3 web app back end in progress, STOPPED mid-way (Claude Code)
+
+- Done + tested: migration 0003 (Better Auth tables on `users`, `chat_messages`, `withUser` RLS, project
+  settings/run_id; db RLS 8/8), chat→patch (`packages/ai/src/prompts/chat.ts`, `packages/pipeline/src/steps/chat.ts`,
+  6/6), worker `StageHooks` + `dbSink` (status, jobs progress, usage, versions, outputs to S3), project service
+  (`packages/pipeline/src/service.ts`: create, resume, chat, undo/redo, restore, duplicate; integration 6/6 on the
+  compose stack), mocks moved to `@makvid/pipeline/testing` (`MAKVID_MOCK_PROVIDERS=1`). PROMPT_VERSION m3.2.
+- apps/web: deps installed only (next 16.4.3, next-intl 4.14.9, better-auth 1.7.14, react 19.2.9, playwright
+  1.64.1); no pages yet. Next 16 uses `proxy.ts` (middleware renamed).
+- Next: Next.js scaffold + next-intl + Better Auth (T096/T097), SSE (T101), pages (T102–T106, voice picker T108a),
+  Docker (T107), E2E (T092/T093), T095 timing test, styles T150–T154, M3 report. Nothing committed since 8cfc390.
+
+## 2026-11-12 — M3 web app done (Claude Code)
+
+- apps/web (Next.js 16.4.3, next-intl vi/en, Better Auth): create page with voice picker + preview clips,
+  editor (MP4 preview, scene strip, chat, undo/redo, versions, downloads), review screens (script + style
+  cards with thumbnails, storyboard grid), SSE progress, friendly error codes. ADR 0008.
+- Backend: migrations 0003/0004, `withUser`, project service, `dbSink`, `runWorkerApp`, `pnpm db:migrate`,
+  `scripts/dev-stack.mjs` (`pnpm dev:mock`), Docker: `docker/web.Dockerfile`, `docker/compose.yml`.
+- Verified: E2E (Playwright) create → 3 chat edits → download, and no-tech-leak scan: pass on the dev stack and
+  on the Docker stack; partial re-render 1 scene vs 8: 23.8 s vs 105.1 s (4.4×, T095); integration suites.
+- Next: styles 4–8 (T150–T154), M3 report + walkthrough (T108), GATE M3.

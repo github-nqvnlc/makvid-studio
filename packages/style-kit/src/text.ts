@@ -100,3 +100,33 @@ export function fitGroup(texts: string[], o: FitOptions): FitResult[] {
   const shared = Math.min(o.maxFontSize, ...sizes);
   return texts.map((t) => fitText(t, { ...o, maxFontSize: shared }));
 }
+
+/** Lowercase, accent-free, punctuation-free key for matching on-screen text with spoken words. */
+export function cueKey(word: string): string {
+  return word
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/đ/gi, "d")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]/gu, "");
+}
+
+/**
+ * Time (scene-local seconds) when the voice-over says the first word of `phrase`, searching from `after`;
+ * undefined when the phrase is not spoken (the caller falls back to an even schedule).
+ */
+export function findCue(
+  narration: ReadonlyArray<{ text: string; start: number }>,
+  phrase: string,
+  after = 0,
+): number | undefined {
+  const keys = phrase
+    .split(/\s+/)
+    .map(cueKey)
+    .filter((k) => k.length > 1);
+  for (const key of keys.slice(0, 3)) {
+    const hit = narration.find((w) => w.start >= after && cueKey(w.text) === key);
+    if (hit) return hit.start;
+  }
+  return undefined;
+}

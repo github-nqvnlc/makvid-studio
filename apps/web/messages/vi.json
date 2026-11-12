@@ -1,0 +1,133 @@
+{
+  "app": {
+    "name": "MakVid Studio",
+    "tagline": "Biến ý tưởng thành video ngắn có giọng đọc, phụ đề và nhạc nền."
+  },
+  "nav": {
+    "projects": "Dự án",
+    "newProject": "Tạo video",
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "signOut": "Đăng xuất",
+    "language": "English"
+  },
+  "auth": {
+    "signInTitle": "Đăng nhập",
+    "signUpTitle": "Tạo tài khoản",
+    "name": "Tên của bạn",
+    "email": "Email",
+    "password": "Mật khẩu (ít nhất 8 ký tự)",
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "google": "Tiếp tục với Google",
+    "toSignUp": "Chưa có tài khoản? Đăng ký",
+    "toSignIn": "Đã có tài khoản? Đăng nhập",
+    "failed": "Email hoặc mật khẩu chưa đúng.",
+    "signUpFailed": "Chưa tạo được tài khoản. Kiểm tra email và mật khẩu rồi thử lại."
+  },
+  "projects": {
+    "title": "Dự án của bạn",
+    "empty": "Chưa có video nào. Bắt đầu bằng một ý tưởng nhé!",
+    "open": "Mở"
+  },
+  "status": {
+    "draft": "Nháp",
+    "ingesting": "Đang đọc ý tưởng",
+    "scripting": "Đang viết lời đọc",
+    "awaiting_script_review": "Chờ bạn duyệt kịch bản",
+    "styling": "Đang chọn phong cách",
+    "storyboarding": "Đang phân cảnh",
+    "awaiting_storyboard_review": "Chờ bạn duyệt phân cảnh",
+    "producing_audio": "Đang tạo giọng đọc",
+    "compiling": "Đang chuẩn bị",
+    "qa": "Đang kiểm tra chất lượng",
+    "rendering": "Đang dựng video",
+    "ready": "Sẵn sàng",
+    "needs_attention": "Cần bạn xem lại",
+    "failed": "Chưa hoàn thành"
+  },
+  "create": {
+    "title": "Tạo video mới",
+    "idea": "Ý tưởng video",
+    "ideaPlaceholder": "Ví dụ: Giải thích lãi kép cho người mới đi làm",
+    "aspect": "Khung hình",
+    "aspects": {
+      "9:16": "Dọc 9:16 (TikTok, Reels)",
+      "16:9": "Ngang 16:9 (YouTube)",
+      "1:1": "Vuông 1:1",
+      "4:5": "Dọc 4:5 (Facebook)"
+    },
+    "duration": "Độ dài (giây)",
+    "mode": "Cách làm",
+    "auto": "Tự động",
+    "autoHint": "Làm một mạch đến khi có video.",
+    "review": "Duyệt từng bước",
+    "reviewHint": "Dừng để bạn sửa kịch bản, chọn phong cách và duyệt phân cảnh.",
+    "voice": "Giọng đọc",
+    "submit": "Tạo video",
+    "submitting": "Đang gửi…",
+    "tooShort": "Hãy viết ý tưởng dài hơn một chút."
+  },
+  "voices": {
+    "standard": "Tiêu chuẩn",
+    "pro": "Pro",
+    "ultra": "Ultra (tự nhiên nhất)",
+    "female": "Nữ",
+    "male": "Nam",
+    "north": "Miền Bắc",
+    "central": "Miền Trung",
+    "south": "Miền Nam",
+    "other": "Giọng chuẩn",
+    "listen": "Nghe thử",
+    "default": "Mặc định"
+  },
+  "editor": {
+    "preview": "Xem trước",
+    "scenes": "Các cảnh",
+    "scene": "Cảnh {n}",
+    "chatTitle": "Chỉnh sửa bằng lời",
+    "chatPlaceholder": "Ví dụ: Đổi tiêu đề thành: Lãi kép là gì?",
+    "send": "Gửi",
+    "sending": "Đang xử lý…",
+    "chatEmpty": "Hãy nói điều bạn muốn thay đổi, mình sẽ sửa đúng cảnh đó.",
+    "undo": "Hoàn tác",
+    "redo": "Làm lại",
+    "versions": "Lịch sử phiên bản",
+    "version": "Phiên bản {n}",
+    "current": "Đang dùng",
+    "restore": "Khôi phục",
+    "duplicate": "Nhân bản dự án",
+    "downloads": "Tải về",
+    "video": "Video {aspect}",
+    "subtitles": "Phụ đề (.srt)",
+    "thumbnail": "Ảnh bìa",
+    "working": "Đang làm video của bạn",
+    "noVideo": "Video sẽ xuất hiện ở đây khi hoàn thành.",
+    "byYou": "Bạn sửa",
+    "byAi": "Tạo tự động"
+  },
+  "review": {
+    "scriptTitle": "Duyệt kịch bản",
+    "scriptHint": "Sửa từng câu lời đọc nếu cần, rồi chọn phong cách hình ảnh.",
+    "videoTitle": "Tiêu đề",
+    "sentence": "Câu {n}",
+    "styles": "Phong cách đề xuất",
+    "chosen": "Đã chọn",
+    "continue": "Tiếp tục",
+    "storyboardTitle": "Duyệt phân cảnh",
+    "storyboardHint": "Bỏ chọn những cảnh bạn không muốn giữ, rồi bấm tạo video.",
+    "keep": "Giữ cảnh này",
+    "makeVideo": "Tạo video",
+    "atLeastOne": "Cần giữ ít nhất một cảnh."
+  },
+  "errors": {
+    "busy": "Video đang được làm, bạn đợi chút rồi sửa tiếp nhé.",
+    "conflict": "Dự án vừa được thay đổi ở nơi khác. Tải lại trang rồi thử lại.",
+    "invalid": "Thông tin chưa hợp lệ, bạn kiểm tra lại giúp mình.",
+    "not_found": "Không tìm thấy dự án này.",
+    "nothing_to_undo": "Không còn gì để hoàn tác.",
+    "nothing_to_redo": "Không còn gì để làm lại.",
+    "unauthorized": "Bạn cần đăng nhập.",
+    "generic": "Có lỗi xảy ra. Bạn thử lại sau ít phút nhé."
+  }
+}

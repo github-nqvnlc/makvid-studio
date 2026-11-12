@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fitGroup, fitText, splitGraphemes, splitWords, type Measure } from "../src";
+import { cueKey, findCue, fitGroup, fitText, splitGraphemes, splitWords, type Measure } from "../src";
 
 // Deterministic fake metrics: every grapheme is 0.55 em wide, a space 0.3 em.
 const measure: Measure = (text, size) =>
@@ -77,5 +77,32 @@ describe("fitText", () => {
       maxHeight: 150,
     });
     expect(new Set(rs.map((r) => r.fontSize)).size).toBe(1);
+  });
+});
+
+describe("findCue (narration sync)", () => {
+  const narration = [
+    { text: "Bạn", start: 0.2 },
+    { text: "cần", start: 0.5 },
+    { text: "vốn", start: 1.1 },
+    { text: "ban", start: 1.3 },
+    { text: "đầu,", start: 1.5 },
+    { text: "lãi", start: 2.4 },
+    { text: "suất", start: 2.6 },
+    { text: "và", start: 3.0 },
+    { text: "Thời", start: 3.3 },
+    { text: "gian.", start: 3.6 },
+  ];
+  it("finds when the voice-over says an on-screen phrase (accent and case insensitive)", () => {
+    expect(findCue(narration, "Vốn ban đầu")).toBe(1.1);
+    expect(findCue(narration, "Lãi suất ổn định")).toBe(2.4);
+    expect(findCue(narration, "thoi gian dai")).toBe(3.3);
+  });
+  it("searches after a given time and returns undefined when the phrase is never spoken", () => {
+    expect(findCue(narration, "vốn", 1.2)).toBeUndefined();
+    expect(findCue(narration, "Cổ phiếu")).toBeUndefined();
+  });
+  it("normalises đ and punctuation", () => {
+    expect(cueKey("Đầu,")).toBe("dau");
   });
 });

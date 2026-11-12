@@ -47,6 +47,8 @@ export interface TemplateContext {
   tokens: Tokens;
   accentColor?: string;
   emphasisWords: string[];
+  /** Spoken words of the scene (scene-local seconds); use findCue() to sync reveals to the voice-over. */
+  narration: Array<{ text: string; start: number }>;
   q<T extends Element = HTMLElement>(selector: string): T | null;
   qa<T extends Element = HTMLElement>(selector: string): T[];
   /** Enter animation preset; durations are divided by `speed`. */

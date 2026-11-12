@@ -11,6 +11,7 @@ export type Step =
   | "ingest"
   | "script"
   | "style_suggest"
+  | "chat_edit"
   | "storyboard"
   | "tts"
   | "align"

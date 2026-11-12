@@ -1,0 +1,19 @@
+{
+  "slots": {
+    "headline": {
+      "type": "text",
+      "required": true,
+      "maxLength": 48
+    },
+    "action": {
+      "type": "text",
+      "required": true,
+      "maxLength": 28
+    },
+    "handle": {
+      "type": "text",
+      "required": false,
+      "maxLength": 32
+    }
+  }
+}

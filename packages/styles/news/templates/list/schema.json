@@ -1,0 +1,15 @@
+{
+  "slots": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "maxLength": 40
+    },
+    "items": {
+      "type": "list",
+      "required": true,
+      "maxItems": 4,
+      "itemMaxLength": 40
+    }
+  }
+}

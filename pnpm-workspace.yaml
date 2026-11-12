@@ -9,6 +9,9 @@ allowBuilds:
   puppeteer: false
   # Optional native msgpack accelerator for BullMQ; prebuilt binaries or pure JS fallback suffice.
   msgpackr-extract: false
+  # Pulled in by next-intl tooling; prebuilt platform binaries are used, no install scripts needed.
+  "@parcel/watcher": false
+  "@swc/core": false
 # HyperFrames 0.9.34 is the version validated in M0 (pinned on purpose, ADR/plan).
 minimumReleaseAgeExclude:
   - "@hyperframes/core@0.9.34"

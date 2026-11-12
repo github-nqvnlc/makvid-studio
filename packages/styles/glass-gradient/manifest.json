@@ -1,0 +1,27 @@
+{
+  "id": "glass-gradient",
+  "version": "1.0.0",
+  "name": {
+    "vi": "Kính mờ gradient",
+    "en": "Glass gradient"
+  },
+  "description": {
+    "vi": "Nền gradient chuyển động, bảng kính mờ, cảm giác hiện đại cao cấp. Hợp ra mắt sản phẩm, công nghệ.",
+    "en": "Moving gradient blobs behind frosted-glass panels. Modern and premium, for launches and tech."
+  },
+  "contentTypes": ["product", "launch", "tech", "marketing"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    }
+  ],
+  "musicMoods": ["upbeat", "tech"],
+  "perfBudget": {
+    "maxMsPerFrame": 120
+  }
+}

@@ -30,6 +30,8 @@ export interface SceneData {
   transitionIn?: { presetId: string; duration: number };
   exit: number; // seconds of fade-out at the end (0 = none)
   captions: CaptionChunk[];
+  /** Spoken words of this scene with scene-local start times (seconds); empty before narration exists. */
+  narration?: Array<{ text: string; start: number }>;
 }
 
 export function formatNumberVi(value: number, decimals?: number): string {
@@ -95,6 +97,7 @@ export function mountScene(
     rng: rng(data.seed).fork(data.sceneId),
     tokens: data.tokens,
     emphasisWords: data.emphasisWords,
+    narration: data.narration ?? [],
     q: <T extends Element>(s: string) => root.querySelector<T>(s) as T | null,
     qa: <T extends Element>(s: string) => Array.from(root.querySelectorAll<T>(s)),
     enter,

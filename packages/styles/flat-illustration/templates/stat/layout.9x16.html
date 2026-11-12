@@ -1,0 +1,6 @@
+<div class="region stat">
+  <div class="illus" aria-hidden="true"><span class="illus-bg"></span><svg class="illus-icon" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 7h6v6" /> <path d="m22 7-8.5 8.5-5-5L2 17" /> </svg></div>
+  <div class="stat-value" data-qa="value">{{#if prefix}}<span class="prefix">{{text prefix}}</span>{{/if}}<span class="num">{{fit valueText w=691 h=220 max=209 min=70 lh=1 font=display lines=1 features=tnum}}</span>{{#if suffix}}<span class="suffix">{{text suffix}}</span>{{/if}}</div>
+  <p class="stat-label" data-qa="label">{{fit label w=821 h=250 max=64 min=36 lh=1.3 font=body lines=3}}</p>
+  {{#if series}}<div class="bars" data-qa="chart" data-qa-box>{{#each series.series}}<div class="bar-col"><div class="bar" data-v="{{attr item.value}}"></div><div class="bar-label">{{text item.label}}</div></div>{{/each}}</div>{{/if}}
+</div>

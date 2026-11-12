@@ -33,3 +33,10 @@ spikes/align-mfa/build.log
 bench/llm-run2.log
 tests/visual/verify*.log
 mfa.json
+
+# Local work dirs (dev stack)
+.work/
+
+# Playwright
+apps/web/test-results/
+apps/web/playwright-report/

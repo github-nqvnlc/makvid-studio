@@ -31,6 +31,11 @@ pnpm license:check    # dependency license gate
 pnpm makvid <cmd>     # CLI: render | qa | golden | lint-style | validate | produce
 docker compose -f docker/compose.dev.yml up -d worker-align   # MFA word alignment (needed by produce)
 docker compose -f docker/compose.dev.yml up -d   # postgres, valkey, seaweedfs
+pnpm db:migrate        # apply SQL migrations to DATABASE_URL
+pnpm dev:mock          # web (http://localhost:3000) + 3 workers with mock providers (no paid calls)
+pnpm dev:stack         # same with real providers (FPT key in .env)
+pnpm --filter @makvid/web test:e2e   # Playwright E2E against a running dev:mock stack
+docker compose -f docker/compose.yml up -d --build   # full stack in containers (web + workers + infra)
 ```
 
 Reference renders and golden frames run **only** in the Linux render container (`docker/worker-render.Dockerfile`):
@@ -56,7 +61,7 @@ Opt-in test suites: `MAKVID_INFRA_TESTS=1` (needs compose stack), `MAKVID_PIPELI
 
 | Path                                                         | What                                                                                             |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `apps/web`                                                   | Next.js app (M3+)                                                                                |
+| `apps/web`                                                   | Next.js 16 app: next-intl (vi/en), Better Auth, API routes, SSE, editor + review UI (ADR 0008)   |
 | `apps/cli`                                                   | `makvid` CLI                                                                                     |
 | `apps/worker-*`                                              | BullMQ workers: ai, audio, render, align                                                         |
 | `packages/spec`                                              | VideoSpec (zod), NFC, patches, migrations                                                        |

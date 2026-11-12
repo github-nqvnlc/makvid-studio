@@ -4,14 +4,32 @@
     {
       "name": "spike-player-next",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "spikes/player-next", "run", "start"],
+      "runtimeArgs": [
+        "--prefix",
+        "spikes/player-next",
+        "run",
+        "start"
+      ],
       "port": 3100
     },
     {
       "name": "scene-preview",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["scripts/static-serve.mjs", "tests/visual/out/compile", "3200"],
+      "runtimeArgs": [
+        "scripts/static-serve.mjs",
+        "tests/visual/out/compile",
+        "3200"
+      ],
       "port": 3200
+    },
+    {
+      "name": "web-mock",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/dev-stack.mjs",
+        "--mock"
+      ],
+      "port": 3000
     }
   ]
 }

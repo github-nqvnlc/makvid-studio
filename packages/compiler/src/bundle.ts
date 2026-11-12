@@ -1,12 +1,16 @@
 // Bundle a style pack's templates + the style-kit browser shell into one local IIFE (esbuild).
-import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
+import type * as NodeModuleNs from "node:module";
 import type { LoadedPack } from "@makvid/style-kit/node";
 import { sha256 } from "./hash";
 
-const here = dirname(fileURLToPath(import.meta.url));
+// When this package is bundled into another server (the Next.js web app), import.meta.url and
+// require.resolve point into the bundle; MAKVID_ROOT (the monorepo root) gives the real source location.
+const here = process.env.MAKVID_ROOT
+  ? join(process.env.MAKVID_ROOT, "packages", "compiler", "src")
+  : dirname(fileURLToPath(import.meta.url));
 const cache = new Map<string, string>();
 
 /** Returns the pack bundle source. Global `MakvidPack.mount(data)` mounts one scene. */
@@ -41,10 +45,17 @@ globalThis.MakvidPack = { id: ${JSON.stringify(pack.id)}, version: ${JSON.string
   return code;
 }
 
-const require = createRequire(import.meta.url);
+/** Runtime resolver (built-in module fetched at runtime so bundlers do not rewrite the lookups). */
+function resolver() {
+  const { createRequire } = process.getBuiltinModule("node:module") as {
+    createRequire: typeof NodeModuleNs.createRequire;
+  };
+  return createRequire(join(here, "bundle.ts"));
+}
 
 /** Absolute paths of vendored browser files (pinned versions from package.json). */
 export function vendorFiles(): { gsap: string; hyperframesRuntime: string } {
+  const require = resolver();
   return {
     gsap: join(dirname(require.resolve("gsap/package.json")), "dist", "gsap.min.js"),
     hyperframesRuntime: join(

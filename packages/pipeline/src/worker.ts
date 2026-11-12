@@ -1,5 +1,6 @@
 // BullMQ stage worker shared by apps/worker-ai, worker-audio, worker-render (T083/T084).
-import { configFromEnv, createLlm } from "@makvid/ai";
+import { configFromEnv, createLlm, DEFAULT_STEPS } from "@makvid/ai";
+import { MockAligner, mockLlm, mockTts, stubRenderer } from "./testing";
 import {
   connectionFromUrl,
   createLogger,
@@ -26,16 +27,45 @@ import {
   type StoryboardReview,
 } from "./produce";
 
+/** Called by stage workers around each stage (project status, versions, outputs, usage). */
+export interface StageHooks {
+  onStageStart?(data: ProduceJobData<ProduceInput>, stage: Stage): unknown;
+  onStageDone?(data: ProduceJobData<ProduceInput>, stage: Stage, state: ProduceState): unknown;
+  onStageFailed?(data: ProduceJobData<ProduceInput>, stage: Stage, err: Error): unknown;
+  onProgress?(
+    data: ProduceJobData<ProduceInput>,
+    stage: Stage,
+    p: { key: string; params?: Record<string, string | number>; fraction: number },
+  ): unknown;
+  onUsage?(data: ProduceJobData<ProduceInput>, u: UsageEntry): unknown;
+}
+
 export type ContextFactory = (
   workDir: string,
   hooks: Pick<PipelineContext, "onUsage" | "onProgress">,
 ) => PipelineContext;
+
+/** Mock providers for end-to-end tests (no paid calls): MAKVID_MOCK_PROVIDERS=1. */
+export function mockContextFactory(stylesRoot: string): ContextFactory {
+  const llm = createLlm({ adapters: { fpt: mockLlm }, steps: DEFAULT_STEPS });
+  return (workDir, hooks) => ({
+    llm,
+    tts: mockTts,
+    aligner: new MockAligner("http://unused"),
+    renderer: stubRenderer,
+    stylesRoot,
+    workDir,
+    voiceId: "vits:banmai",
+    ...hooks,
+  });
+}
 
 /** Production context from env: FPT LLM + TTS, MFA aligner, HyperFrames renderer. */
 export function contextFromEnv(
   stylesRoot: string,
   renderer: Renderer = createRenderer("hyperframes", { workers: Number(process.env.RENDER_WORKERS ?? 4) }),
 ): ContextFactory {
+  if (process.env.MAKVID_MOCK_PROVIDERS === "1") return mockContextFactory(stylesRoot);
   const key = process.env.FPT_AI_API_KEY;
   if (!key) throw new Error("FPT_AI_API_KEY is not set");
   const llm = createLlm(configFromEnv());
@@ -63,31 +93,58 @@ export function startStageWorker(
     prefix?: string;
     concurrency?: number;
     onUsage?: (data: ProduceJobData, u: UsageEntry) => void;
+    /** Persistence hooks (status, versions, outputs): see sink.ts. Errors here are logged, never fatal. */
+    hooks?: StageHooks;
   } = {},
 ): Worker {
   const log = createLogger(`worker-${queue}`);
   const connection = opts.connection ?? connectionFromUrl();
-  return new Worker<ProduceJobData<ProduceInput>, { stage: string }>(
+  const worker = new Worker<ProduceJobData<ProduceInput>, { stage: string }>(
     queue,
     async (job: Job<ProduceJobData<ProduceInput>>) => {
       const stage = job.name as Stage;
       if (STAGE_QUEUE[stage] !== queue)
         throw new Error(`stage "${stage}" does not belong on queue "${queue}"`);
       const data = job.data;
+      const safe = async (what: string, fn: () => unknown) => {
+        try {
+          await fn();
+        } catch (e) {
+          const err = e as Error & { cause?: Error };
+          log.error(
+            { jobId: job.id, stage, err: err.message.split("\n")[0], cause: err.cause?.message },
+            `hook ${what} failed`,
+          );
+        }
+      };
+      await safe("start", () => opts.hooks?.onStageStart?.(data, stage));
       const ctx = makeCtx(data.workDir, {
-        onUsage: (u) => opts.onUsage?.(data, u),
-        onProgress: (p) =>
+        onUsage: (u) => (opts.onUsage?.(data, u), void safe("usage", () => opts.hooks?.onUsage?.(data, u))),
+        onProgress: (p) => (
+          void safe("progress", () => opts.hooks?.onProgress?.(data, stage, p)),
           void job
             .updateProgress(progressEvent(data.projectId, stage, p) as unknown as object)
-            .catch(() => undefined),
+            .catch(() => undefined)
+        ),
       });
       log.info({ jobId: job.id, stage, projectId: data.projectId }, "stage start");
-      await runStage(ctx, stage, data.input);
+      const state = await runStage(ctx, stage, data.input);
+      await safe("done", () => opts.hooks?.onStageDone?.(data, stage, state));
       log.info({ jobId: job.id, stage }, "stage done");
       return { stage };
     },
     { connection, prefix: opts.prefix ?? "mkv", concurrency: opts.concurrency ?? 1 },
   );
+  worker.on("failed", (job, err) => {
+    if (!job) return;
+    const final = job.attemptsMade >= (job.opts.attempts ?? 1);
+    log.warn({ jobId: job.id, stage: job.name, final, err: err.message }, "stage failed");
+    if (final)
+      void Promise.resolve(opts.hooks?.onStageFailed?.(job.data, job.name as Stage, err)).catch(
+        (e: unknown) => log.error({ jobId: job.id, err: (e as Error).message }, "hook failed failed"),
+      );
+  });
+  return worker;
 }
 
 const stageDefs = (stages: Stage[]): StageDef[] => stages.map((name) => ({ name, queue: STAGE_QUEUE[name] }));

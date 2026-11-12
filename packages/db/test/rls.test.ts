@@ -10,6 +10,8 @@ import {
   projectVersions,
   usageRecords,
   users,
+  chatMessages,
+  withUser,
   withWorkspace,
   workspaces,
   type Db,
@@ -40,7 +42,7 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
     await a.unsafe(`DROP DATABASE IF EXISTS ${dbName}`);
     await a.unsafe(`CREATE DATABASE ${dbName}`);
     await a.end();
-    expect(await migrate(url)).toEqual(["0001_init.sql", "0002_projects_pipeline.sql"]);
+    expect(await migrate(url)).toEqual(["0001_init.sql", "0002_projects_pipeline.sql", "0003_auth_chat.sql"]);
     expect(await migrate(url)).toEqual([]); // idempotent
     ({ db, close } = connect(url, 4));
     const [u1] = await db.insert(users).values({ email: "a@example.test" }).returning();
@@ -146,5 +148,37 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
     ).toMatch(/immutable/);
     const [u] = await withWorkspace(db, ids.w1, (tx) => tx.select().from(usageRecords));
     expect(u!.costUsd).toBe("0.000038");
+  });
+
+  it("a user sees only their own memberships and workspaces (withUser)", async () => {
+    const r = await withUser(db, ids.u1, async (tx) => ({
+      m: await tx.select().from(memberships),
+      w: await tx.select().from(workspaces),
+    }));
+    expect(r.m.map((m) => m.workspaceId)).toEqual([ids.w1]);
+    expect(r.w.map((w) => w.slug)).toEqual(["a"]);
+    // Read-only: a user context cannot add memberships.
+    expect(
+      await pgError(
+        withUser(db, ids.u1, (tx) =>
+          tx.insert(memberships).values({ workspaceId: ids.w2, userId: ids.u1, role: "owner" }),
+        ),
+      ),
+    ).toMatch(/row-level security/);
+  });
+
+  it("chat messages are tenant-scoped", async () => {
+    await withWorkspace(db, ids.w1, async (tx) => {
+      const [p] = await tx.insert(projects).values({ workspaceId: ids.w1, title: "Chat" }).returning();
+      await tx.insert(chatMessages).values({
+        workspaceId: ids.w1,
+        projectId: p!.id,
+        role: "user",
+        kind: "edit",
+        content: "Đổi tiêu đề",
+      });
+    });
+    expect(await withWorkspace(db, ids.w2, (tx) => tx.select().from(chatMessages))).toEqual([]);
+    expect(await withWorkspace(db, ids.w1, (tx) => tx.select().from(chatMessages))).toHaveLength(1);
   });
 });

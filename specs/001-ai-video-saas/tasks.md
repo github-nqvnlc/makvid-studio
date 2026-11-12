@@ -208,26 +208,26 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 ### Tests for User Story 2
 
-- [ ] T092 [P] [US2] E2E test sign-up → create → 3 chat edits → download in `tests/e2e/create-and-edit.spec.ts`
-- [ ] T093 [P] [US2] E2E test scanning all user pages for technical strings (`{`, `<div`, `Error:`, stack traces, JSON) in `tests/e2e/no-tech-leak.spec.ts`
-- [ ] T094 [P] [US2] Unit tests for chat→patch intent parsing incl. ambiguous request ⇒ one clarifying question, out-of-range scene ⇒ explanation without change, in `packages/ai/test/chat-patch.test.ts`
-- [ ] T095 [P] [US2] Integration test that a single-scene edit re-renders only that scene and is ≥3× faster than full render in `tests/integration/partial-rerender.test.ts`
+- [x] T092 [P] [US2] E2E test sign-up → create → 3 chat edits → download in `tests/e2e/create-and-edit.spec.ts`
+- [x] T093 [P] [US2] E2E test scanning all user pages for technical strings (`{`, `<div`, `Error:`, stack traces, JSON) in `tests/e2e/no-tech-leak.spec.ts`
+- [x] T094 [P] [US2] Unit tests for chat→patch intent parsing incl. ambiguous request ⇒ one clarifying question, out-of-range scene ⇒ explanation without change, in `packages/ai/test/chat-patch.test.ts`
+- [x] T095 [P] [US2] Integration test that a single-scene edit re-renders only that scene and is ≥3× faster than full render in `tests/integration/partial-rerender.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T096 [P] [US2] Scaffold `apps/web` (Next.js App Router, next-intl with `vi` default + `en`, shared UI from `packages/ui`)
-- [ ] T097 [P] [US2] Integrate Better Auth (email + Google) with Drizzle adapter and organization/workspace mapping in `apps/web/src/server/auth.ts`
-- [ ] T098 [P] [US2] Create table `chat_messages` (role `user|assistant`, kind `edit|clarify|info`, `target_scene_id?`) in `packages/db/src/schema/chat.ts`
-- [ ] T099 [US2] Implement chat→patch step (LLM produces RFC 6902 patch targeted by `scene.id`, validated by zod + compile; optimistic lock on `parent_version_id = head`) in `apps/worker-ai/src/steps/chat-patch.ts`
-- [ ] T100 [US2] Implement version service (create, undo/redo by moving `head_version_id`, restore, duplicate project) in `apps/web/src/server/versions.ts`
-- [ ] T101 [US2] Implement SSE progress endpoint mapping job events to friendly messages in `apps/web/src/app/api/projects/[id]/events/route.ts`
-- [ ] T102 [US2] Build create-project page (idea input, aspect, duration, mode) in `apps/web/src/app/[locale]/projects/new/page.tsx`
-- [ ] T103 [US2] Build project editor page: `<hyperframes-player>` preview with audio and seek, scene thumbnail strip with selection, chat panel in `apps/web/src/app/[locale]/projects/[id]/page.tsx`
-- [ ] T104 [P] [US2] Build review screens for US3 (script editor, style picker with thumbnails + reasons, storyboard grid) in `apps/web/src/app/[locale]/projects/[id]/review/`
-- [ ] T105 [P] [US2] Build version history panel (undo, redo, restore) in `apps/web/src/components/VersionHistory.tsx`
-- [ ] T106 [US2] Build downloads (MP4 per aspect, SRT, thumbnail via signed URLs) in `apps/web/src/components/Downloads.tsx`
-- [ ] T107 [US2] Add `docker/web.Dockerfile`, worker Dockerfiles and root `docker/compose.yml` running the full stack with `docker compose up -d`
-- [ ] T108a [US2] Voice picker: list voices (FPT VITs / pro / ultra) with gender + region and a pre-generated preview clip per voice (`packages/tts/library/voices/`), selectable per project; default `vits:banmai` (product-owner decision 2026-11-12) — _library + catalog done (21 clips, `voiceCatalog()`); picker UI with the web app_ — _library + catalog done (21 clips, `voiceCatalog()`); picker UI comes with the web app_
+- [x] T096 [P] [US2] Scaffold `apps/web` (Next.js App Router, next-intl with `vi` default + `en`, shared UI from `packages/ui`)
+- [x] T097 [P] [US2] Integrate Better Auth (email + Google) with Drizzle adapter and organization/workspace mapping in `apps/web/src/server/auth.ts`
+- [x] T098 [P] [US2] Create table `chat_messages` (role `user|assistant`, kind `edit|clarify|info`, `target_scene_id?`) in `packages/db/src/schema/chat.ts`
+- [x] T099 [US2] Implement chat→patch step (LLM produces RFC 6902 patch targeted by `scene.id`, validated by zod + compile; optimistic lock on `parent_version_id = head`) in `apps/worker-ai/src/steps/chat-patch.ts` — _runs in the web request; re-render on the workers (ADR 0008)_
+- [x] T100 [US2] Implement version service (create, undo/redo by moving `head_version_id`, restore, duplicate project) in `apps/web/src/server/versions.ts`
+- [x] T101 [US2] Implement SSE progress endpoint mapping job events to friendly messages in `apps/web/src/app/api/projects/[id]/events/route.ts`
+- [x] T102 [US2] Build create-project page (idea input, aspect, duration, mode) in `apps/web/src/app/[locale]/projects/new/page.tsx`
+- [x] T103 [US2] Build project editor page: `<hyperframes-player>` preview with audio and seek, scene thumbnail strip with selection, chat panel in `apps/web/src/app/[locale]/projects/[id]/page.tsx` — _preview plays the rendered MP4 (ADR 0008)_
+- [x] T104 [P] [US2] Build review screens for US3 (script editor, style picker with thumbnails + reasons, storyboard grid) in `apps/web/src/app/[locale]/projects/[id]/review/`
+- [x] T105 [P] [US2] Build version history panel (undo, redo, restore) in `apps/web/src/components/VersionHistory.tsx`
+- [x] T106 [US2] Build downloads (MP4 per aspect, SRT, thumbnail via signed URLs) in `apps/web/src/components/Downloads.tsx`
+- [x] T107 [US2] Add `docker/web.Dockerfile`, worker Dockerfiles and root `docker/compose.yml` running the full stack with `docker compose up -d`
+- [x] T108a [US2] Voice picker: list voices (FPT VITs / pro / ultra) with gender + region and a pre-generated preview clip per voice (`packages/tts/library/voices/`), selectable per project; default `vits:banmai` (product-owner decision 2026-11-12) — _library + catalog done (21 clips, `voiceCatalog()`); picker UI with the web app_ — _library + catalog done (21 clips, `voiceCatalog()`); picker UI comes with the web app_
 - [x] T108b [US2] Licensed music library: integrate the commercial music provider chosen by the product owner (ADR 0007) behind a `MusicProvider` interface; keep procedural beds as offline fallback (product-owner decision 2026-11-12)
 - [ ] T108 [US2] Write M3 report `docs/reports/M3.md` (non-coder walkthrough recording, E2E results, 8 style packs)
 

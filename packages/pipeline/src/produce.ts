@@ -21,6 +21,8 @@ export interface ProduceInput {
   styleId?: string; // forces a style; otherwise the top suggestion
   /** "auto" (default) never pauses; "review" pauses for the user twice (US3). */
   mode?: "auto" | "review";
+  /** Voice chosen by the user (voice picker); defaults to the context voice. */
+  voiceId?: string;
 }
 
 export const STAGES = ["script", "style", "storyboard", "audio", "qa", "render"] as const;
@@ -112,7 +114,11 @@ export async function runStage(
   opts: { cacheDir?: string } = {},
 ): Promise<ProduceState> {
   const state: ProduceState = loadState(ctx0.workDir) ?? { input, usage: [] };
-  const ctx: PipelineContext = { ...ctx0, onUsage: (u) => (state.usage.push(u), ctx0.onUsage(u)) };
+  const ctx: PipelineContext = {
+    ...ctx0,
+    voiceId: input.voiceId ?? ctx0.voiceId,
+    onUsage: (u) => (state.usage.push(u), ctx0.onUsage(u)),
+  };
   const cache = new StepCache(join(ctx.workDir, "steps"));
   const durationSec = input.durationSec ?? 45;
   const p = (step: Step, key: string, fraction: number, params?: Record<string, string | number>) =>

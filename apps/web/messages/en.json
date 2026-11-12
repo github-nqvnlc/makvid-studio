@@ -1,0 +1,133 @@
+{
+  "app": {
+    "name": "MakVid Studio",
+    "tagline": "Turn an idea into a short video with voice-over, captions and music."
+  },
+  "nav": {
+    "projects": "Projects",
+    "newProject": "Create video",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "language": "Tiếng Việt"
+  },
+  "auth": {
+    "signInTitle": "Sign in",
+    "signUpTitle": "Create an account",
+    "name": "Your name",
+    "email": "Email",
+    "password": "Password (at least 8 characters)",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "google": "Continue with Google",
+    "toSignUp": "No account yet? Sign up",
+    "toSignIn": "Already have an account? Sign in",
+    "failed": "Wrong email or password.",
+    "signUpFailed": "Could not create the account. Check your email and password and try again."
+  },
+  "projects": {
+    "title": "Your projects",
+    "empty": "No videos yet. Start with an idea!",
+    "open": "Open"
+  },
+  "status": {
+    "draft": "Draft",
+    "ingesting": "Reading your idea",
+    "scripting": "Writing the voice-over",
+    "awaiting_script_review": "Waiting for your script review",
+    "styling": "Choosing a style",
+    "storyboarding": "Planning the scenes",
+    "awaiting_storyboard_review": "Waiting for your storyboard review",
+    "producing_audio": "Creating the voice",
+    "compiling": "Preparing",
+    "qa": "Checking quality",
+    "rendering": "Rendering the video",
+    "ready": "Ready",
+    "needs_attention": "Needs your attention",
+    "failed": "Not finished"
+  },
+  "create": {
+    "title": "Create a new video",
+    "idea": "Video idea",
+    "ideaPlaceholder": "For example: Explain compound interest to first-time earners",
+    "aspect": "Aspect ratio",
+    "aspects": {
+      "9:16": "Vertical 9:16 (TikTok, Reels)",
+      "16:9": "Landscape 16:9 (YouTube)",
+      "1:1": "Square 1:1",
+      "4:5": "Portrait 4:5 (Facebook)"
+    },
+    "duration": "Length (seconds)",
+    "mode": "Mode",
+    "auto": "Automatic",
+    "autoHint": "Goes straight to the finished video.",
+    "review": "Review each step",
+    "reviewHint": "Pauses so you can edit the script, pick a style and approve the storyboard.",
+    "voice": "Voice",
+    "submit": "Create video",
+    "submitting": "Sending…",
+    "tooShort": "Please describe your idea a little more."
+  },
+  "voices": {
+    "standard": "Standard",
+    "pro": "Pro",
+    "ultra": "Ultra (most natural)",
+    "female": "Female",
+    "male": "Male",
+    "north": "Northern",
+    "central": "Central",
+    "south": "Southern",
+    "other": "Neutral",
+    "listen": "Listen",
+    "default": "Default"
+  },
+  "editor": {
+    "preview": "Preview",
+    "scenes": "Scenes",
+    "scene": "Scene {n}",
+    "chatTitle": "Edit by chatting",
+    "chatPlaceholder": "For example: Change the title to: What is compound interest?",
+    "send": "Send",
+    "sending": "Working…",
+    "chatEmpty": "Tell me what to change and I will edit just that scene.",
+    "undo": "Undo",
+    "redo": "Redo",
+    "versions": "Version history",
+    "version": "Version {n}",
+    "current": "Current",
+    "restore": "Restore",
+    "duplicate": "Duplicate project",
+    "downloads": "Downloads",
+    "video": "Video {aspect}",
+    "subtitles": "Subtitles (.srt)",
+    "thumbnail": "Thumbnail",
+    "working": "Making your video",
+    "noVideo": "Your video will appear here when it is ready.",
+    "byYou": "Your edit",
+    "byAi": "Generated"
+  },
+  "review": {
+    "scriptTitle": "Review the script",
+    "scriptHint": "Edit any voice-over sentence, then choose a visual style.",
+    "videoTitle": "Title",
+    "sentence": "Sentence {n}",
+    "styles": "Suggested styles",
+    "chosen": "Selected",
+    "continue": "Continue",
+    "storyboardTitle": "Review the storyboard",
+    "storyboardHint": "Untick the scenes you do not want, then create the video.",
+    "keep": "Keep this scene",
+    "makeVideo": "Create video",
+    "atLeastOne": "Keep at least one scene."
+  },
+  "errors": {
+    "busy": "Your video is being made; please wait a moment before editing.",
+    "conflict": "The project just changed elsewhere. Reload the page and try again.",
+    "invalid": "Something is not quite right; please check and try again.",
+    "not_found": "This project was not found.",
+    "nothing_to_undo": "Nothing to undo.",
+    "nothing_to_redo": "Nothing to redo.",
+    "unauthorized": "Please sign in.",
+    "generic": "Something went wrong. Please try again in a few minutes."
+  }
+}

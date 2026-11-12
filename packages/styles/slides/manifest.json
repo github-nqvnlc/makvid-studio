@@ -1,0 +1,27 @@
+{
+  "id": "slides",
+  "version": "1.0.0",
+  "name": {
+    "vi": "Trình chiếu",
+    "en": "Slides"
+  },
+  "description": {
+    "vi": "Như một bài thuyết trình gọn gàng: tiêu đề, gạch đầu dòng hiện đúng lúc lời đọc nhắc tới.",
+    "en": "A clean presentation: titles and bullets revealed exactly when the voice-over mentions them."
+  },
+  "contentTypes": ["explainer", "education", "tutorial", "corporate"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    }
+  ],
+  "musicMoods": ["calm", "corporate"],
+  "perfBudget": {
+    "maxMsPerFrame": 80
+  }
+}

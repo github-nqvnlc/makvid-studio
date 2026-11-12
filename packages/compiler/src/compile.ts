@@ -293,6 +293,9 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
         end: (c.endMs - timing.startMs) / 1000,
         words: c.words.map((w) => ({ start: (w.startMs - timing.startMs) / 1000 })),
       })),
+      narration: chunks.flatMap((c) =>
+        c.words.map((w) => ({ text: w.text, start: (w.startMs - timing.startMs) / 1000 })),
+      ),
     };
     const json = JSON.stringify(data).replace(/</g, "\\u003c");
     const html = `<!doctype html>

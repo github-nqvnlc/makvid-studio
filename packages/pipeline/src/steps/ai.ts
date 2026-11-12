@@ -29,7 +29,7 @@ export function ingest(prompt: string): SourceMaterial {
   return { kind: "prompt", markdown: text.slice(0, 8000) };
 }
 
-const logUsage = (ctx: PipelineContext, step: Step, usage: TokenUsage[]) => {
+export const logUsage = (ctx: Pick<PipelineContext, "onUsage">, step: Step, usage: TokenUsage[]) => {
   for (const u of usage)
     ctx.onUsage({
       step,

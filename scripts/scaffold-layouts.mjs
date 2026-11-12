@@ -1,6 +1,7 @@
 // Scaffold the 8 templates x 4 aspect layouts of a style pack from a per-pack type scale.
 // The generated layout.*.html files are the source of truth afterwards (hand-editable).
-// Usage: node scripts/scaffold-layouts.mjs <packDir> <variant: minimal|kinetic|infographic>
+// Usage: node scripts/scaffold-layouts.mjs <packDir> <variant>
+//   variants: minimal | kinetic | infographic | slides | news | terminal | glass | flat
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -33,11 +34,47 @@ const SCALE = {
     "1:1": [92, 74, 48, 36, 28],
     "4:5": [100, 80, 54, 40, 30],
   },
+  slides: {
+    "16:9": [112, 84, 54, 40, 30],
+    "9:16": [112, 92, 62, 46, 36],
+    "1:1": [92, 74, 48, 36, 28],
+    "4:5": [100, 80, 54, 40, 30],
+  },
+  news: {
+    "16:9": [116, 88, 54, 40, 30],
+    "9:16": [116, 94, 62, 46, 36],
+    "1:1": [96, 76, 50, 38, 28],
+    "4:5": [104, 84, 56, 40, 30],
+  },
+  // Monospace glyphs are ~0.6 em wide: a smaller scale keeps the same words per line.
+  terminal: {
+    "16:9": [96, 72, 46, 34, 26],
+    "9:16": [92, 76, 52, 40, 30],
+    "1:1": [80, 64, 42, 32, 24],
+    "4:5": [86, 70, 46, 34, 26],
+  },
+  glass: {
+    "16:9": [116, 86, 54, 40, 30],
+    "9:16": [116, 92, 62, 46, 36],
+    "1:1": [94, 74, 48, 36, 28],
+    "4:5": [102, 82, 54, 40, 30],
+  },
+  flat: {
+    "16:9": [116, 88, 56, 40, 30],
+    "9:16": [116, 96, 64, 46, 36],
+    "1:1": [96, 78, 50, 38, 28],
+    "4:5": [104, 84, 56, 40, 30],
+  },
 }[variant];
+if (!SCALE) throw new Error(`unknown variant "${variant}"`);
+// Height kept free at the top of the content region for pack chrome (news ticker, terminal title bar,
+// slide header). pack.css must offset .region by the same --reserve.
+const RESERVE = { news: 84, terminal: 72, slides: 64 }[variant] ?? 0;
 const r = Math.round;
 
 function layouts(a) {
-  const { W, H, wide } = REGION[a];
+  const { W, wide } = REGION[a];
+  const H = REGION[a].H - RESERVE;
   const [xl, l, m, s, xs] = SCALE[a];
   const lt = variant === "kinetic" ? 1.0 : 1.08; // display line height
   const fit = (path, o) =>

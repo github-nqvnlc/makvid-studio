@@ -1,0 +1,28 @@
+{
+  "slots": {
+    "value": {
+      "type": "number",
+      "required": true
+    },
+    "prefix": {
+      "type": "text",
+      "required": false,
+      "maxLength": 6
+    },
+    "suffix": {
+      "type": "text",
+      "required": false,
+      "maxLength": 10
+    },
+    "label": {
+      "type": "text",
+      "required": true,
+      "maxLength": 60
+    },
+    "series": {
+      "type": "series",
+      "required": false,
+      "maxItems": 10
+    }
+  }
+}

@@ -37,6 +37,16 @@ export async function withWorkspace<T>(db: Db, workspaceId: string, fn: (tx: Tx)
   });
 }
 
+/** Run `fn` as makvid_app with app.user_id set: the user may read only their own memberships/workspaces. */
+export async function withUser<T>(db: Db, userId: string, fn: (tx: Tx) => Promise<T>): Promise<T> {
+  if (!UUID.test(userId)) throw new Error("invalid user id");
+  return db.transaction(async (tx) => {
+    await tx.execute(sql`SET LOCAL ROLE makvid_app`);
+    await tx.execute(sql`SELECT set_config('app.user_id', ${userId}, true)`);
+    return fn(tx);
+  });
+}
+
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
 
 /** Apply pending SQL migrations in file order; each runs in its own transaction and is recorded. */

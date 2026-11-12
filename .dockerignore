@@ -13,3 +13,6 @@ apps/cli/scratch
 out
 **/*.log
 **/golden
+.work
+apps/web/test-results
+apps/web/playwright-report
