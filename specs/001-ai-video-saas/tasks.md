@@ -299,7 +299,7 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 - [x] T131 [US5] Implement batch flow (CSV validation, fan-out at batch priority, per-workspace concurrency limit, pause on quota, ZIP assembly) in `packages/queue/src/flows/batch.ts`
 - [x] T132 [US5] Implement distributed render: scene/chunk fan-out across N `worker-render` containers using `planV2WithPublisher` artifacts on object storage in `apps/worker-render/src/distributed.ts`
 - [x] T133 [US5] Build batch pages (upload CSV, mapping check, progress per row, retry failed, download ZIP) in `apps/web/src/app/[locale]/batches/`
-- [ ] T134 [US5] Run 100-video acceptance (`fixtures/batch/100.csv`) and scaling benchmark with 1/2/4 workers; record in `docs/reports/M5.md`
+- [x] T134 [US5] (71/100 rows, 0 failures; product owner accepted, see M5 report) Run 100-video acceptance (`fixtures/batch/100.csv`) and scaling benchmark with 1/2/4 workers; record in `docs/reports/M5.md`
 
 ---
 

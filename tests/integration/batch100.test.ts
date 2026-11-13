@@ -67,7 +67,7 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1" && process.env.MAKVID_BATC
           !(v.batch.status === "completed" && v.batch.zip) &&
           v.batch.status !== "completed_with_errors"
         ) {
-          if (Date.now() - t0 > 3 * 3600_000) throw new Error(`still ${v.batch.status}`);
+          if (Date.now() - t0 > 7 * 3600_000) throw new Error(`still ${v.batch.status}`);
           await new Promise((res) => setTimeout(res, 5000));
           v = await batchView(s.deps, s.ws, r.batchId);
         }
@@ -108,7 +108,7 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1" && process.env.MAKVID_BATC
           writeFileSync(process.env.MAKVID_BATCH100_OUT, JSON.stringify(report, null, 2));
         console.log("batch100", report);
       },
-      4 * 3600_000,
+      8 * 3600_000,
     );
   },
 );

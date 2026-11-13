@@ -184,3 +184,11 @@
 - T132: scene-level distributed rendering (RENDER_DISTRIBUTED=1), integration 3/3.
 - Fixed: empty values in .env (WORK_ROOT=, QUEUE_PREFIX=) split work dirs between web and workers.
 - Next: render scaling benchmark in the container, 100-row batch acceptance, M5 report, GATE M5.
+
+## 2026-11-14 — M5 done, awaiting GATE M5 (Claude Code)
+
+- 100-row batch (mock voice + stub renderer): 71/100 rows succeeded with 0 failures before the test's 3 h cap;
+  product owner accepted 71 and asked not to rerun the full 100.
+- Render benchmark (61 s 1080p30, container): one standard worker 108 s; 1/2/4 workers on one 12-CPU host
+  226/133/95 s (1.70x, 2.38x; host CPU bound).
+- Report docs/reports/M5.md. Next: GATE M5 approval, then M6.
