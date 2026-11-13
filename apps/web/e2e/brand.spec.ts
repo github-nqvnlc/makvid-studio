@@ -7,7 +7,9 @@ import { signUp, waitReady } from "./helpers";
 
 const root = resolve(import.meta.dirname, "../../..");
 // A complete local font with Vietnamese glyphs (Windows ships Arial); the font is only read, never committed.
-const FULL_FONT = ["C:/Windows/Fonts/arial.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"].find(existsSync);
+const FULL_FONT = ["C:/Windows/Fonts/arial.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"].find(
+  existsSync,
+);
 
 test("brand kit: upload, validation, save, produce with brand", async ({ page }) => {
   await signUp(page, "brand");

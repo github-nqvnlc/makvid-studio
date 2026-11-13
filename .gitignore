@@ -40,3 +40,6 @@ mfa.json
 # Playwright
 apps/web/test-results/
 apps/web/playwright-report/
+
+# Database backups (docker/compose.yml "backup" service)
+backups/

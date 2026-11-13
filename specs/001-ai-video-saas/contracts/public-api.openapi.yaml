@@ -163,7 +163,8 @@ components:
     apiKey: { type: http, scheme: bearer, description: "Workspace API key: mk_live_..." }
   parameters:
     Id: { name: id, in: path, required: true, schema: { type: string } }
-    IdempotencyKey: { name: Idempotency-Key, in: header, required: false, schema: { type: string, maxLength: 255 } }
+    IdempotencyKey:
+      { name: Idempotency-Key, in: header, required: false, schema: { type: string, maxLength: 255 } }
   responses:
     Unauthorized:
       description: Missing or invalid API key
@@ -255,9 +256,18 @@ components:
             required: [id, name, description]
             properties:
               id: { type: string }
-              name: { type: object, required: [vi, en], properties: { vi: { type: string }, en: { type: string } } }
+              name:
+                {
+                  type: object,
+                  required: [vi, en],
+                  properties: { vi: { type: string }, en: { type: string } },
+                }
               description:
-                { type: object, required: [vi, en], properties: { vi: { type: string }, en: { type: string } } }
+                {
+                  type: object,
+                  required: [vi, en],
+                  properties: { vi: { type: string }, en: { type: string } },
+                }
     VoiceList:
       type: object
       required: [voices]
@@ -291,4 +301,5 @@ components:
         code: { type: string }
         message: { type: string }
         hint: { type: string }
-        reason: { type: string, description: "Quota denial reason (videos, video_seconds, api_disabled, ...)" }
+        reason:
+          { type: string, description: "Quota denial reason (videos, video_seconds, api_disabled, ...)" }

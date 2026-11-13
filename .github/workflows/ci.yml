@@ -8,6 +8,8 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# T164: lint, typecheck, unit, integration (mock providers, compose infra), license scan, Docker image builds,
+# render smoke + determinism, golden frames for every style pack, Playwright E2E against the mock stack.
 jobs:
   check:
     runs-on: ubuntu-24.04
@@ -25,8 +27,53 @@ jobs:
       - run: pnpm test
       - run: pnpm license:check
 
-  # T055: build the render container and render the sample spec with network disabled; checks frame
-  # determinism (two renders, identical frame hashes) and runs the renderer contract + overflow tests.
+  integration:
+    runs-on: ubuntu-24.04
+    needs: check
+    env:
+      MAKVID_INFRA_TESTS: "1"
+      DATABASE_URL: postgres://makvid:makvid-dev@localhost:5432/makvid
+      DATABASE_ADMIN_URL: postgres://makvid:makvid-dev@localhost:5432/postgres
+      VALKEY_URL: redis://localhost:6379
+      S3_ENDPOINT: http://localhost:8333
+      S3_BUCKET: makvid-dev
+      S3_ACCESS_KEY_ID: makvid-dev-access
+      S3_SECRET_ACCESS_KEY: makvid-dev-secret-change-me
+      S3_FORCE_PATH_STYLE: "true"
+      MAKVID_SECRET_KEY: ci-only-secret-key-not-used-elsewhere
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pnpm install --frozen-lockfile
+      - name: Infra (postgres, valkey, seaweedfs)
+        run: docker compose -f docker/compose.dev.yml up -d --wait postgres valkey seaweedfs
+      - name: DB, billing, web (RLS, quota, webhooks)
+        run: pnpm --filter @makvid/db --filter @makvid/billing --filter @makvid/web test
+      - name: Pipeline integration (mock providers) + isolation
+        run: >-
+          pnpm --filter @makvid/tests exec vitest run integration/flow integration/project-service
+          integration/batch integration/priority integration/distributed integration/retention
+          integration/mediagen-store isolation
+
+  images:
+    runs-on: ubuntu-24.04
+    needs: check
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build web, worker and align images
+        run: |
+          docker build -f docker/web.Dockerfile -t makvid-web:ci .
+          docker build -f docker/worker-align.Dockerfile -t makvid-align:ci .
+      - name: Compose file is valid
+        run: cp .env.example .env && docker compose config -q
+
+  # Build the render container and render the sample spec with network disabled; checks frame determinism
+  # (two renders, identical frame hashes), runs the renderer contract + overflow tests and every golden.
   render-smoke:
     runs-on: ubuntu-24.04
     needs: check
@@ -45,14 +92,63 @@ jobs:
         run: |
           docker run --rm --network none --shm-size 2g -e MAKVID_RENDER_TESTS=1 -e MAKVID_VISUAL_TESTS=1 \
             --entrypoint pnpm makvid-render:ci -r --filter @makvid/renderer --filter @makvid/tests test
-      - name: Golden frames
+      - name: Golden frames (every style pack)
         run: |
-          for s in minimal kinetic infographic; do
+          for d in packages/styles/*/; do
+            s=$(basename "$d"); [ -f "$d/manifest.json" ] || continue
             docker run --rm --network none --shm-size 2g \
               -v "$PWD/packages/styles/$s/golden:/app/packages/styles/$s/golden:ro" makvid-render:ci golden $s --out /tmp/golden
           done
       - uses: actions/upload-artifact@v5
         if: always()
         with:
+          # frames.sha256 is compared with a render on another machine (cross-machine determinism, T169).
           name: render-smoke
-          path: out/**/9x16/video.mp4
+          path: |
+            out/a/9x16/video.mp4
+            out/a/9x16/frames.sha256
+
+  e2e:
+    runs-on: ubuntu-24.04
+    needs: check
+    env:
+      DATABASE_URL: postgres://makvid:makvid-dev@localhost:5432/makvid
+      VALKEY_URL: redis://localhost:6379
+      S3_ENDPOINT: http://localhost:8333
+      S3_BUCKET: makvid-dev
+      S3_ACCESS_KEY_ID: makvid-dev-access
+      S3_SECRET_ACCESS_KEY: makvid-dev-secret-change-me
+      S3_FORCE_PATH_STYLE: "true"
+      BETTER_AUTH_SECRET: ci-only-auth-secret-0123456789abcdef
+      BETTER_AUTH_URL: http://localhost:3000
+      MAKVID_SECRET_KEY: ci-only-secret-key-not-used-elsewhere
+      MAKVID_PAYMENTS: mock
+      MAKVID_WEBHOOK_TEST_PORT: "47811"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pnpm install --frozen-lockfile
+      - name: Pinned chrome-headless-shell (same build as the render container)
+        run: npx --yes @puppeteer/browsers@3.2.2 install chrome-headless-shell@153.0.8010.36 --path ~/.cache/puppeteer
+      - run: docker compose -f docker/compose.dev.yml up -d --wait postgres valkey seaweedfs
+      - run: pnpm db:migrate
+      - name: Mock stack (web + workers, no paid calls)
+        run: |
+          node scripts/dev-stack.mjs --mock > stack.log 2>&1 &
+          for i in $(seq 1 150); do curl -fs http://localhost:3000/api/health && break; sleep 2; done
+          curl -fs http://localhost:3000/api/health
+      - run: pnpm --filter @makvid/web test:e2e
+      - name: Public API contract
+        run: MAKVID_E2E_BASE_URL=http://localhost:3000 pnpm --filter @makvid/web exec vitest run test/api-v1.contract.test.ts
+      - uses: actions/upload-artifact@v5
+        if: failure()
+        with:
+          name: e2e-logs
+          path: |
+            stack.log
+            apps/web/test-results/

@@ -17,10 +17,25 @@ const styles = join(root, "packages", "styles");
 const fonts = (pack: string, prefix: string) =>
   ["latin", "latin-ext", "vietnamese"].map((s) => join(styles, pack, "fonts", `${prefix}-${s}`));
 const brand: BrandKit = {
-  colors: { bg: "#102a43", fg: "#f0f4f8", muted: "#bcccdc", accent: "#f7c948", accentInk: "#102a43", surface: "#243b53" },
+  colors: {
+    bg: "#102a43",
+    fg: "#f0f4f8",
+    muted: "#bcccdc",
+    accent: "#f7c948",
+    accentInk: "#102a43",
+    surface: "#243b53",
+  },
   fonts: {
-    display: { family: "Brand Display", weight: 800, files: fonts("slides", "lexend").map((f) => `${f}-800-normal.woff2`) },
-    body: { family: "Brand Body", weight: 400, files: fonts("flat-illustration", "nunito").map((f) => `${f}-400-normal.woff2`) },
+    display: {
+      family: "Brand Display",
+      weight: 800,
+      files: fonts("slides", "lexend").map((f) => `${f}-800-normal.woff2`),
+    },
+    body: {
+      family: "Brand Body",
+      weight: 400,
+      files: fonts("flat-illustration", "nunito").map((f) => `${f}-400-normal.woff2`),
+    },
   },
   logo: { file: join(root, "fixtures/brand/logo.svg"), position: "top-right" },
 };
@@ -46,7 +61,9 @@ describe.runIf(process.env.MAKVID_VISUAL_TESTS === "1")("brand kit in every scen
   for (const styleId of ["minimal", "kinetic"])
     for (const aspect of ASPECTS)
       it(`${styleId} ${aspect}`, async () => {
-        const parsed = parseVideoSpec(JSON.parse(readFileSync(join(root, "fixtures/specs/sample-vi.json"), "utf8")));
+        const parsed = parseVideoSpec(
+          JSON.parse(readFileSync(join(root, "fixtures/specs/sample-vi.json"), "utf8")),
+        );
         if (!parsed.ok) throw new Error(parsed.issues.join("; "));
         const spec = { ...parsed.spec, scenes: parsed.spec.scenes.map((s) => ({ ...s, styleId })) };
         const video = await compileVideo(spec, {
@@ -61,7 +78,8 @@ describe.runIf(process.env.MAKVID_VISUAL_TESTS === "1")("brand kit in every scen
         for (const s of video.scenes) {
           const at = Math.round(s.durationMs * 0.7);
           const [frame] = await captureFrames({ sceneDir: s.dir, width, height, atMs: [at] });
-          for (const i of checkFrame(frame!.dom!, at, { aspect })) problems.push(`${s.sceneId} ${i.rule}: ${i.detail}`);
+          for (const i of checkFrame(frame!.dom!, at, { aspect }))
+            problems.push(`${s.sceneId} ${i.rule}: ${i.detail}`);
           const page = await openScene(s.dir, width, height);
           try {
             await page.seek(at / 1000);
@@ -73,20 +91,32 @@ describe.runIf(process.env.MAKVID_VISUAL_TESTS === "1")("brand kit in every scen
               const logo = document.querySelector<HTMLImageElement>(".brand-logo")!.getBoundingClientRect();
               const region = document.querySelector(".region")!.getBoundingClientRect();
               return {
-                heading: font(".headline, .title-text, .hl-text, .list-title, .cmp-title, .q-text, .cta-head, .stat-value"),
+                heading: font(
+                  ".headline, .title-text, .hl-text, .list-title, .cmp-title, .q-text, .cta-head, .stat-value",
+                ),
                 body: font(".item-text, .subtitle, .ci, .stat-label, .q-author, .cta-handle, .kicker"),
                 bg: getComputedStyle(document.getElementById("root")!).backgroundColor,
                 logo: { x: logo.x, y: logo.y, w: logo.width, h: logo.height, bottom: logo.bottom },
                 regionTop: region.top,
-                loaded: [...document.fonts].filter((f) => f.status === "loaded").map((f) => f.family.replace(/"/g, "")),
+                loaded: [...document.fonts]
+                  .filter((f) => f.status === "loaded")
+                  .map((f) => f.family.replace(/"/g, "")),
               };
             });
-            if (!r.heading?.includes("Brand Display")) problems.push(`${s.sceneId}: heading font ${r.heading}`);
+            if (!r.heading?.includes("Brand Display"))
+              problems.push(`${s.sceneId}: heading font ${r.heading}`);
             if (r.body && !r.body.includes("Brand Body")) problems.push(`${s.sceneId}: body font ${r.body}`);
             if (r.bg !== "rgb(16, 42, 67)") problems.push(`${s.sceneId}: background ${r.bg}`);
-            if (!(r.logo.w > 20 && r.logo.h > 20 && r.logo.x >= 0 && r.logo.x + r.logo.w <= width && r.logo.y >= 0))
+            if (!(
+              r.logo.w > 20 &&
+              r.logo.h > 20 &&
+              r.logo.x >= 0 &&
+              r.logo.x + r.logo.w <= width &&
+              r.logo.y >= 0
+            ))
               problems.push(`${s.sceneId}: logo not inside the frame ${JSON.stringify(r.logo)}`);
-            if (r.logo.bottom > r.regionTop + 1) problems.push(`${s.sceneId}: logo overlaps the content region`);
+            if (r.logo.bottom > r.regionTop + 1)
+              problems.push(`${s.sceneId}: logo overlaps the content region`);
             if (!r.loaded.includes("Brand Display")) problems.push(`${s.sceneId}: brand font not loaded`);
           } finally {
             await page.close();

@@ -16,15 +16,7 @@ import {
   type Db,
   type PlanLimits,
 } from "@makvid/db";
-import {
-  creditBalance,
-  decide,
-  handlePaymentEvent,
-  QuotaError,
-  reserve,
-  settle,
-  usageSummary,
-} from "../src";
+import { creditBalance, decide, handlePaymentEvent, QuotaError, reserve, settle, usageSummary } from "../src";
 
 const FREE: PlanLimits = {
   videos: 3,
@@ -42,10 +34,22 @@ const FREE: PlanLimits = {
 describe("decide (no I/O)", () => {
   it("free plan: 60 s max, no batch/API/AI images, 3 videos", () => {
     expect(decide(FREE, {}, {}, 0, { videoSeconds: 61 })).toEqual({ ok: false, reason: "max_video_seconds" });
-    expect(decide(FREE, {}, {}, 0, { videoSeconds: 30, feature: "batch" })).toEqual({ ok: false, reason: "batch_disabled" });
-    expect(decide(FREE, {}, {}, 0, { videoSeconds: 30, feature: "api" })).toEqual({ ok: false, reason: "api_disabled" });
-    expect(decide(FREE, {}, {}, 0, { videoSeconds: 30, aiImages: 1 })).toEqual({ ok: false, reason: "mediagen_disabled" });
-    expect(decide(FREE, { videos: 2 }, { videos: 1 }, 0, { videoSeconds: 30 })).toEqual({ ok: false, reason: "videos" });
+    expect(decide(FREE, {}, {}, 0, { videoSeconds: 30, feature: "batch" })).toEqual({
+      ok: false,
+      reason: "batch_disabled",
+    });
+    expect(decide(FREE, {}, {}, 0, { videoSeconds: 30, feature: "api" })).toEqual({
+      ok: false,
+      reason: "api_disabled",
+    });
+    expect(decide(FREE, {}, {}, 0, { videoSeconds: 30, aiImages: 1 })).toEqual({
+      ok: false,
+      reason: "mediagen_disabled",
+    });
+    expect(decide(FREE, { videos: 2 }, { videos: 1 }, 0, { videoSeconds: 30 })).toEqual({
+      ok: false,
+      reason: "videos",
+    });
     expect(decide(FREE, { videos: 2 }, {}, 0, { videoSeconds: 30, ttsChars: 500 })).toEqual({
       ok: true,
       amounts: { videos: 1, video_seconds: 30, tts_chars: 500 },
@@ -54,7 +58,10 @@ describe("decide (no I/O)", () => {
 
   it("seconds beyond the plan come from credits, else the request is refused", () => {
     const pro = { ...FREE, videos: null, max_video_seconds: 600, video_seconds: 100 };
-    expect(decide(pro, { video_seconds: 80 }, {}, 0, { videoSeconds: 50 })).toEqual({ ok: false, reason: "video_seconds" });
+    expect(decide(pro, { video_seconds: 80 }, {}, 0, { videoSeconds: 50 })).toEqual({
+      ok: false,
+      reason: "video_seconds",
+    });
     expect(decide(pro, { video_seconds: 80 }, {}, 60, { videoSeconds: 50 })).toEqual({
       ok: true,
       amounts: { videos: 1, video_seconds: 20, credit_seconds: 30 },
@@ -108,13 +115,17 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("quota with Postgres", ()
 
   it("commit uses the real amounts (never more than reserved); release frees everything; settle is idempotent", async () => {
     const before = await usageSummary(db, ws);
-    const res = await withWorkspace(db, ws, (tx) => tx.execute(
-      // the three reservations from the previous test
-      `SELECT id FROM quota_reservations WHERE status = 'reserved' ORDER BY created_at` as never,
-    ));
+    const res = await withWorkspace(db, ws, (tx) =>
+      tx.execute(
+        // the three reservations from the previous test
+        `SELECT id FROM quota_reservations WHERE status = 'reserved' ORDER BY created_at` as never,
+      ),
+    );
     const ids = (res as unknown as Array<{ id: string }>).map((r) => r.id);
     expect(ids).toHaveLength(3);
-    expect(await settle(db, ws, { reservationId: ids[0]! }, true, { videoSeconds: 40.2, ttsChars: 580 })).toBe(true);
+    expect(
+      await settle(db, ws, { reservationId: ids[0]! }, true, { videoSeconds: 40.2, ttsChars: 580 }),
+    ).toBe(true);
     expect(await settle(db, ws, { reservationId: ids[0]! }, true)).toBe(false);
     expect(await settle(db, ws, { reservationId: ids[1]! }, false)).toBe(true);
     const after = await usageSummary(db, ws);
@@ -131,13 +142,45 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("quota with Postgres", ()
     const [order] = await withWorkspace(db, ws, (tx) =>
       tx
         .insert(paymentOrders)
-        .values({ workspaceId: ws, provider: "mock", kind: "plan", planId: "starter", months: 1, amount: "19.00", currency: "USD" })
+        .values({
+          workspaceId: ws,
+          provider: "mock",
+          kind: "plan",
+          planId: "starter",
+          months: 1,
+          amount: "19.00",
+          currency: "USD",
+        })
         .returning(),
     );
     // Underpaid: nothing granted.
-    expect(await handlePaymentEvent(db, "mock", { kind: "paid", eventId: "x0", orderId: order!.id, amount: 1, currency: "USD" })).toBe("rejected");
-    expect(await handlePaymentEvent(db, "mock", { kind: "paid", eventId: "x1", orderId: order!.id, amount: 19, currency: "USD" })).toBe("processed");
-    expect(await handlePaymentEvent(db, "mock", { kind: "paid", eventId: "x1", orderId: order!.id, amount: 19, currency: "USD" })).toBe("duplicate");
+    expect(
+      await handlePaymentEvent(db, "mock", {
+        kind: "paid",
+        eventId: "x0",
+        orderId: order!.id,
+        amount: 1,
+        currency: "USD",
+      }),
+    ).toBe("rejected");
+    expect(
+      await handlePaymentEvent(db, "mock", {
+        kind: "paid",
+        eventId: "x1",
+        orderId: order!.id,
+        amount: 19,
+        currency: "USD",
+      }),
+    ).toBe("processed");
+    expect(
+      await handlePaymentEvent(db, "mock", {
+        kind: "paid",
+        eventId: "x1",
+        orderId: order!.id,
+        amount: 19,
+        currency: "USD",
+      }),
+    ).toBe("duplicate");
     const subs = await withWorkspace(db, ws, (tx) => tx.select().from(subscriptions));
     expect(subs.map((s) => [s.planId, s.status])).toEqual([["starter", "active"]]);
     const s = await usageSummary(db, ws);
@@ -146,13 +189,31 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("quota with Postgres", ()
 
     // Starter: 3600 s/month. Fill it, then buy credits for the overflow.
     await withWorkspace(db, ws, (tx) =>
-      tx.execute(`INSERT INTO usage_periods (workspace_id, period_start, period_end, used) VALUES ('${ws}', '${s.plan.periodStart.toISOString()}', '${s.plan.periodEnd.toISOString()}', '{"video_seconds": 3590}') ON CONFLICT (workspace_id, period_start) DO UPDATE SET used = EXCLUDED.used` as never),
+      tx.execute(
+        `INSERT INTO usage_periods (workspace_id, period_start, period_end, used) VALUES ('${ws}', '${s.plan.periodStart.toISOString()}', '${s.plan.periodEnd.toISOString()}', '{"video_seconds": 3590}') ON CONFLICT (workspace_id, period_start) DO UPDATE SET used = EXCLUDED.used` as never,
+      ),
     );
     await expect(reserve(db, ws, { videoSeconds: 60 })).rejects.toMatchObject({ reason: "video_seconds" });
     const [credits] = await withWorkspace(db, ws, (tx) =>
-      tx.insert(paymentOrders).values({ workspaceId: ws, provider: "mock", kind: "credits", creditSeconds: 1800, amount: "9.00", currency: "USD" }).returning(),
+      tx
+        .insert(paymentOrders)
+        .values({
+          workspaceId: ws,
+          provider: "mock",
+          kind: "credits",
+          creditSeconds: 1800,
+          amount: "9.00",
+          currency: "USD",
+        })
+        .returning(),
     );
-    await handlePaymentEvent(db, "mock", { kind: "paid", eventId: "x2", orderId: credits!.id, amount: 9, currency: "USD" });
+    await handlePaymentEvent(db, "mock", {
+      kind: "paid",
+      eventId: "x2",
+      orderId: credits!.id,
+      amount: 9,
+      currency: "USD",
+    });
     const r = await reserve(db, ws, { videoSeconds: 60 });
     expect(r.amounts).toMatchObject({ video_seconds: 10, credit_seconds: 50 });
     expect(await withWorkspace(db, ws, (tx) => creditBalance(tx, ws))).toBe(1750);
@@ -160,7 +221,9 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("quota with Postgres", ()
     expect(await withWorkspace(db, ws, (tx) => creditBalance(tx, ws))).toBe(1800);
     // Refund of the credit order claws the credits back.
     await handlePaymentEvent(db, "mock", { kind: "refund", eventId: "x3", orderId: credits!.id, amount: 9 });
-    const ledger = await withWorkspace(db, ws, (tx) => tx.select().from(creditLedger).where(eq(creditLedger.ref, credits!.id)));
+    const ledger = await withWorkspace(db, ws, (tx) =>
+      tx.select().from(creditLedger).where(eq(creditLedger.ref, credits!.id)),
+    );
     expect(ledger.map((l) => l.reason).sort()).toEqual(["clawback", "purchase"]);
   });
 });

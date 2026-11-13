@@ -17,3 +17,4 @@ export * from "./batch";
 export * from "./quota";
 export * from "./webhooks";
 export * from "./distributed";
+export * from "./retention";

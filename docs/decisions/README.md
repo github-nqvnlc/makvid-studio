@@ -2,21 +2,21 @@
 
 One file per decision: `NNNN-short-title.md`, numbered sequentially, never renumbered.
 
-| ADR                                     | Title                                                                 | Status                      |
-| --------------------------------------- | --------------------------------------------------------------------- | --------------------------- |
-| [0001](0001-gsap-license.md)            | GSAP behind AnimationRuntime; ask Webflow                             | Accepted                    |
-| [0002](0002-default-tts.md)             | Default TTS: FPT AI Marketplace `FPT.AI-VITs`                         | Accepted                    |
-| [0003](0003-render-worker-baseline.md)  | Render worker 8 vCPU / 16 GB / no GPU                                 | Accepted                    |
-| [0004](0004-payment-gateway.md)         | Payments: Polar (cards, subscriptions) + PayOS (VietQR)               | Accepted                    |
-| [0005](0005-default-llm.md)             | Default LLMs: FPT, per-step models                                    | Accepted                    |
-| [0006](0006-word-alignment-mfa.md)      | Word timing: Montreal Forced Aligner                                  | Accepted                    |
-| [0007](0007-licensed-music.md)          | Music: Soundstripe API, procedural fallback                           | Accepted (contract pending) |
-| [0008](0008-web-app-m3.md)              | Web app: Next.js 16, Better Auth, chat edits in web, MP4 preview      | Accepted                    |
-| [0009](0009-style-packs-4-8.md)         | Style packs 4–8, narration cues, bitmap glass background, perf budget | Accepted                    |
-| [0010](0010-speech-to-text.md)          | Speech-to-text: whisper.cpp words + MFA timing, self-hosted           | Accepted                    |
-| [0011](0011-ai-media-generation.md)     | AI images: ShopAIKey → Google fallback, off by default, hash cache    | Accepted                    |
-| [0012](0012-style-packs-9-13-mixing.md) | Style packs 9–13, CPU 3D (SVGRenderer), per-scene style mixing        | Accepted                    |
-| [0013](0013-batch-quota-api-distributed.md) | M5: template batches, quota reservations, public API, scene fan-out | Accepted |
+| ADR                                         | Title                                                                 | Status                      |
+| ------------------------------------------- | --------------------------------------------------------------------- | --------------------------- |
+| [0001](0001-gsap-license.md)                | GSAP behind AnimationRuntime; ask Webflow                             | Accepted                    |
+| [0002](0002-default-tts.md)                 | Default TTS: FPT AI Marketplace `FPT.AI-VITs`                         | Accepted                    |
+| [0003](0003-render-worker-baseline.md)      | Render worker 8 vCPU / 16 GB / no GPU                                 | Accepted                    |
+| [0004](0004-payment-gateway.md)             | Payments: Polar (cards, subscriptions) + PayOS (VietQR)               | Accepted                    |
+| [0005](0005-default-llm.md)                 | Default LLMs: FPT, per-step models                                    | Accepted                    |
+| [0006](0006-word-alignment-mfa.md)          | Word timing: Montreal Forced Aligner                                  | Accepted                    |
+| [0007](0007-licensed-music.md)              | Music: Soundstripe API, procedural fallback                           | Accepted (contract pending) |
+| [0008](0008-web-app-m3.md)                  | Web app: Next.js 16, Better Auth, chat edits in web, MP4 preview      | Accepted                    |
+| [0009](0009-style-packs-4-8.md)             | Style packs 4–8, narration cues, bitmap glass background, perf budget | Accepted                    |
+| [0010](0010-speech-to-text.md)              | Speech-to-text: whisper.cpp words + MFA timing, self-hosted           | Accepted                    |
+| [0011](0011-ai-media-generation.md)         | AI images: ShopAIKey → Google fallback, off by default, hash cache    | Accepted                    |
+| [0012](0012-style-packs-9-13-mixing.md)     | Style packs 9–13, CPU 3D (SVGRenderer), per-scene style mixing        | Accepted                    |
+| [0013](0013-batch-quota-api-distributed.md) | M5: template batches, quota reservations, public API, scene fan-out   | Accepted                    |
 
 ## Template
 

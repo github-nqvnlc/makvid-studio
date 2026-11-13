@@ -47,7 +47,16 @@ test("create videos from a written script, a data file and an audio recording", 
   // Audio recording, keeping the original voice.
   const dir = mkdtempSync(join(tmpdir(), "e2e-audio-"));
   const wav = join(dir, "ghi-am.wav");
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-f", "lavfi", "-i", "sine=frequency=200:duration=10", wav]);
+  execFileSync("ffmpeg", [
+    "-y",
+    "-loglevel",
+    "error",
+    "-f",
+    "lavfi",
+    "-i",
+    "sine=frequency=200:duration=10",
+    wav,
+  ]);
   await page.goto("/vi/projects/new");
   await page.getByTestId("source-media").click();
   await page.locator('input[name="file"]').setInputFiles(wav);

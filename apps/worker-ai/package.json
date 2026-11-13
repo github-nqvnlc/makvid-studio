@@ -18,6 +18,10 @@
     "tsx": "4.23.15"
   },
   "dependencies": {
-    "@makvid/pipeline": "workspace:*"
+    "@makvid/db": "workspace:*",
+    "@makvid/pipeline": "workspace:*",
+    "@makvid/queue": "workspace:*",
+    "@makvid/storage": "workspace:*",
+    "bullmq": "5.81.5"
   }
 }

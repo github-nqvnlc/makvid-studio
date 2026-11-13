@@ -11,6 +11,7 @@ import {
   withWorkspace,
   type Db,
 } from "@makvid/db";
+import { activePlan } from "@makvid/billing";
 import type { ProduceJobData } from "@makvid/queue";
 import { aspectSlug, ASPECT_SIZES, SPEC_VERSION } from "@makvid/spec";
 import { workspaceKey, type ObjectStore } from "@makvid/storage";
@@ -179,6 +180,7 @@ export function dbSink(db: Db, store: ObjectStore): StageHooks {
               message: "auto",
             });
           }
+          const retentionDays = outputs.length ? (await activePlan(tx, d.workspaceId)).retentionDays : 0;
           for (const x of outputs) {
             const { width, height } = ASPECT_SIZES[x.o.aspect];
             await tx.insert(renderOutputs).values({
@@ -195,6 +197,8 @@ export function dbSink(db: Db, store: ObjectStore): StageHooks {
               fps: 30,
               loudnessLufs: Number.isFinite(state.loudnessLufs) ? state.loudnessLufs! : null,
               watermarked: state.spec?.meta.watermark === true,
+              // Files are kept for the plan's retention period (FR-057); the retention job deletes them after.
+              expiresAt: new Date(Date.now() + retentionDays * 86400_000),
             });
           }
           set.headVersionId = d.versionId;

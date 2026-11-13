@@ -378,9 +378,21 @@ importers:
 
   apps/worker-ai:
     dependencies:
+      '@makvid/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@makvid/pipeline':
         specifier: workspace:*
         version: link:../../packages/pipeline
+      '@makvid/queue':
+        specifier: workspace:*
+        version: link:../../packages/queue
+      '@makvid/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
+      bullmq:
+        specifier: 5.81.5
+        version: 5.81.5
     devDependencies:
       '@makvid/config':
         specifier: workspace:*

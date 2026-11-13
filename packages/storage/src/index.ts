@@ -14,6 +14,8 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export interface ObjectStoreConfig {
   endpoint?: string;
+  /** Endpoint browsers use for signed URLs, when it differs from the one the server reaches (Docker). */
+  publicEndpoint?: string;
   region: string;
   bucket: string;
   accessKeyId: string;
@@ -69,6 +71,7 @@ export function configFromEnv(env: NodeJS.ProcessEnv = process.env): ObjectStore
   };
   return {
     ...(env.S3_ENDPOINT ? { endpoint: env.S3_ENDPOINT } : {}),
+    ...(env.S3_PUBLIC_ENDPOINT ? { publicEndpoint: env.S3_PUBLIC_ENDPOINT } : {}),
     region: env.S3_REGION ?? "us-east-1",
     bucket: need("S3_BUCKET"),
     accessKeyId: need("S3_ACCESS_KEY_ID"),
@@ -84,6 +87,15 @@ export function createObjectStore(cfg: ObjectStoreConfig): ObjectStore {
     forcePathStyle: cfg.forcePathStyle ?? false,
     credentials: { accessKeyId: cfg.accessKeyId, secretAccessKey: cfg.secretAccessKey },
   });
+  // Signing needs no network call: a second client only changes the host in the signed URLs.
+  const signer = cfg.publicEndpoint
+    ? new S3Client({
+        region: cfg.region,
+        endpoint: cfg.publicEndpoint,
+        forcePathStyle: cfg.forcePathStyle ?? false,
+        credentials: { accessKeyId: cfg.accessKeyId, secretAccessKey: cfg.secretAccessKey },
+      })
+    : client;
   const Bucket = cfg.bucket;
   return {
     async put(key, body, opts = {}) {
@@ -139,11 +151,11 @@ export function createObjectStore(cfg: ObjectStoreConfig): ObjectStore {
     },
     signedGetUrl(key, expiresInSec = 900) {
       assertKey(key);
-      return getSignedUrl(client, new GetObjectCommand({ Bucket, Key: key }), { expiresIn: expiresInSec });
+      return getSignedUrl(signer, new GetObjectCommand({ Bucket, Key: key }), { expiresIn: expiresInSec });
     },
     signedPutUrl(key, contentType, expiresInSec = 900) {
       assertKey(key);
-      return getSignedUrl(client, new PutObjectCommand({ Bucket, Key: key, ContentType: contentType }), {
+      return getSignedUrl(signer, new PutObjectCommand({ Bucket, Key: key, ContentType: contentType }), {
         expiresIn: expiresInSec,
       });
     },

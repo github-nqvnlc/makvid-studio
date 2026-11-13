@@ -63,9 +63,10 @@ function routes() {
   walk(root);
   return out;
 }
-
-// Routes without a session on purpose: auth, provider webhooks, public API (API-key auth), public assets.
+// Routes without a session on purpose: auth, provider webhooks, public API (API-key auth), public assets,
+// health (status only) and metrics (METRICS_TOKEN).
 const PUBLIC = [
+  /^\/api\/(health|metrics)$/,
   /^\/api\/auth\//,
   /^\/api\/billing\/webhooks\//,
   /^\/api\/v1\//,
@@ -106,7 +107,9 @@ describe("route coverage", () => {
     const admin = all.filter((x) => x.path.startsWith("/api/admin/"));
     expect(admin.length).toBe(2);
     for (const r of admin)
-      expect(r.body, `${r.method} ${r.path}`).toMatch(/if \(!v\.isPlatformAdmin\) return fail\("forbidden"\)/);
+      expect(r.body, `${r.method} ${r.path}`).toMatch(
+        /if \(!v\.isPlatformAdmin\) return fail\("forbidden"\)/,
+      );
   });
 });
 

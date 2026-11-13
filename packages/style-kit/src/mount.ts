@@ -136,7 +136,13 @@ export function mountScene(
       bridge.setAttribute("aria-hidden", "true");
       bridge.style.cssText = `position:absolute;inset:0;pointer-events:none;background:${t.fromColor}`;
       root.after(bridge);
-      tl.fromTo(bridge, { opacity: 1 }, { opacity: 0 }, { duration: t.duration * 1.2, ease: "power1.inOut" }, 0);
+      tl.fromTo(
+        bridge,
+        { opacity: 1 },
+        { opacity: 0 },
+        { duration: t.duration * 1.2, ease: "power1.inOut" },
+        0,
+      );
     }
   }
   if (data.exit > 0) {

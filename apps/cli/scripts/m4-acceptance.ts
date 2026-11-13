@@ -26,8 +26,19 @@ if (!key) throw new Error("FPT_AI_API_KEY is not set");
 const aligner = new MfaAligner();
 const renderer = createRenderer("hyperframes", { workers: Number(process.env.RENDER_WORKERS ?? 4) });
 
-const cases: Array<{ kind: string; style: string; label: string; source: () => Promise<SourceMaterial>; own?: boolean }> = [
-  { kind: "script", style: "slides", label: "Kịch bản có sẵn", source: async () => ingestScript(fx("script-vi.txt")) },
+const cases: Array<{
+  kind: string;
+  style: string;
+  label: string;
+  source: () => Promise<SourceMaterial>;
+  own?: boolean;
+}> = [
+  {
+    kind: "script",
+    style: "slides",
+    label: "Kịch bản có sẵn",
+    source: async () => ingestScript(fx("script-vi.txt")),
+  },
   {
     kind: "url",
     style: "news",
@@ -40,15 +51,28 @@ const cases: Array<{ kind: string; style: string; label: string; source: () => P
           : { url, status: 200, contentType: "text/html", text: fx("article-vi.html") },
       ),
   },
-  { kind: "github", style: "terminal", label: "Kho GitHub", source: () => ingestGithub("https://github.com/ggml-org/whisper.cpp") },
-  { kind: "table", style: "infographic", label: "Dữ liệu", source: async () => ingestTable(fx("gia-vang.csv"), { title: "Giá vàng trong nước nửa đầu 2026" }) },
+  {
+    kind: "github",
+    style: "terminal",
+    label: "Kho GitHub",
+    source: () => ingestGithub("https://github.com/ggml-org/whisper.cpp"),
+  },
+  {
+    kind: "table",
+    style: "infographic",
+    label: "Dữ liệu",
+    source: async () => ingestTable(fx("gia-vang.csv"), { title: "Giá vàng trong nước nửa đầu 2026" }),
+  },
   {
     kind: "media",
     style: "flat-illustration",
     label: "Ghi âm",
     own: true,
     source: () =>
-      ingestMedia(resolve(out, "../m4-media/talk.mp4"), { speech: aligner, workDir: join(out, "media", "source") }),
+      ingestMedia(resolve(out, "../m4-media/talk.mp4"), {
+        speech: aligner,
+        workDir: join(out, "media", "source"),
+      }),
   },
 ];
 
@@ -98,7 +122,13 @@ try {
         ? { verbatim: JSON.stringify(r.spec.script.map((x) => x.text)) === JSON.stringify(source.sentences) }
         : {}),
       ...(source.series
-        ? { chartsMatchFile: stats.length > 0 && stats.every((s) => JSON.stringify(s.slots.series) === JSON.stringify({ series: source.series })) }
+        ? {
+            chartsMatchFile:
+              stats.length > 0 &&
+              stats.every(
+                (s) => JSON.stringify(s.slots.series) === JSON.stringify({ series: source.series }),
+              ),
+          }
         : {}),
     };
     results.push(row);

@@ -11,7 +11,7 @@
 Both sit behind `PaymentProvider` (`packages/billing/src/providers/`). Docs read 2026-11-13:
 
 - **Polar** — `POST {https://api.polar.sh | https://sandbox-api.polar.sh}/v1/checkouts/`, `Authorization:
-  Bearer <organization access token>`, pinned with `Polar-Version: 2026-10`. Body: `products` (product UUIDs,
+Bearer <organization access token>`, pinned with `Polar-Version: 2026-10`. Body: `products` (product UUIDs,
   min 1), `success_url`, `return_url`, `external_customer_id` (= our workspace id), `customer_email`,
   `metadata`. Response 201 `Checkout { id, url, status, expires_at }`.
   Webhooks follow **Standard Webhooks**: headers `webhook-id`, `webhook-timestamp`, `webhook-signature`

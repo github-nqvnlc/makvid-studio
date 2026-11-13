@@ -25,7 +25,7 @@
    service and admin policies and nothing else (isolation suite checks the catalog).
 5. **Public API**: keys `mk_live_<prefix>_<secret>`, argon2id hash, lookup by prefix; per-key fixed-window rate
    limit in Valkey; `Idempotency-Key` stored per workspace with the request hash; errors `{code, message,
-   hint}` in English without internal names. The OpenAPI file in `specs/…/contracts` is the single source of
+hint}` in English without internal names. The OpenAPI file in `specs/…/contracts` is the single source of
    the docs page, `/api/v1/openapi.yaml` and the contract tests.
 6. **Webhooks**: `X-MakVid-Signature: t=<unix>,v1=<hex HMAC-SHA256("t.body")>`, secrets AES-256-GCM at rest,
    one row per (endpoint, event) + BullMQ retries (8, exponential), delivered through the SSRF-safe fetch

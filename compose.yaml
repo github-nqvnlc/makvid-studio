@@ -1,0 +1,5 @@
+# One-command start from the repo root: `docker compose up -d --build` (reads ./.env). See README.
+# The services live in docker/compose.yml; add more render workers with `--scale worker-render=N`.
+include:
+  - path: docker/compose.yml
+    env_file: .env

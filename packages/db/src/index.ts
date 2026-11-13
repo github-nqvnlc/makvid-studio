@@ -69,7 +69,7 @@ export async function withAdmin<T>(db: Db, fn: (tx: Tx) => Promise<T>): Promise<
   });
 }
 
-const migrationsDir =join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
+const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
 
 /** Apply pending SQL migrations in file order; each runs in its own transaction and is recorded. */
 export async function migrate(url: string = process.env.DATABASE_URL ?? ""): Promise<string[]> {

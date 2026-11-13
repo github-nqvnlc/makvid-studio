@@ -9,8 +9,22 @@ process.env.MAKVID_ROOT ??= resolve(import.meta.dirname, "../..");
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+// Security headers on every response (T163). No CSP yet: Next's inline runtime would need nonces.
+const SECURITY_HEADERS = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+  ...(process.env.NODE_ENV === "production"
+    ? [{ key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" }]
+    : []),
+];
+
 const config: NextConfig = {
   poweredByHeader: false,
+  async headers() {
+    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+  },
   transpilePackages: [
     "@makvid/ai",
     "@makvid/billing",

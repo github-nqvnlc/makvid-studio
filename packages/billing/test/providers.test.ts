@@ -60,10 +60,18 @@ describe("PayOS", () => {
       sent = JSON.parse(init.body as string) as Record<string, unknown>;
       headers = init.headers as Record<string, string>;
       return new Response(
-        JSON.stringify({ code: "00", data: { checkoutUrl: "https://pay.payos.vn/web/x", paymentLinkId: "x" } }),
+        JSON.stringify({
+          code: "00",
+          data: { checkoutUrl: "https://pay.payos.vn/web/x", paymentLinkId: "x" },
+        }),
       );
     }) as unknown as typeof fetch;
-    const p = new PayOsProvider({ clientId: "cid", apiKey: "akey", checksumKey: PAYOS_KEY, fetch: fakeFetch });
+    const p = new PayOsProvider({
+      clientId: "cid",
+      apiKey: "akey",
+      checksumKey: PAYOS_KEY,
+      fetch: fakeFetch,
+    });
     const s = await p.createCheckout({
       workspaceId: "w",
       orderId: "o",
@@ -100,9 +108,15 @@ describe("Polar (Standard Webhooks)", () => {
   it("verifies a signed delivery; rejects wrong secret, tampered body and old timestamps", () => {
     const body = '{"type":"order.paid","data":{}}';
     const sig = signStandardWebhook(secret, "msg_1", now, body);
-    const h = { "webhook-id": "msg_1", "webhook-timestamp": String(now), "webhook-signature": `v1,bogus ${sig}` };
+    const h = {
+      "webhook-id": "msg_1",
+      "webhook-timestamp": String(now),
+      "webhook-signature": `v1,bogus ${sig}`,
+    };
     expect(() => verifyStandardWebhook(secret, body, h, now)).not.toThrow();
-    expect(() => verifyStandardWebhook(secret, body.replace("{}", '{"x":1}'), h, now)).toThrow(WebhookVerificationError);
+    expect(() => verifyStandardWebhook(secret, body.replace("{}", '{"x":1}'), h, now)).toThrow(
+      WebhookVerificationError,
+    );
     const other = `whsec_${Buffer.from("another-secret").toString("base64")}`;
     expect(() => verifyStandardWebhook(other, body, h, now)).toThrow(WebhookVerificationError);
     expect(() => verifyStandardWebhook(secret, body, h, now + 3600)).toThrow(/tolerance/);
@@ -128,11 +142,21 @@ describe("Polar (Standard Webhooks)", () => {
         currency: "usd",
         metadata: { order_id: "our-order", workspace_id: "ws" },
         subscription_id: "sub_1",
-        subscription: { id: "sub_1", current_period_start: "2026-11-13T00:00:00Z", current_period_end: "2026-12-13T00:00:00Z" },
+        subscription: {
+          id: "sub_1",
+          current_period_start: "2026-11-13T00:00:00Z",
+          current_period_end: "2026-12-13T00:00:00Z",
+        },
         product_id: "prod",
       },
     });
-    expect(paid).toMatchObject({ kind: "paid", orderId: "our-order", amount: 19, currency: "USD", subscriptionRef: "sub_1" });
+    expect(paid).toMatchObject({
+      kind: "paid",
+      orderId: "our-order",
+      amount: 19,
+      currency: "USD",
+      subscriptionRef: "sub_1",
+    });
     const canceled = await deliver("e2", {
       type: "subscription.canceled",
       data: {
@@ -146,7 +170,11 @@ describe("Polar (Standard Webhooks)", () => {
       },
     });
     expect(canceled).toMatchObject({ kind: "subscription", status: "canceled", workspaceId: "ws" });
-    expect(await deliver("e3", { type: "benefit.granted", data: {} })).toEqual({ kind: "ignored", eventId: "e3", type: "benefit.granted" });
+    expect(await deliver("e3", { type: "benefit.granted", data: {} })).toEqual({
+      kind: "ignored",
+      eventId: "e3",
+      type: "benefit.granted",
+    });
   });
 
   it("creates a checkout pinned to the API version with our metadata", async () => {
@@ -155,7 +183,12 @@ describe("Polar (Standard Webhooks)", () => {
       req = { url, init };
       return new Response(JSON.stringify({ id: "chk", url: "https://polar.sh/checkout/x" }), { status: 201 });
     }) as unknown as typeof fetch;
-    const p = new PolarProvider({ accessToken: "tok", webhookSecret: secret, server: "sandbox", fetch: fakeFetch });
+    const p = new PolarProvider({
+      accessToken: "tok",
+      webhookSecret: secret,
+      server: "sandbox",
+      fetch: fakeFetch,
+    });
     const s = await p.createCheckout({
       workspaceId: "ws",
       orderId: "o1",
@@ -181,7 +214,9 @@ describe("mock provider", () => {
   it("only accepts bodies signed with the server secret", async () => {
     const m = new MockPaymentProvider("s3cret", "http://localhost:3000");
     const body = JSON.stringify({ eventId: "m1", orderId: "o", amount: 9, currency: "USD" });
-    expect(await m.parseWebhook(body, { "x-mock-signature": signMock("s3cret", body) })).toMatchObject({ kind: "paid" });
+    expect(await m.parseWebhook(body, { "x-mock-signature": signMock("s3cret", body) })).toMatchObject({
+      kind: "paid",
+    });
     await expect(m.parseWebhook(body, { "x-mock-signature": signMock("nope", body) })).rejects.toBeInstanceOf(
       WebhookVerificationError,
     );

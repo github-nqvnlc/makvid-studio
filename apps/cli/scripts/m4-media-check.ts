@@ -21,7 +21,23 @@ const r = await new FptTtsProvider(key).synthesize({ text: TEXT.join(" "), voice
 const wav = join(out, "voice.wav");
 writeFileSync(wav, r.audio);
 const mp4 = join(out, "talk.mp4");
-execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=black:s=640x360:r=25", "-i", wav, "-shortest", "-c:v", "libx264", "-c:a", "aac", mp4]);
+execFileSync("ffmpeg", [
+  "-y",
+  "-loglevel",
+  "error",
+  "-f",
+  "lavfi",
+  "-i",
+  "color=c=black:s=640x360:r=25",
+  "-i",
+  wav,
+  "-shortest",
+  "-c:v",
+  "libx264",
+  "-c:a",
+  "aac",
+  mp4,
+]);
 
 const t0 = performance.now();
 const src = await ingestMedia(mp4, { speech: new MfaAligner(), workDir: join(out, "work") });
@@ -41,10 +57,16 @@ const d = Array.from({ length: ref.length + 1 }, (_, i) => [i, ...Array(hyp.leng
 for (let j = 1; j <= hyp.length; j++) d[0]![j] = j;
 for (let i = 1; i <= ref.length; i++)
   for (let j = 1; j <= hyp.length; j++)
-    d[i]![j] = Math.min(d[i - 1]![j]! + 1, d[i]![j - 1]! + 1, d[i - 1]![j - 1]! + (ref[i - 1] === hyp[j - 1] ? 0 : 1));
+    d[i]![j] = Math.min(
+      d[i - 1]![j]! + 1,
+      d[i]![j - 1]! + 1,
+      d[i - 1]![j - 1]! + (ref[i - 1] === hyp[j - 1] ? 0 : 1),
+    );
 const wer = d[ref.length]![hyp.length]! / ref.length;
 const words = src.transcript!;
-const monotonic = words.every((w, i) => w.endMs >= w.startMs && (i === 0 || w.startMs >= words[i - 1]!.startMs));
+const monotonic = words.every(
+  (w, i) => w.endMs >= w.startMs && (i === 0 || w.startMs >= words[i - 1]!.startMs),
+);
 const report = {
   durationSec: src.metadata.durationSec,
   processingSec: Math.round(seconds * 10) / 10,

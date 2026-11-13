@@ -279,7 +279,6 @@
   color: var(--accent);
 }
 
-
 /* ---- neon theme ---- */
 /* Static scanlines over the whole frame on their own layer (painted once, composited every frame). */
 .pack-neon::after {

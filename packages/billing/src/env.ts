@@ -17,6 +17,9 @@ export function paymentsFromEnv(
 ): Payments {
   const want = new Set((env.MAKVID_PAYMENTS ?? "off").split(",").map((s) => s.trim()));
   const providers: Payments["providers"] = {};
+  // The mock provider grants plans without money: never in production.
+  if (want.has("mock") && env.NODE_ENV === "production" && env.MAKVID_ALLOW_MOCK_PAYMENTS !== "1")
+    throw new Error("MAKVID_PAYMENTS=mock is not allowed in production");
   if (want.has("mock"))
     providers.mock = new MockPaymentProvider(env.MAKVID_SECRET_KEY ?? "dev-mock-secret", baseUrl);
   if (want.has("polar") && env.POLAR_ACCESS_TOKEN && env.POLAR_WEBHOOK_SECRET)
