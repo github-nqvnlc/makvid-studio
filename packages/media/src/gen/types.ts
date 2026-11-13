@@ -15,6 +15,9 @@ export interface GeneratedImage {
   costUsd: number;
   /** True when the result came from the content-hash cache (no provider call). */
   cached?: boolean;
+  /** Which provider actually made it (differs from the wrapper when a fallback answered). */
+  provider?: string;
+  model?: string;
 }
 
 export interface VideoRequest {

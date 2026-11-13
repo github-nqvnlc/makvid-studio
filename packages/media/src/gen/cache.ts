@@ -37,15 +37,17 @@ export class CachedMediaGen implements MediaGenProvider {
     const hit = await this.store.get(key);
     if (hit) return { ...hit, costUsd: 0, cached: true };
     const out = await this.inner.generateImage(req);
+    const provider = out.provider ?? this.id;
+    const model = out.model ?? this.model;
     await this.store.put(key, {
       image: out.image,
       mime: out.mime,
-      provider: this.id,
-      model: this.model,
+      provider,
+      model,
       costUsd: out.costUsd,
       prompt: req.prompt,
     });
-    await this.onUsage({ provider: this.id, model: this.model, images: 1, costUsd: out.costUsd });
+    await this.onUsage({ provider, model, images: 1, costUsd: out.costUsd });
     return { ...out, cached: false };
   }
 }

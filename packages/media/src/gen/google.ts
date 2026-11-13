@@ -24,7 +24,7 @@ export const GOOGLE_IMAGE_PRICE = {
 };
 
 /** Aspect ratios the API accepts for image output. */
-const RATIOS = [
+export const GOOGLE_RATIOS = [
   "1:1",
   "2:3",
   "3:2",
@@ -42,11 +42,15 @@ const RATIOS = [
 ];
 
 /** Closest supported aspect ratio (by log ratio, so 9:16 and 16:9 are symmetric). */
-export function nearestAspect(width: number, height: number): string {
+export function nearestAspect(
+  width: number,
+  height: number,
+  ratios: readonly string[] = GOOGLE_RATIOS,
+): string {
   const want = Math.log(width / height);
-  let best = RATIOS[0]!;
+  let best = ratios[0]!;
   let bestD = Infinity;
-  for (const r of RATIOS) {
+  for (const r of ratios) {
     const [w, h] = r.split(":").map(Number) as [number, number];
     const d = Math.abs(Math.log(w / h) - want);
     if (d < bestD) [best, bestD] = [r, d];
@@ -153,6 +157,8 @@ export class GoogleImageProvider implements MediaGenProvider {
       image: Buffer.from(last.data, "base64"),
       mime: last.mime_type ?? "image/png",
       costUsd: googleImageCost(json.usage, 1),
+      provider: this.id,
+      model: this.model,
     };
   }
 }

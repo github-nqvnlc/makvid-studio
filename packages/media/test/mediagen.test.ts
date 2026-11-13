@@ -1,9 +1,12 @@
 // T124: MediaGenProvider contract, Google adapter request/response mapping (fake fetch), content-hash cache,
-// cost logging, and "off" ⇒ no provider at all. Live call: MAKVID_LIVE_MEDIAGEN=1 with GEMINI_API_KEY.
+// ShopAIKey adapter, fallback chain, cost logging, and "off" ⇒ no provider at all. Live call: MAKVID_LIVE_MEDIAGEN=1 with GEMINI_API_KEY.
 import { describe, expect, it } from "vitest";
 import {
   CachedMediaGen,
   createMediaGen,
+  FallbackMediaGen,
+  SHOPAIKEY_DEFAULT_COST_USD,
+  ShopAiKeyImageProvider,
   GOOGLE_IMAGE_MODEL,
   GoogleImageProvider,
   googleImageCost,
@@ -137,12 +140,107 @@ describe("content-hash cache and cost logging", () => {
 describe("configuration", () => {
   it("off by default and without a key: no provider, so zero media-gen cost", () => {
     expect(createMediaGen({})).toBeNull();
-    expect(createMediaGen({ mode: "off", apiKey: "k" })).toBeNull();
+    expect(createMediaGen({ mode: "off", geminiApiKey: "k", shopAiKey: "k" })).toBeNull();
     expect(createMediaGen({ mode: "google" })).toBeNull();
-    expect(createMediaGen({ mode: "google", apiKey: "k" })).toBeInstanceOf(GoogleImageProvider);
+    expect(createMediaGen({ mode: "google", geminiApiKey: "k" })).toBeInstanceOf(GoogleImageProvider);
+    expect(createMediaGen({ mode: "shopaikey", shopAiKey: "k" })).toBeInstanceOf(ShopAiKeyImageProvider);
     expect(createMediaGen({ mode: "mock" })).toBeInstanceOf(MockMediaGen);
   });
+
+  it("a provider order becomes a fallback chain; providers without a key are skipped", () => {
+    const both = createMediaGen({ mode: "shopaikey,google", shopAiKey: "a", geminiApiKey: "b" });
+    expect(both).toBeInstanceOf(FallbackMediaGen);
+    expect(both?.id).toBe("shopaikey");
+    expect(createMediaGen({ mode: "shopaikey,google", geminiApiKey: "b" })).toBeInstanceOf(
+      GoogleImageProvider,
+    );
+  });
 });
+
+describe("ShopAIKey adapter", () => {
+  const OKR = { created: 1, data: [{ b64_json: PNG.toString("base64") }] };
+  it("sends the documented request (base64, never a public URL) and prices per image", async () => {
+    const { f, calls } = fakeFetch(OKR);
+    const out = await new ShopAiKeyImageProvider({ apiKey: "sk-test", fetch: f }).generateImage(REQ);
+    expect(out.image.equals(PNG)).toBe(true);
+    expect(out.mime).toBe("image/png");
+    expect(out.costUsd).toBe(SHOPAIKEY_DEFAULT_COST_USD);
+    const c = calls[0]!;
+    expect(c.url).toBe("https://api.shopaikey.com/images/google/generations");
+    expect((c.init.headers as Record<string, string>).Authorization).toBe("Bearer sk-test");
+    expect(JSON.parse(String(c.init.body))).toEqual({
+      model: "nano-banana-2.1",
+      prompt: REQ.prompt,
+      size: "9:16",
+      imageSize: "2K",
+      format: "png",
+      response_format: "b64_json",
+    });
+  });
+
+  it("maps ratios the reseller lacks to the nearest one it has", async () => {
+    const { f, calls } = fakeFetch(OKR);
+    await new ShopAiKeyImageProvider({ apiKey: "k", fetch: f }).generateImage({
+      ...REQ,
+      width: 400,
+      height: 1600,
+    });
+    expect(JSON.parse(String(calls[0]!.init.body)).size).toBe("9:16");
+  });
+
+  it("errors carry the server message; a non-image payload is rejected", async () => {
+    const bad = new ShopAiKeyImageProvider({
+      apiKey: "sk-secret",
+      fetch: fakeFetch({ error: { message: "Invalid API key" } }, 401).f,
+    });
+    const err = await bad.generateImage(REQ).catch((e: unknown) => e);
+    expect(err).toMatchObject({ code: "http" });
+    expect(String((err as Error).message)).toContain("Invalid API key");
+    expect(String((err as Error).message)).not.toContain("sk-secret");
+    const junk = new ShopAiKeyImageProvider({
+      apiKey: "k",
+      fetch: fakeFetch({ data: [{ b64_json: Buffer.from("<html>").toString("base64") }] }).f,
+    });
+    await expect(junk.generateImage(REQ)).rejects.toMatchObject({ code: "no_image" });
+  });
+});
+
+describe("fallback", () => {
+  it("uses the next provider when the first is down, logs the one that answered", async () => {
+    const down = new ShopAiKeyImageProvider({ apiKey: "k", fetch: fakeFetch({}, 503).f });
+    const google = new GoogleImageProvider({ apiKey: "g", fetch: fakeFetch(OK).f });
+    const usage: MediaGenUsage[] = [];
+    const gen = new CachedMediaGen(new FallbackMediaGen([down, google]), new MemoryMediaGenStore(), (u) => {
+      usage.push(u);
+    });
+    const out = await gen.generateImage(REQ);
+    expect(out.provider).toBe("google");
+    expect(usage).toEqual([
+      { provider: "google", model: GOOGLE_IMAGE_MODEL, images: 1, costUsd: out.costUsd },
+    ]);
+  });
+
+  it("a safety block is final", async () => {
+    const blocked = new GoogleImageProvider({ apiKey: "g", fetch: fakeFetch({ status: "failed" }).f });
+    const mock = new MockMediaGen();
+    await expect(new FallbackMediaGen([blocked, mock]).generateImage(REQ)).rejects.toMatchObject({
+      code: "blocked",
+    });
+    expect(mock.calls).toBe(0);
+  });
+});
+
+describe.runIf(process.env.MAKVID_LIVE_MEDIAGEN === "1" && !!process.env.SHOPAIKEY_API_KEY)(
+  "live ShopAIKey call",
+  () => {
+    it("returns a real image", { timeout: 240_000 }, async () => {
+      const p = new ShopAiKeyImageProvider({ apiKey: process.env.SHOPAIKEY_API_KEY! });
+      const out = await p.generateImage({ ...REQ, width: 1024, height: 1024 });
+      expect(out.image.length).toBeGreaterThan(10_000);
+      expect(out.mime.startsWith("image/")).toBe(true);
+    });
+  },
+);
 
 describe.runIf(process.env.MAKVID_LIVE_MEDIAGEN === "1" && !!process.env.GEMINI_API_KEY)(
   "live Google call",

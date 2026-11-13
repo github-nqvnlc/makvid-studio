@@ -129,3 +129,10 @@
   `dbMediaGenStore` (ai asset + media_gen_cache, RLS) in the pipeline; ADR 0011. Unit 7/7, infra test 1/1.
 - Not verified live: `GEMINI_API_KEY` is empty in `.env`. Scene selection for AI images and plan quota later.
 - Next: styles T155–T159, mixing T160, guide T161, report T162.
+
+## 2026-11-13 — M4: ShopAIKey image provider (Claude Code)
+
+- Product owner chose ShopAIKey (key reseller) for production, risks accepted (ADR 0011 amended). Adapter
+  `ShopAiKeyImageProvider` (base64 only, price per image from config), `FallbackMediaGen`
+  (`MAKVID_MEDIAGEN=shopaikey,google`). Unit 13/13. Live check pending: `SHOPAIKEY_API_KEY` not in `.env` yet.
+- Follow-up for M6 legal pages: list ShopAIKey as a sub-processor in the privacy policy.
