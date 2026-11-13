@@ -58,11 +58,21 @@ docker compose up -d
 
 ## M4–M6
 
-- **M4**: `makvid golden --all` pass cho 13 style. Mỗi nguồn đầu vào (`fixtures/sources/*`) cho ra
-  1 video đạt QA.
-- **M5**: chạy batch 100 dòng (`fixtures/batch/100.csv`) → 100 video. Đo thời gian khi có 1, 2 và 4
-  worker (`docker compose up -d --scale worker-render=N`) → tăng gần tuyến tính. Test vượt quota → 402.
-- **M6**: cài từ đầu theo README trên Windows 11 và trên một VPS Linux trống bằng
-  `docker compose up -d`. Render cùng một spec trên hai máy rồi so frame hash → trùng.
+- **M4**: `scripts/verify-render.sh` (container render, mạng tắt): golden frame 13 style × 32 khung khớp,
+  test chữ dài tối đa đạt. Mỗi nguồn đầu vào có video mẫu đạt QA (`docs/reports/M4.md`).
+- **M5** (stack dev có `MAKVID_INFRA_TESTS=1`):
+  - `pnpm --filter @makvid/tests exec vitest run integration/batch integration/priority`: lô 10 dòng có 2 lỗi,
+    chạy lại đúng 2 dòng; video đơn đi trước lô.
+  - `MAKVID_BATCH100=1 … integration/batch100`: lô `fixtures/batch/100.csv` (đã chạy: 71/100, 0 lỗi, được chấp nhận).
+  - `pnpm --filter @makvid/billing test`: 10 yêu cầu cùng lúc ở gói miễn phí → đúng 3 được nhận (quota → 402).
+  - Tăng tốc render: `apps/cli/scripts/m5-scale-bench.ts` trong container với 1/2/4 worker
+    (hoặc `docker compose up -d --scale worker-render=N`).
+  - Hợp đồng API: `MAKVID_E2E_BASE_URL=http://localhost:3000 pnpm --filter @makvid/web exec vitest run test/api-v1.contract.test.ts`.
+- **M6**: cài từ đầu theo README bằng `docker compose up -d --build` (trên Windows 11 + Docker Desktop;
+  máy Linux thật được thay bằng runner Linux của CI theo quyết định chủ sản phẩm). Kiểm:
+  `docker compose ps` (healthy), `/api/health`, E2E Playwright với `E2E_BASE_URL` trỏ vào bản cài,
+  sao lưu + thử khôi phục (`docker compose run --rm backup /backup/restore-test.sh`).
+  Cùng một spec → cùng khung hình: golden frame tạo trên Windows (container) phải khớp trên runner Linux
+  của CI (job `render-smoke`).
 
 Xem thêm: [plan.md](plan.md), [data-model.md](data-model.md), [contracts/](contracts/).

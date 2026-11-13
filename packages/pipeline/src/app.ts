@@ -24,7 +24,16 @@ export async function runWorkerApp(
     process.env.MAKVID_STYLES_ROOT ?? join(dirname(fileURLToPath(import.meta.url)), "..", "..", "styles");
   const db = process.env.DATABASE_URL ? connect(process.env.DATABASE_URL, 4) : undefined;
   const store = db ? createObjectStore(configFromEnv()) : undefined;
-  await store?.ensureBucket();
+  // Object storage may still be starting (compose, restarts): retry for up to two minutes instead of crashing.
+  for (let attempt = 1; store; attempt++) {
+    try {
+      await store.ensureBucket();
+      break;
+    } catch (e) {
+      if (attempt >= 40) throw e;
+      await new Promise((r) => setTimeout(r, 3000));
+    }
+  }
   const connection = connectionFromUrl();
   const prefix = process.env.QUEUE_PREFIX || undefined;
   const deps: ServiceDeps | undefined =

@@ -74,6 +74,8 @@ docker compose pull && docker compose up -d --build      # cập nhật sau khi 
 docker compose down                                # dừng (dữ liệu vẫn còn trong volume)
 ```
 
+Trên Windows, chạy các lệnh trên trong PowerShell. Nếu dùng Git Bash, thêm `MSYS_NO_PATHCONV=1` trước lệnh `docker compose run … /backup/...` để đường dẫn không bị đổi.
+
 Quản trị nền tảng: đặt một tài khoản làm quản trị viên rồi mở `/admin`:
 
 ```bash
