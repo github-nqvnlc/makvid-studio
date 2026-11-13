@@ -14,6 +14,7 @@ import {
 } from "node:crypto";
 import { Queue, Worker, type ConnectionOptions } from "bullmq";
 import { createLogger } from "@makvid/queue";
+import type { StageHooks } from "./worker";
 import { and, eq } from "drizzle-orm";
 import { webhookDeliveries, webhookEndpoints, withService, withWorkspace, type Db } from "@makvid/db";
 import { safeFetch, SafeFetchError, type SafeFetchOptions } from "@makvid/media";
@@ -241,11 +242,11 @@ export function startWebhookWorker(
 
 /** Worker hooks: emit video.completed / video.failed after the persistence hooks ran. */
 export function withWebhookHooks(
-  base: import("./worker").StageHooks,
+  base: StageHooks,
   db: Db,
   connection: ConnectionOptions,
   prefix?: string,
-): import("./worker").StageHooks {
+): StageHooks {
   const opts = prefix ? { prefix } : {};
   return {
     ...base,
