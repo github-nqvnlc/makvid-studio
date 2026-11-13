@@ -382,14 +382,14 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 ## Phase 13: Polish & cross-cutting — M6
 
 - [x] T163 [P] Security review: sandbox (render containers on Docker `internal` network), SSRF, upload validation, provider-key encryption (AES-256-GCM, key from env/KMS), signed URL TTLs; record in `docs/security/review-M6.md`
-- [ ] T164 [P] Complete CI in `.github/workflows/ci.yml`: lint, typecheck, unit, integration (mocks), license scan, Docker image build, render-smoke, golden frames, E2E
+- [x] T164 [P] Complete CI in `.github/workflows/ci.yml`: lint, typecheck, unit, integration (mocks), license scan, Docker image build, render-smoke, golden frames, E2E
 - [x] T165 [P] Production `docker/compose.yml` hardening (healthchecks, resource limits, `worker-render` scalable via `--scale`)
 - [x] T166 [P] Daily PostgreSQL backup + restore test script in `docker/backup/` and retention cleanup job deleting `render_outputs` past `expires_at` in `apps/worker-ai/src/cron/retention.ts`
 - [x] T167 [P] Monitoring: queue metrics, render time per minute of video, cost per video dashboards; document in `docs/ops/monitoring.md`
-- [ ] T168 [P] README with step-by-step install for Windows 11 (Docker Desktop) and Linux VPS, plus `docs/ops/runbook.md`
-- [ ] T169 Cross-machine determinism check: render the same spec on Windows 11 Docker Desktop and a clean Linux VPS, compare frame hashes; record in `docs/reports/M6.md`
+- [x] T168 [P] README with step-by-step install for Windows 11 (Docker Desktop) and Linux VPS, plus `docs/ops/runbook.md`
+- [x] T169 Cross-machine determinism check: render the same spec on Windows 11 Docker Desktop and a clean Linux VPS, compare frame hashes; record in `docs/reports/M6.md`
 - [ ] T170 Confirm Webflow written GSAP confirmation is on file in `docs/legal/` or fallback-runtime migration is complete (ADR 0001 release gate)
-- [ ] T171 Run all scenarios in `quickstart.md` end-to-end and write the M6 report `docs/reports/M6.md`
+- [x] T171 Run all scenarios in `quickstart.md` end-to-end and write the M6 report `docs/reports/M6.md`
 
 **🛑 GATE M6**: Fresh install from README on both environments with `docker compose up -d`; full flow works; same VideoSpec → same video.
 

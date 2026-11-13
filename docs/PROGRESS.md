@@ -197,3 +197,13 @@
 
 - Product owner approved M5 (batch acceptance accepted at 71/100). Open: plan prices, Polar/PayOS accounts, multi-host scaling test (M5 report section 8).
 - Next: M6 (polish and cross-cutting).
+
+## 2026-11-14 — M6 done, awaiting GATE M6 (Claude Code)
+
+- Security review, hardened compose (internal network, healthchecks, limits, scalable render, backups),
+  root compose.yaml, README + runbook, retention job, backup/restore test, /api/health, /api/metrics.
+- Fresh install on Windows 11 Docker Desktop from README: up in 9 min, E2E 4/4. Found and fixed: SeaweedFS bound
+  to one network, web signing vs internal S3 endpoint, empty first backup, align healthcheck.
+- Cross-machine determinism: 13 packs x 32 golden frames made on Windows (container) match on the GitHub Linux
+  runner. CI green on all 5 jobs (run #14) for the first time since M3.
+- Pending: T170 (product owner sends the Webflow GSAP confirmation for docs/legal/). Report docs/reports/M6.md.
