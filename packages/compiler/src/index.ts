@@ -7,3 +7,4 @@ export * from "./hash";
 export * from "./timing";
 export { bundlePack, vendorFiles } from "./bundle";
 export { lintFreeform } from "./freeform";
+export * from "./brand";

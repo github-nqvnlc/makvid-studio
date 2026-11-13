@@ -10,7 +10,7 @@ WORKDIR /opt
 ARG WHISPER_MODEL=small
 RUN git clone --depth 1 --branch v1.9.5 https://github.com/ggml-org/whisper.cpp.git \
  && cmake -S whisper.cpp -B whisper.cpp/build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF \
-      -DWHISPER_BUILD_TESTS=OFF -DGGML_NATIVE=OFF \
+      -DWHISPER_BUILD_TESTS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF \
  && cmake --build whisper.cpp/build -j --config Release --target whisper-cli \
  && sh whisper.cpp/models/download-ggml-model.sh ${WHISPER_MODEL} \
  && mkdir -p /out && cp whisper.cpp/build/bin/whisper-cli /out/ \

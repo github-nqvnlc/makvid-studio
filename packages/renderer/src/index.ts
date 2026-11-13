@@ -7,7 +7,7 @@ export * from "./types";
 export * from "./ffmpeg";
 export * from "./mux";
 export { captureFrames } from "./capture";
-export { findChrome, closeSharedBrowser } from "./browser";
+export { findChrome, closeSharedBrowser, openScene } from "./browser";
 export { FallbackRenderer } from "./fallback";
 export { HyperFramesRenderer, type HyperFramesOptions } from "./hyperframes";
 

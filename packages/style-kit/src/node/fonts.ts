@@ -1,7 +1,7 @@
 // Font metrics at compile time (fontkit, MIT). Faces are split by unicode-range like the browser
 // does with @font-face subsets, so the measured width matches what Chrome lays out.
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join } from "node:path";
 import * as fontkit from "fontkit";
 import type { Measure } from "../text";
 
@@ -10,7 +10,7 @@ export interface FontFaceEntry {
   weight: number;
   style: "normal" | "italic";
   subset: string;
-  file: string; // relative to the pack's fonts/ dir
+  file: string; // relative to the pack's fonts/ dir, or absolute (brand fonts)
   unicodeRange: string; // CSS unicode-range
 }
 
@@ -46,7 +46,9 @@ export class FontBook {
     readonly dir: string,
   ) {
     this.faces = manifest.faces.map((f) => {
-      const font = fontkit.create(readFileSync(join(dir, f.file))) as fontkit.Font;
+      const font = fontkit.create(
+        readFileSync(isAbsolute(f.file) ? f.file : join(dir, f.file)),
+      ) as fontkit.Font;
       return { ...f, font, ranges: parseUnicodeRange(f.unicodeRange) };
     });
   }
@@ -113,3 +115,24 @@ export const VIETNAMESE_CHARSET = (() => {
   s += "fjwz0123456789.,;:!?\"'()-–—%/&+₫";
   return s + s.toUpperCase();
 })();
+
+/** CSS unicode-range covering a font file's character map (contiguous runs merged). */
+export function unicodeRangeOf(file: string): string {
+  const font = fontkit.create(readFileSync(file)) as fontkit.Font;
+  const cps = [...new Set(font.characterSet)].sort((a, b) => a - b);
+  const runs: Array<[number, number]> = [];
+  for (const cp of cps) {
+    const last = runs[runs.length - 1];
+    if (last && cp === last[1] + 1) last[1] = cp;
+    else runs.push([cp, cp]);
+  }
+  const hex = (n: number) => n.toString(16).toUpperCase();
+  return runs.map(([a, b]) => (a === b ? `U+${hex(a)}` : `U+${hex(a)}-${hex(b)}`)).join(",");
+}
+
+/** Family name and weight (OS/2 usWeightClass) declared inside a font file. */
+export function fontInfo(file: string): { family: string; weight: number } {
+  const font = fontkit.create(readFileSync(file)) as fontkit.Font & { "OS/2"?: { usWeightClass?: number } };
+  const weight = Math.round((font["OS/2"]?.usWeightClass ?? 400) / 100) * 100;
+  return { family: font.familyName || "Brand", weight: Math.min(900, Math.max(100, weight)) };
+}

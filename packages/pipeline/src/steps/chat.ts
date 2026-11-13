@@ -74,11 +74,20 @@ export function editsToPatch(spec: VideoSpec, edits: ChatEdit[]): PatchOp[] {
   return ops;
 }
 
-async function compiles(ctx: Pick<PipelineContext, "stylesRoot">, spec: VideoSpec): Promise<string[]> {
+async function compiles(
+  ctx: Pick<PipelineContext, "stylesRoot" | "brand">,
+  spec: VideoSpec,
+): Promise<string[]> {
   const dir = mkdtempSync(join(tmpdir(), "mkv-chat-"));
   try {
     for (const aspect of spec.meta.aspectRatios)
-      await compileVideo(spec, { aspect, stylesRoot: ctx.stylesRoot, outDir: dir, engine: "chat-check" });
+      await compileVideo(spec, {
+        aspect,
+        stylesRoot: ctx.stylesRoot,
+        outDir: dir,
+        engine: "chat-check",
+        ...(ctx.brand ? { brand: ctx.brand } : {}),
+      });
     return [];
   } catch (e) {
     if (e instanceof CompileError) return e.issues;
@@ -89,7 +98,7 @@ async function compiles(ctx: Pick<PipelineContext, "stylesRoot">, spec: VideoSpe
 }
 
 export async function chatEdit(
-  ctx: Pick<PipelineContext, "llm" | "stylesRoot" | "onUsage">,
+  ctx: Pick<PipelineContext, "llm" | "stylesRoot" | "onUsage" | "brand">,
   spec: VideoSpec,
   message: string,
   history: ChatTurn[] = [],

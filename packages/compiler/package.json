@@ -5,7 +5,8 @@
   "type": "module",
   "description": "VideoSpec + style pack -> per-scene HTML, captions, SRT, scene hashing",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./contrast": "./src/contrast.ts"
   },
   "scripts": {
     "typecheck": "tsc -p .",

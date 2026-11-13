@@ -109,3 +109,15 @@
   tests), upload validation (12 tests), create-form source picker + multipart API.
 - Pending: Docker was stopped — worker-align image with whisper not built yet, real-recording check, E2E of
   the source picker, acceptance videos (T118); then US8 (T120–T125).
+
+## 2026-11-13 — M4: US4 done, US8 brand kit + assets done (Claude Code)
+
+- US4: worker-align image with whisper.cpp built (`GGML_OPENMP=OFF`); real-recording check (18 s audio, WER 18%
+  raw, mostly digits written as words); source-picker E2E passes; 5 acceptance videos (one per source, QA first
+  pass) in `docs/reports/assets/M4/sources/`.
+- US8: migration 0005 (assets, brand_kits, media_gen_cache, RLS), upload service with sha256 dedupe and
+  Vietnamese glyph check, brand override in the compiler (colours, fonts, logo; visual test 10/10), brand kit
+  and asset library pages; the editor always saves the full palette and blocks low-contrast pairs (API too).
+  Brand E2E passes.
+- Next: T124 AI media provider (cost decision for the product owner), styles T155–T159, mixing T160, guide T161,
+  report T162.

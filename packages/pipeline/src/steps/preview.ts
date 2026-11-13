@@ -24,6 +24,7 @@ export async function storyboardPreview(
 ): Promise<ScenePreview[]> {
   const aspect = spec.meta.aspectRatios[0]!;
   const video = await compileVideo(spec, {
+    ...(ctx.brand ? { brand: ctx.brand } : {}),
     aspect,
     stylesRoot: ctx.stylesRoot,
     outDir: join(ctx.workDir, "preview-build"),

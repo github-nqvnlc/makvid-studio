@@ -310,12 +310,12 @@
 .cta-btn {
   align-self: flex-start;
   background: var(--accent);
-  color: #fff;
+  color: var(--c-accentInk);
   border-radius: 999px;
   padding: 0.35em 0.9em;
 }
 .cta-btn .fit {
-  color: #fff;
+  color: var(--c-accentInk);
 }
 .cta-handle {
   color: var(--c-muted);

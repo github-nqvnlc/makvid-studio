@@ -118,6 +118,7 @@ export const projects = pgTable("projects", {
   deletedAt: ts("deleted_at"),
   settings: jsonb("settings").notNull().default({}),
   runId: uuid("run_id"),
+  brandKitId: uuid("brand_kit_id"),
 });
 
 export const projectVersions = pgTable("project_versions", {
@@ -269,5 +270,64 @@ export const chatMessages = pgTable("chat_messages", {
   content: text("content").notNull(),
   targetSceneId: text("target_scene_id"),
   versionId: uuid("version_id"),
+  createdAt: ts("created_at").notNull().defaultNow(),
+});
+
+// ---- 0005: brand kits + asset library (migrations/0005_brand_assets.sql) ----
+
+export const assetKind = pgEnum("asset_kind", [
+  "image",
+  "video",
+  "audio",
+  "music",
+  "voice_recording",
+  "font",
+  "generated_image",
+  "generated_video",
+]);
+export const assetOrigin = pgEnum("asset_origin", ["upload", "ingest", "ai", "library"]);
+
+export const assets = pgTable(
+  "assets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    workspaceId: uuid("workspace_id").notNull(),
+    kind: assetKind("kind").notNull(),
+    name: text("name").notNull(),
+    storageKey: text("storage_key").notNull(),
+    mime: text("mime").notNull(),
+    bytes: integer("bytes").notNull(),
+    sha256: text("sha256").notNull(),
+    width: integer("width"),
+    height: integer("height"),
+    durationMs: integer("duration_ms"),
+    license: jsonb("license").notNull().default({}),
+    metadata: jsonb("metadata").notNull().default({}),
+    origin: assetOrigin("origin").notNull().default("upload"),
+    createdAt: ts("created_at").notNull().defaultNow(),
+  },
+  (t) => [unique("assets_workspace_sha_uq").on(t.workspaceId, t.sha256)],
+);
+
+export const brandKits = pgTable("brand_kits", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id").notNull(),
+  name: text("name").notNull(),
+  logoAssetId: uuid("logo_asset_id"),
+  colors: jsonb("colors").notNull().default({}),
+  fonts: jsonb("fonts").notNull().default({}),
+  logoPosition: text("logo_position").notNull().default("top-right"),
+  isDefault: boolean("is_default").notNull().default(false),
+  createdAt: ts("created_at").notNull().defaultNow(),
+  updatedAt: ts("updated_at").notNull().defaultNow(),
+});
+
+export const mediaGenCache = pgTable("media_gen_cache", {
+  cacheKey: text("cache_key").primaryKey(),
+  workspaceId: uuid("workspace_id").notNull(),
+  assetId: uuid("asset_id").notNull(),
+  provider: text("provider").notNull(),
+  model: text("model").notNull(),
+  costUsd: numeric("cost_usd", { precision: 12, scale: 6 }),
   createdAt: ts("created_at").notNull().defaultNow(),
 });

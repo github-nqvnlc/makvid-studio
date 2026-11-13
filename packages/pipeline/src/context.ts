@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { LlmProvider } from "@makvid/ai";
 import type { Renderer } from "@makvid/renderer";
+import type { BrandKit } from "@makvid/compiler";
 import type { MusicProvider } from "@makvid/media";
 import type { MfaAligner, TtsProvider } from "@makvid/tts";
 
@@ -50,6 +51,8 @@ export interface PipelineContext {
   voiceId: string;
   /** Licensed music catalog (ADR 0007); procedural beds when absent. */
   music?: MusicProvider;
+  /** Workspace brand kit with local file paths (US8); applied to every compile. */
+  brand?: BrandKit;
   onUsage(u: UsageEntry): void;
   onProgress(p: Progress): void;
 }

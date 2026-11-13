@@ -260,6 +260,9 @@ importers:
       '@makvid/ai':
         specifier: workspace:*
         version: link:../../packages/ai
+      '@makvid/compiler':
+        specifier: workspace:*
+        version: link:../../packages/compiler
       '@makvid/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -278,6 +281,9 @@ importers:
       '@makvid/storage':
         specifier: workspace:*
         version: link:../../packages/storage
+      '@makvid/style-kit':
+        specifier: workspace:*
+        version: link:../../packages/style-kit
       '@makvid/tts':
         specifier: workspace:*
         version: link:../../packages/tts

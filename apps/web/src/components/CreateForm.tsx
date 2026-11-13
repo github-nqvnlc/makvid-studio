@@ -12,7 +12,7 @@ const ASPECTS = ["9:16", "16:9", "1:1", "4:5"] as const;
 const SOURCES = ["prompt", "script", "url", "github", "table", "media"] as const;
 type SourceKind = (typeof SOURCES)[number];
 
-export function CreateForm({ voices }: { voices: VoiceOption[] }) {
+export function CreateForm({ voices, hasBrand = false }: { voices: VoiceOption[]; hasBrand?: boolean }) {
   const t = useTranslations("create");
   const te = useTranslations("errors");
   const router = useRouter();
@@ -23,6 +23,7 @@ export function CreateForm({ voices }: { voices: VoiceOption[] }) {
   const [link, setLink] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [useSourceAudio, setUseSourceAudio] = useState(true);
+  const [useBrand, setUseBrand] = useState(hasBrand);
   const [aspect, setAspect] = useState<(typeof ASPECTS)[number]>("9:16");
   const [durationSec, setDuration] = useState(45);
   const [mode, setMode] = useState<"auto" | "review">("auto");
@@ -43,12 +44,13 @@ export function CreateForm({ voices }: { voices: VoiceOption[] }) {
       res = await fetch("/api/projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ prompt, aspect, durationSec, mode, voiceId }),
+        body: JSON.stringify({ prompt, aspect, durationSec, mode, voiceId, useBrand }),
       });
     else {
       const fd = new FormData();
       for (const [k, v] of Object.entries({ kind, aspect, durationSec: String(durationSec), mode, voiceId }))
         fd.set(k, v);
+      fd.set("useBrand", String(useBrand));
       if (kind === "script") fd.set("text", script);
       if (kind === "url" || kind === "github") fd.set("url", link.trim());
       if (kind === "media") fd.set("useSourceAudio", String(useSourceAudio));
@@ -189,6 +191,18 @@ export function CreateForm({ voices }: { voices: VoiceOption[] }) {
           ))}
         </div>
       </fieldset>
+      {hasBrand && (
+        <label className="row" style={{ fontWeight: 400 }}>
+          <input
+            type="checkbox"
+            style={{ width: "auto" }}
+            checked={useBrand}
+            onChange={(e) => setUseBrand(e.target.checked)}
+            data-testid="use-brand"
+          />
+          {t("useBrand")}
+        </label>
+      )}
       <fieldset className="stack" style={{ border: 0, padding: 0, margin: 0 }}>
         <legend style={{ fontWeight: 600, marginBottom: 6 }}>{t("voice")}</legend>
         <VoicePicker voices={voices} value={voiceId} onChange={setVoice} />

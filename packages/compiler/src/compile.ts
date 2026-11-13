@@ -1,7 +1,7 @@
 // Compiler: VideoSpec + style pack -> one self-contained directory per scene (index.html, local fonts,
 // bundled runtime, no external URLs). Same inputs -> byte-identical output (constitution III).
 import { copyFileSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join } from "node:path";
 import {
   ASPECT_SIZES,
   aspectSlug,
@@ -21,6 +21,7 @@ import {
 } from "@makvid/style-kit";
 import { loadPack, type LoadedPack, type TemplateSchema } from "@makvid/style-kit/node";
 import { bundlePack, vendorFiles } from "./bundle";
+import { applyBrand, fontFormat, logoHtml, servedFontName, type BrandKit } from "./brand";
 import { captionsHtml, layoutCaptions, type CaptionChunkOut, type CaptionStyle } from "./captions";
 import { hashDir, sceneCacheKey } from "./hash";
 import { escapeHtml, parseLayout, renderLayout, wordKey, type FitIssue } from "./layout";
@@ -37,6 +38,8 @@ export interface CompileOptions {
   /** Renderer id + version, part of the cache key. */
   engine: string;
   fps?: number;
+  /** Workspace brand kit (US8): colours, fonts and logo override the style pack. */
+  brand?: BrandKit;
 }
 
 export interface CompiledScene {
@@ -115,7 +118,7 @@ function fontFaceCss(pack: LoadedPack): string {
   return pack.fontsManifest.faces
     .map(
       (f) =>
-        `@font-face{font-family:"${f.family}";font-style:${f.style};font-weight:${f.weight};font-display:block;src:url("assets/fonts/${f.file}") format("woff2");unicode-range:${f.unicodeRange};}`,
+        `@font-face{font-family:"${f.family}";font-style:${f.style};font-weight:${f.weight};font-display:block;src:url("assets/fonts/${servedFontName(f.file)}") format("${fontFormat(f.file)}");unicode-range:${f.unicodeRange};}`,
     )
     .join("\n");
 }
@@ -175,6 +178,7 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
     let p = packs.get(id);
     if (!p) {
       p = loadPack(join(opts.stylesRoot, id));
+      if (opts.brand) p = applyBrand(p, opts.brand);
       packs.set(id, p);
     }
     return p;
@@ -258,7 +262,15 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
     );
 
     for (const f of pack.fontsManifest.faces)
-      copyFileSync(join(pack.dir, "fonts", f.file), join(dir, "assets", "fonts", f.file));
+      copyFileSync(
+        isAbsolute(f.file) ? f.file : join(pack.dir, "fonts", f.file),
+        join(dir, "assets", "fonts", servedFontName(f.file)),
+      );
+    const logo = logoHtml(opts.brand);
+    if (logo.file && opts.brand?.logo) {
+      mkdirSync(join(dir, "assets", "brand"), { recursive: true });
+      copyFileSync(opts.brand.logo.file, join(dir, "assets", "brand", logo.file));
+    }
     if (runtime === "gsap") copyFileSync(vendor.gsap, join(dir, "assets", "vendor", "gsap.min.js"));
     copyFileSync(vendor.hyperframesRuntime, join(dir, "assets", "vendor", "hyperframe.runtime.iife.js"));
     writeFileSync(join(dir, "assets", "pack.js"), await bundlePack(pack));
@@ -310,6 +322,7 @@ ${tokensCss(pack, opts.aspect, scene.tuning?.accentColor)}
 ${BASE_CSS}
 #captions{bottom:${capBottom}px;}
 ${pack.css}
+${logo.css}
 </style>
 </head>
 <body>
@@ -319,6 +332,7 @@ ${pack.css}
 ${layoutHtml}
 </div></div>
 ${capHtml}
+${logo.html}
 </div>
 </div>
 ${runtime === "gsap" ? '<script src="assets/vendor/gsap.min.js"></script>\n' : ""}<script src="assets/vendor/hyperframe.runtime.iife.js"></script>

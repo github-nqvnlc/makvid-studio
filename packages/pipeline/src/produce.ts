@@ -5,6 +5,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { PROMPT_VERSION, type StoryboardOutput } from "@makvid/ai";
+import type { BrandKit } from "@makvid/compiler";
 import type { AspectRatio, VideoSpec } from "@makvid/spec";
 import {
   BuiltinMusicProvider,
@@ -44,6 +45,8 @@ export interface ProduceInput {
   mediaFile?: string;
   /** kind "media": keep the original voice (transcript narrated verbatim, no TTS). */
   useSourceAudio?: boolean;
+  /** Brand kit (US8) resolved to local files in the work dir. */
+  brand?: BrandKit;
   /** Voice chosen by the user (voice picker); defaults to the context voice. */
   voiceId?: string;
 }
@@ -142,6 +145,7 @@ export async function runStage(
   const ctx: PipelineContext = {
     ...ctx0,
     voiceId: input.voiceId ?? ctx0.voiceId,
+    ...(input.brand ? { brand: input.brand } : {}),
     onUsage: (u) => (state.usage.push(u), ctx0.onUsage(u)),
   };
   const cache = new StepCache(join(ctx.workDir, "steps"));

@@ -9,7 +9,9 @@
     "signIn": "Sign in",
     "signUp": "Sign up",
     "signOut": "Sign out",
-    "language": "Tiếng Việt"
+    "language": "Tiếng Việt",
+    "brand": "Brand",
+    "assets": "Library"
   },
   "auth": {
     "signInTitle": "Sign in",
@@ -66,7 +68,8 @@
     "voice": "Voice",
     "submit": "Create video",
     "submitting": "Sending…",
-    "tooShort": "Please describe your idea a little more."
+    "tooShort": "Please describe your idea a little more.",
+    "useBrand": "Use the brand kit (colours, fonts, logo)"
   },
   "voices": {
     "standard": "Standard",
@@ -133,7 +136,9 @@
     "file_too_large": "The file is too large (data up to 2 MB, audio/video up to 200 MB and 5 minutes).",
     "file_empty": "The file is empty.",
     "source_unreachable": "Could not open this link. Please check it (it must be a public page).",
-    "source_unreadable": "Could not read content from this source. Please try another one."
+    "source_unreadable": "Could not read content from this source. Please try another one.",
+    "font_glyphs": "This font is missing some Vietnamese letters or the ₫ sign. Please choose a font that supports Vietnamese.",
+    "brand_contrast": "The brand colours are too similar for text to be readable. Please choose colours with more contrast."
   },
   "source": {
     "title": "Content source",
@@ -173,5 +178,43 @@
       "label": "Audio or video file (up to 5 minutes)",
       "useSourceAudio": "Keep the original voice as the voice-over"
     }
+  },
+  "brand": {
+    "title": "Brand kit",
+    "hint": "These colours, logo and fonts replace the style in every scene when the brand is turned on for a video.",
+    "name": "Name",
+    "colors": "Colours",
+    "color": {
+      "bg": "Background",
+      "fg": "Text",
+      "accent": "Accent",
+      "accentInk": "Text on accent",
+      "surface": "Cards",
+      "muted": "Secondary text"
+    },
+    "logo": "Logo",
+    "none": "No logo",
+    "topRight": "Top right",
+    "topLeft": "Top left",
+    "uploadLogo": "Upload a logo (PNG, JPG, WebP or SVG)",
+    "fonts": "Fonts",
+    "font": {
+      "display": "Heading font",
+      "body": "Body and caption font"
+    },
+    "styleFont": "Use the style's font",
+    "save": "Save brand kit",
+    "saved": "Saved. Turn on \"Use brand\" when creating a video to apply it.",
+    "preview": "Preview",
+    "sampleTitle": "Sample heading",
+    "sampleBody": "Sample text with Vietnamese marks: ạ ặ ẩ ỗ ữ ỹ ₫",
+    "sampleCta": "Follow now",
+    "contrast": "Text would be hard to read for: {pairs}. Please choose colours with more contrast."
+  },
+  "assets": {
+    "title": "Asset library",
+    "hint": "Images and fonts you uploaded. Each file is stored once.",
+    "empty": "No assets yet. Upload a logo or a font on the Brand page.",
+    "font": "Font"
   }
 }

@@ -10,6 +10,8 @@ import {
   projectVersions,
   usageRecords,
   users,
+  assets,
+  brandKits,
   chatMessages,
   withUser,
   withWorkspace,
@@ -42,7 +44,13 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
     await a.unsafe(`DROP DATABASE IF EXISTS ${dbName}`);
     await a.unsafe(`CREATE DATABASE ${dbName}`);
     await a.end();
-    expect(await migrate(url)).toEqual(["0001_init.sql", "0002_projects_pipeline.sql", "0003_auth_chat.sql"]);
+    expect(await migrate(url)).toEqual([
+      "0001_init.sql",
+      "0002_projects_pipeline.sql",
+      "0003_auth_chat.sql",
+      "0004_jobs_run_id.sql",
+      "0005_brand_assets.sql",
+    ]);
     expect(await migrate(url)).toEqual([]); // idempotent
     ({ db, close } = connect(url, 4));
     const [u1] = await db.insert(users).values({ email: "a@example.test" }).returning();
@@ -180,5 +188,44 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
     });
     expect(await withWorkspace(db, ids.w2, (tx) => tx.select().from(chatMessages))).toEqual([]);
     expect(await withWorkspace(db, ids.w1, (tx) => tx.select().from(chatMessages))).toHaveLength(1);
+  });
+
+  it("assets are tenant-scoped and de-duplicated per workspace by sha256", async () => {
+    const sha = "a".repeat(64);
+    const row = (ws: string) => ({
+      workspaceId: ws,
+      kind: "image" as const,
+      name: "logo.png",
+      storageKey: `ws/${ws}/assets/${sha}`,
+      mime: "image/png",
+      bytes: 1234,
+      sha256: sha,
+    });
+    await withWorkspace(db, ids.w1, (tx) => tx.insert(assets).values(row(ids.w1)));
+    expect(await pgError(withWorkspace(db, ids.w1, (tx) => tx.insert(assets).values(row(ids.w1))))).toMatch(
+      /assets_workspace_sha_uq|duplicate key/,
+    );
+    await withWorkspace(db, ids.w2, (tx) => tx.insert(assets).values(row(ids.w2))); // same file, other tenant: ok
+    expect(await withWorkspace(db, ids.w2, (tx) => tx.select().from(assets))).toHaveLength(1);
+    const [a] = await withWorkspace(db, ids.w1, (tx) => tx.select().from(assets));
+    await withWorkspace(db, ids.w1, (tx) =>
+      tx
+        .insert(brandKits)
+        .values({
+          workspaceId: ids.w1,
+          name: "Brand",
+          logoAssetId: a!.id,
+          colors: { accent: "#f7c948" },
+          isDefault: true,
+        }),
+    );
+    expect(
+      await pgError(
+        withWorkspace(db, ids.w1, (tx) =>
+          tx.insert(brandKits).values({ workspaceId: ids.w1, name: "B2", isDefault: true }),
+        ),
+      ),
+    ).toMatch(/brand_kits_default_uq|duplicate key/);
+    expect(await withWorkspace(db, ids.w2, (tx) => tx.select().from(brandKits))).toEqual([]);
   });
 });

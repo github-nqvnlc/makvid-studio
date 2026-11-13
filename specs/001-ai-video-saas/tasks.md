@@ -253,9 +253,9 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 - [x] T113 [P] [US4] Implement article ingest with `@mozilla/readability` + `linkedom`, image extraction only when license/robots allow, in `packages/media/src/ingest/article.ts`
 - [x] T114 [P] [US4] Implement public GitHub ingest (README, releases, recent commits via REST API) in `packages/media/src/ingest/github.ts`
 - [x] T115 [P] [US4] Implement CSV/JSON ingest with type inference and chart-ready series in `packages/media/src/ingest/table.ts`
-- [ ] T116 [P] [US4] Implement audio/video ingest → word-timestamped transcript via `Aligner`, option to use the source audio as narration, in `packages/media/src/ingest/media.ts` — _code + mocked tests done (whisper.cpp + MFA, ADR 0010); real-recording check pending (Docker)_
-- [ ] T117 [US4] Add source pickers (script, URL, GitHub, file upload) to `apps/web/src/app/[locale]/projects/new/page.tsx` — _UI + API done; browser check pending (Docker)_
-- [ ] T118 [US4] Create `fixtures/sources/` (one per type) and render acceptance videos into `docs/reports/assets/M4/sources/`
+- [x] T116 [P] [US4] Implement audio/video ingest → word-timestamped transcript via `Aligner`, option to use the source audio as narration, in `packages/media/src/ingest/media.ts`
+- [x] T117 [US4] Add source pickers (script, URL, GitHub, file upload) to `apps/web/src/app/[locale]/projects/new/page.tsx`
+- [x] T118 [US4] Create `fixtures/sources/` (one per type) and render acceptance videos into `docs/reports/assets/M4/sources/`
 
 ---
 
@@ -268,15 +268,15 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 ### Tests for User Story 8
 
 - [x] T119 [P] [US8] Upload validation tests (MIME allowlist + magic-byte sniff + size limits per kind) in `apps/web/test/upload.test.ts`
-- [ ] T120 [P] [US8] Brand override visual test across 4 aspects in `tests/visual/brand-kit.test.ts`
+- [x] T120 [P] [US8] Brand override visual test across 4 aspects in `tests/visual/brand-kit.test.ts`
 
 ### Implementation for User Story 8
 
-- [ ] T121 [P] [US8] Create tables `brand_kits`, `assets` (unique(workspace_id, sha256); `kind` enum per data-model.md; license jsonb), `music_tracks`, `sfx`, `voices` in `packages/db/src/schema/assets.ts`
-- [ ] T122 [P] [US8] Implement upload service (validation, sha256 dedupe, font glyph check for Vietnamese) in `apps/web/src/server/uploads.ts`
-- [ ] T123 [US8] Implement brand-kit token override in `packages/compiler/src/brand.ts`
+- [x] T121 [P] [US8] Create tables `brand_kits`, `assets` (unique(workspace_id, sha256); `kind` enum per data-model.md; license jsonb), `music_tracks`, `sfx`, `voices` in `packages/db/src/schema/assets.ts`
+- [x] T122 [P] [US8] Implement upload service (validation, sha256 dedupe, font glyph check for Vietnamese) in `apps/web/src/server/uploads.ts`
+- [x] T123 [US8] Implement brand-kit token override in `packages/compiler/src/brand.ts`
 - [ ] T124 [P] [US8] Implement `MediaGenProvider` interface + one provider adapter with content-hash cache and cost logging in `packages/media/src/gen/`
-- [ ] T125 [US8] Build brand kit and asset library pages in `apps/web/src/app/[locale]/workspace/brand/` and `.../assets/`
+- [x] T125 [US8] Build brand kit and asset library pages in `apps/web/src/app/[locale]/workspace/brand/` and `.../assets/`
 
 ---
 

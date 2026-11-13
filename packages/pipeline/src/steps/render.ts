@@ -27,6 +27,7 @@ async function compileFor(
   aspect: AspectRatio,
 ): Promise<CompiledVideo> {
   return compileVideo(spec, {
+    ...(ctx.brand ? { brand: ctx.brand } : {}),
     aspect,
     stylesRoot: ctx.stylesRoot,
     outDir: join(ctx.workDir, "build"),

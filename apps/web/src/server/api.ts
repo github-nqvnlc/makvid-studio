@@ -12,7 +12,9 @@ export type ApiErrorCode =
   | "file_too_large"
   | "file_empty"
   | "source_unreachable"
-  | "source_unreadable";
+  | "source_unreadable"
+  | "font_glyphs"
+  | "brand_contrast";
 
 const STATUS: Record<ApiErrorCode, number> = {
   unauthorized: 401,
@@ -28,6 +30,8 @@ const STATUS: Record<ApiErrorCode, number> = {
   file_empty: 400,
   source_unreachable: 422,
   source_unreadable: 422,
+  font_glyphs: 422,
+  brand_contrast: 422,
 };
 
 export const fail = (code: ApiErrorCode) => Response.json({ error: code }, { status: STATUS[code] });

@@ -16,6 +16,7 @@ import { createProject } from "@makvid/pipeline";
 import { voiceCatalog } from "@makvid/tts";
 import { fail, guarded } from "@/server/api";
 import { server } from "@/server/deps";
+import { resolveBrandKit } from "@/server/assets";
 import { UploadError, validateUpload } from "@/server/uploads";
 
 export const dynamic = "force-dynamic";
@@ -43,6 +44,7 @@ const Common = z.object({
   durationSec: z.coerce.number().int().min(30).max(180),
   mode: z.enum(["auto", "review"]),
   voiceId: z.string(),
+  useBrand: z.union([z.boolean(), z.enum(["true", "false"]).transform((x) => x === "true")]).optional(),
 });
 const Source = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("prompt"), prompt: z.string().trim().min(3).max(4000) }),
@@ -126,6 +128,7 @@ export function POST(req: Request) {
       console.warn("source ingest failed", (e as Error).message);
       return fail("source_unreadable");
     }
+    const brand = c.useBrand ? await resolveBrandKit(v.workspaceId) : null;
     const id = await createProject(server().deps, {
       workspaceId: v.workspaceId,
       userId: v.userId,
@@ -136,6 +139,7 @@ export function POST(req: Request) {
       voiceId: c.voiceId,
       ...(source ? { source } : {}),
       ...(media ? { media, useSourceAudio: s.kind === "media" && s.useSourceAudio === "true" } : {}),
+      ...(brand ? { brand } : {}),
     });
     return Response.json({ id }, { status: 201 });
   });

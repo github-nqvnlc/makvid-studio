@@ -37,6 +37,8 @@ export default async function LocaleLayout({
                 <>
                   <Link href="/">{t("projects")}</Link>
                   <Link href="/projects/new">{t("newProject")}</Link>
+                  <Link href="/workspace/brand">{t("brand")}</Link>
+                  <Link href="/workspace/assets">{t("assets")}</Link>
                   <span className="muted small">{v.name || v.email}</span>
                   <SignOutButton label={t("signOut")} />
                 </>

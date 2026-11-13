@@ -3,18 +3,75 @@
 // never reach the disk.
 import "server-only";
 
-export type UploadKind = "table" | "media";
+export type UploadKind = "table" | "media" | "image" | "font";
 
 export interface SniffedFile {
   kind: UploadKind;
   /** Canonical extension derived from the content (not from the user's file name). */
-  ext: "csv" | "json" | "mp3" | "wav" | "m4a" | "mp4" | "mov" | "webm" | "ogg";
+  ext:
+    | "csv"
+    | "json"
+    | "mp3"
+    | "wav"
+    | "m4a"
+    | "mp4"
+    | "mov"
+    | "webm"
+    | "ogg"
+    | "png"
+    | "jpg"
+    | "webp"
+    | "svg"
+    | "ttf"
+    | "otf"
+    | "woff"
+    | "woff2";
 }
 
 export const UPLOAD_LIMITS: Record<UploadKind, number> = {
   table: 2 * 1024 * 1024, // 2 MB
   media: 200 * 1024 * 1024, // 200 MB (≤ 5 minutes is enforced after decoding)
+  image: 5 * 1024 * 1024, // 5 MB (logos, pictures)
+  font: 10 * 1024 * 1024, // 10 MB
 };
+
+export const MIME: Record<SniffedFile["ext"], string> = {
+  csv: "text/csv",
+  json: "application/json",
+  mp3: "audio/mpeg",
+  wav: "audio/wav",
+  m4a: "audio/mp4",
+  mp4: "video/mp4",
+  mov: "video/quicktime",
+  webm: "video/webm",
+  ogg: "audio/ogg",
+  png: "image/png",
+  jpg: "image/jpeg",
+  webp: "image/webp",
+  svg: "image/svg+xml",
+  ttf: "font/ttf",
+  otf: "font/otf",
+  woff: "font/woff",
+  woff2: "font/woff2",
+};
+
+/**
+ * SVG is accepted only as a plain drawing: no scripts, event handlers, foreignObject, external references or
+ * entities (they are rendered through <img>, but files are also downloadable and reusable).
+ */
+export function safeSvg(text: string): boolean {
+  const t = text.replace(/^\uFEFF/, "").trimStart();
+  if (!/^(<\?xml[^>]*>\s*)?(<!--[\s\S]*?-->\s*)*<svg[\s>]/i.test(t)) return false;
+  if (!/xmlns=["']http:\/\/www\.w3\.org\/2000\/svg["']/.test(t)) return false;
+  if (/<!DOCTYPE|<!ENTITY|<script|<foreignObject|<iframe|<embed|<object|<use\b/i.test(t)) return false;
+  if (/\son[a-z]+\s*=/i.test(t)) return false;
+  if (/javascript:|data:text\/html/i.test(t)) return false;
+  // href / xlink:href / url(): only fragment references (#id) or embedded raster images.
+  for (const m of t.matchAll(/(?:href|src)\s*=\s*["']([^"']*)["']/gi))
+    if (!/^#|^data:image\/(png|jpeg|webp);base64,/i.test(m[1]!)) return false;
+  for (const m of t.matchAll(/url\(\s*["']?([^"')]*)/gi)) if (!m[1]!.startsWith("#")) return false;
+  return true;
+}
 
 export class UploadError extends Error {
   constructor(readonly code: "file_type" | "file_too_large" | "file_empty") {
@@ -37,6 +94,15 @@ export function sniff(bytes: Uint8Array): SniffedFile | null {
     return { kind: "media", ext: "mp4" };
   }
   if (ascii(bytes, 0, 4) === "RIFF" && ascii(bytes, 8, 12) === "WAVE") return { kind: "media", ext: "wav" };
+  if (ascii(bytes, 0, 4) === "RIFF" && ascii(bytes, 8, 12) === "WEBP") return { kind: "image", ext: "webp" };
+  if (startsWith(bytes, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+    return { kind: "image", ext: "png" };
+  if (startsWith(bytes, [0xff, 0xd8, 0xff])) return { kind: "image", ext: "jpg" };
+  if (ascii(bytes, 0, 4) === "wOF2") return { kind: "font", ext: "woff2" };
+  if (ascii(bytes, 0, 4) === "wOFF") return { kind: "font", ext: "woff" };
+  if (ascii(bytes, 0, 4) === "OTTO") return { kind: "font", ext: "otf" };
+  if (startsWith(bytes, [0x00, 0x01, 0x00, 0x00]) || ascii(bytes, 0, 4) === "true")
+    return { kind: "font", ext: "ttf" };
   if (ascii(bytes, 0, 4) === "OggS") return { kind: "media", ext: "ogg" };
   if (startsWith(bytes, [0x1a, 0x45, 0xdf, 0xa3])) return { kind: "media", ext: "webm" }; // EBML (webm/mkv)
   if (ascii(bytes, 0, 3) === "ID3" || (bytes[0] === 0xff && (bytes[1]! & 0xe0) === 0xe0))
@@ -51,6 +117,8 @@ export function sniff(bytes: Uint8Array): SniffedFile | null {
     return null;
   }
   const t = text.replace(/^\uFEFF/, "").trimStart();
+  if (/^(<\?xml[^>]*>\s*)?(<!--[\s\S]*?-->\s*)*<svg[\s>]/i.test(t))
+    return bytes.length <= head.length && safeSvg(text) ? { kind: "image", ext: "svg" } : null;
   if (/^[[{]/.test(t)) return { kind: "table", ext: "json" };
   const firstLine = t.split(/\r?\n/, 1)[0] ?? "";
   if (/[,;\t]/.test(firstLine) && t.includes("\n")) return { kind: "table", ext: "csv" };

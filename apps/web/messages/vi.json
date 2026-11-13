@@ -9,7 +9,9 @@
     "signIn": "Đăng nhập",
     "signUp": "Đăng ký",
     "signOut": "Đăng xuất",
-    "language": "English"
+    "language": "English",
+    "brand": "Thương hiệu",
+    "assets": "Thư viện"
   },
   "auth": {
     "signInTitle": "Đăng nhập",
@@ -66,7 +68,8 @@
     "voice": "Giọng đọc",
     "submit": "Tạo video",
     "submitting": "Đang gửi…",
-    "tooShort": "Hãy viết ý tưởng dài hơn một chút."
+    "tooShort": "Hãy viết ý tưởng dài hơn một chút.",
+    "useBrand": "Dùng bộ nhận diện thương hiệu (màu, font, logo)"
   },
   "voices": {
     "standard": "Tiêu chuẩn",
@@ -133,7 +136,9 @@
     "file_too_large": "File quá lớn (dữ liệu tối đa 2 MB, âm thanh/video tối đa 200 MB và 5 phút).",
     "file_empty": "File trống.",
     "source_unreachable": "Không mở được đường dẫn này. Hãy kiểm tra lại link (phải là trang công khai).",
-    "source_unreadable": "Không đọc được nội dung từ nguồn này. Hãy thử một nguồn khác."
+    "source_unreadable": "Không đọc được nội dung từ nguồn này. Hãy thử một nguồn khác.",
+    "font_glyphs": "Font này thiếu một số chữ tiếng Việt (có dấu) hoặc ký hiệu ₫, nên chưa dùng được. Hãy chọn font hỗ trợ tiếng Việt.",
+    "brand_contrast": "Các màu thương hiệu quá giống nhau nên chữ khó đọc. Hãy chọn màu tương phản hơn."
   },
   "source": {
     "title": "Nguồn nội dung",
@@ -173,5 +178,43 @@
       "label": "File âm thanh hoặc video (tối đa 5 phút)",
       "useSourceAudio": "Giữ giọng gốc trong file làm lời đọc"
     }
+  },
+  "brand": {
+    "title": "Bộ nhận diện thương hiệu",
+    "hint": "Màu, logo và font này sẽ thay cho phong cách ở mọi cảnh khi bạn bật thương hiệu cho video.",
+    "name": "Tên",
+    "colors": "Màu",
+    "color": {
+      "bg": "Nền",
+      "fg": "Chữ",
+      "accent": "Màu nhấn",
+      "accentInk": "Chữ trên màu nhấn",
+      "surface": "Thẻ / khung",
+      "muted": "Chữ phụ"
+    },
+    "logo": "Logo",
+    "none": "Không dùng logo",
+    "topRight": "Góc trên bên phải",
+    "topLeft": "Góc trên bên trái",
+    "uploadLogo": "Tải logo (PNG, JPG, WebP hoặc SVG)",
+    "fonts": "Font chữ",
+    "font": {
+      "display": "Font tiêu đề",
+      "body": "Font nội dung và phụ đề"
+    },
+    "styleFont": "Dùng font của phong cách",
+    "save": "Lưu thương hiệu",
+    "saved": "Đã lưu. Bật \"Dùng thương hiệu\" khi tạo video để áp dụng.",
+    "preview": "Xem trước",
+    "sampleTitle": "Tiêu đề mẫu tiếng Việt",
+    "sampleBody": "Nội dung mẫu với đầy đủ dấu: ạ ặ ẩ ỗ ữ ỹ ₫",
+    "sampleCta": "Theo dõi ngay",
+    "contrast": "Chữ khó đọc với cặp màu: {pairs}. Hãy chọn màu tương phản hơn."
+  },
+  "assets": {
+    "title": "Thư viện tài nguyên",
+    "hint": "Ảnh và font bạn đã tải lên. Mỗi file chỉ lưu một lần.",
+    "empty": "Chưa có tài nguyên nào. Tải logo hoặc font ở trang Thương hiệu.",
+    "font": "Font"
   }
 }

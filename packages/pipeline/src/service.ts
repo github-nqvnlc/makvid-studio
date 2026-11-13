@@ -7,6 +7,7 @@ import { cpSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { and, asc, desc, eq, inArray, isNull, max } from "drizzle-orm";
 import type { ConnectionOptions } from "bullmq";
+import type { BrandKit } from "@makvid/compiler";
 import {
   chatMessages,
   projects,
@@ -102,6 +103,8 @@ export interface CreateProjectInput {
   /** Uploaded audio/video: saved in the work dir and transcribed by the worker. */
   media?: { bytes: Buffer; ext: string };
   useSourceAudio?: boolean;
+  /** Workspace brand kit resolved to local files (US8). */
+  brand?: { id: string; kit: BrandKit };
 }
 
 export async function createProject(deps: ServiceDeps, c: CreateProjectInput): Promise<string> {
@@ -117,6 +120,7 @@ export async function createProject(deps: ServiceDeps, c: CreateProjectInput): P
     ...(c.styleId ? { styleId: c.styleId } : {}),
     ...(c.source ? { source: c.source } : {}),
     ...(c.media && c.useSourceAudio ? { useSourceAudio: true } : {}),
+    ...(c.brand ? { brand: c.brand.kit } : {}),
   };
   const kind = c.source?.kind ?? (c.media ? "media" : "prompt");
   const projectId = await withWorkspace(deps.db, c.workspaceId, async (tx) => {
@@ -146,6 +150,7 @@ export async function createProject(deps: ServiceDeps, c: CreateProjectInput): P
           ...(c.styleId ? { styleId: c.styleId } : {}),
         },
         runId,
+        ...(c.brand ? { brandKitId: c.brand.id } : {}),
       })
       .returning();
     return p!.id;
@@ -300,7 +305,13 @@ export async function chatProject(
     return { p, spec: await headSpec(tx, p.headVersionId), history: history.reverse() };
   });
   const turns: ChatTurn[] = history.map((h) => ({ role: h.role, content: h.content }));
-  const r = await chatEdit({ ...ai, stylesRoot: deps.stylesRoot }, spec, text, turns);
+  const brand = loadState(workDirOf(deps, workspaceId, projectId))?.input.brand;
+  const r = await chatEdit(
+    { ...ai, stylesRoot: deps.stylesRoot, ...(brand ? { brand } : {}) },
+    spec,
+    text,
+    turns,
+  );
   const versionId = r.kind === "edit" ? randomUUID() : undefined;
   await withWorkspace(deps.db, workspaceId, async (tx) => {
     if (r.kind === "edit")

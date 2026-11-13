@@ -13,6 +13,8 @@ const CODES = [
   "file_empty",
   "source_unreachable",
   "source_unreadable",
+  "font_glyphs",
+  "brand_contrast",
 ] as const;
 export type ErrorKey = (typeof CODES)[number];
 
