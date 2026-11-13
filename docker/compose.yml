@@ -4,10 +4,11 @@
 # whole stack without paid calls.
 #
 # Hardening:
-#   - Two networks. "internal" has no route to the internet: postgres, valkey, worker-align and worker-render
-#     live only there, so compiled scenes (and the browser that renders them) cannot reach the network.
-#     "edge" is for what needs the internet or the host: web (users), worker-ai / worker-audio (AI and voice
-#     providers), seaweedfs (browsers download the signed URLs from it).
+#   - Two networks. "internal" has no route to the internet: postgres, valkey and worker-align live only there.
+#     "edge" is for what needs the internet or the host: web (users), worker-ai / worker-audio / worker-render
+#     (AI and voice providers; render asks the AI to shorten overflowing text), seaweedfs (browsers download
+#     the signed URLs from it). Compiled scenes never reach the network: the renderer blocks every non-local
+#     request and QA fails a scene that tries.
 #   - Healthchecks on every long-running service, CPU/memory limits, restart policies, no dev default secrets.
 #   - Render scales out: docker compose -f docker/compose.yml up -d --scale worker-render=3
 #     (RENDER_DISTRIBUTED=1: a video's scenes are spread over every render container, ADR 0013).
@@ -222,12 +223,14 @@ services:
 
   worker-render:
     <<: *worker
-    # No internet: scenes are self-contained (fonts, scripts, images are bundled at compile time).
-    networks: [internal]
+    # Needs the edge network: the QA stage asks the AI provider to shorten text that overflows. Scenes still
+    # cannot reach the network: the renderer blocks every non-local request and QA fails any scene that tries.
+    networks: [internal, edge]
     shm_size: 2g
     environment:
       <<: *app-env
       S3_ENDPOINT: "http://seaweedfs:8333"
+      FPT_AI_API_KEY: ${FPT_AI_API_KEY:-}
       RENDER_WORKERS: ${RENDER_WORKERS:-4}
       RENDER_DISTRIBUTED: "1"
     entrypoint: ["node", "--import", "tsx", "apps/worker-render/src/index.ts"]
