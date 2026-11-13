@@ -6,13 +6,30 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { PROMPT_VERSION, type StoryboardOutput } from "@makvid/ai";
 import type { AspectRatio, VideoSpec } from "@makvid/spec";
-import { BuiltinMusicProvider, mixAudio, sfxLibrary, sfxPath, type MusicChoice } from "@makvid/media";
+import {
+  BuiltinMusicProvider,
+  ingestMedia,
+  mixAudio,
+  sfxLibrary,
+  sfxPath,
+  type MusicChoice,
+} from "@makvid/media";
 import { narrate } from "@makvid/tts";
 import { hashOf, StepCache, type PipelineContext, type Step, type UsageEntry } from "./context";
-import { ingest, storyboard, styleOptions, suggestStyles, writeScript, type ScriptResult } from "./steps/ai";
-import { applyNarration, buildSpec, musicMoods, videoDurationMs } from "./steps/build";
+import {
+  ingest,
+  scriptFromSource,
+  storyboard,
+  styleOptions,
+  suggestStyles,
+  writeScript,
+  type ScriptResult,
+  type SourceMaterial,
+} from "./steps/ai";
+import { applyNarration, applySourceData, buildSpec, musicMoods, videoDurationMs } from "./steps/build";
 import { storyboardPreview, type ScenePreview } from "./steps/preview";
 import { qaAndFix, renderAll, type RenderedAspect } from "./steps/render";
+import { narrationFromSource } from "./steps/source-narration";
 
 export interface ProduceInput {
   prompt: string;
@@ -21,6 +38,12 @@ export interface ProduceInput {
   styleId?: string; // forces a style; otherwise the top suggestion
   /** "auto" (default) never pauses; "review" pauses for the user twice (US3). */
   mode?: "auto" | "review";
+  /** Already-ingested source (script, article, GitHub, table, media); `prompt` is then a short label. */
+  source?: SourceMaterial;
+  /** Uploaded audio/video in the work dir: transcribed (whisper + MFA) by the script stage on the worker. */
+  mediaFile?: string;
+  /** kind "media": keep the original voice (transcript narrated verbatim, no TTS). */
+  useSourceAudio?: boolean;
   /** Voice chosen by the user (voice picker); defaults to the context voice. */
   voiceId?: string;
 }
@@ -73,6 +96,8 @@ export interface ProduceState {
   loudnessLufs?: number;
   qa?: { passed: boolean; attempts: number; issues: number };
   outputs?: RenderedAspect[];
+  /** Ingested source (US4), kept for later stages (chart data, source audio). */
+  source?: SourceMaterial;
   /** Review mode: the point the pipeline is waiting at (cleared when the user resumes). */
   awaiting?: ReviewPoint;
   approved?: ReviewPoint[];
@@ -135,11 +160,20 @@ export async function runStage(
   switch (stage) {
     case "script": {
       p("ingest", "progress.ingest", 0.02);
-      const source = ingest(input.prompt);
+      const source =
+        state.source ??
+        input.source ??
+        (input.mediaFile
+          ? await ingestMedia(input.mediaFile, { speech: ctx.aligner, workDir: join(ctx.workDir, "source") })
+          : ingest(input.prompt));
+      state.source = source;
       p("script", "progress.script", 0.05);
-      state.script = await cache.run("script", { source, durationSec, v: PROMPT_VERSION }, () =>
-        writeScript(ctx, source, durationSec),
-      );
+      state.script =
+        source.kind === "script" || (source.kind === "media" && input.useSourceAudio)
+          ? scriptFromSource(source) // the user's narration (or the recording's transcript), word for word
+          : await cache.run("script", { source: source.markdown, durationSec, v: PROMPT_VERSION }, () =>
+              writeScript(ctx, source, durationSec),
+            );
       break;
     }
     case "style": {
@@ -179,6 +213,7 @@ export async function runStage(
         voiceId: ctx.voiceId,
         musicTrackId: `${music.provider}:${music.trackId}`,
       });
+      if (state.source) state.spec = applySourceData(state.spec, state.source);
       break;
     }
     case "preview": {
@@ -190,18 +225,25 @@ export async function runStage(
       p("tts", "progress.voice", 0.35);
       let spec = need(state.spec, "a storyboard");
       const parts = spec.script.map((s) => ({ scriptId: s.id, text: s.text }));
-      const nar = await cache.run("tts", { parts, voice: ctx.voiceId }, async () => {
-        const n = await narrate(parts, { tts: ctx.tts, aligner: ctx.aligner, voiceId: ctx.voiceId });
-        ctx.onUsage({
-          step: "tts",
-          provider: ctx.tts.id,
-          model: ctx.voiceId,
-          ttsChars: n.chars,
-          costUsd: n.costUsd,
-        });
-        const { wav, ...rest } = n;
-        return { ...rest, wavB64: wav.toString("base64") };
-      });
+      const fromSource = input.useSourceAudio && state.source?.kind === "media";
+      const nar = fromSource
+        ? (() => {
+            const n = narrationFromSource(spec, state.source!);
+            const { wav, ...rest } = n;
+            return { ...rest, chars: 0, costUsd: 0, wavB64: wav.toString("base64") };
+          })()
+        : await cache.run("tts", { parts, voice: ctx.voiceId }, async () => {
+            const n = await narrate(parts, { tts: ctx.tts, aligner: ctx.aligner, voiceId: ctx.voiceId });
+            ctx.onUsage({
+              step: "tts",
+              provider: ctx.tts.id,
+              model: ctx.voiceId,
+              ttsChars: n.chars,
+              costUsd: n.costUsd,
+            });
+            const { wav, ...rest } = n;
+            return { ...rest, wavB64: wav.toString("base64") };
+          });
       const narrationFile = join(ctx.workDir, "narration.wav");
       writeFileSync(narrationFile, Buffer.from(nar.wavB64, "base64"));
       spec = applyNarration(spec, nar.words, nar.parts, nar.durationMs);

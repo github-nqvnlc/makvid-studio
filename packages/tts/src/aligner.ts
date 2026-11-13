@@ -1,6 +1,12 @@
 // Aligner client for apps/worker-align (Montreal Forced Aligner, ADR 0006).
 import type { Aligner, TimedWord } from "./types";
 
+export interface TranscriptSegment {
+  startMs: number;
+  endMs: number;
+  text: string;
+}
+
 export interface AlignUtterance {
   id: string;
   wav: Buffer;
@@ -33,6 +39,27 @@ export class MfaAligner implements Aligner {
     if (!res.ok || !body.utterances)
       throw new Error(`aligner error ${res.status}: ${body.error ?? "no result"}`);
     return new Map(body.utterances.map((u) => [u.id, u.words]));
+  }
+
+  /** Speech-to-text (whisper.cpp in worker-align, ADR 0010): segments with coarse times; 16 kHz mono WAV in. */
+  async transcribe(
+    wav16k: Buffer,
+    opts: { language?: string; prompt?: string } = {},
+  ): Promise<TranscriptSegment[]> {
+    const res = await fetch(`${this.baseUrl}/transcribe`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        wav_base64: wav16k.toString("base64"),
+        language: opts.language ?? "vi",
+        ...(opts.prompt ? { prompt: opts.prompt.normalize("NFC") } : {}),
+      }),
+      signal: AbortSignal.timeout(this.timeoutMs * 2),
+    });
+    const body = (await res.json()) as { segments?: TranscriptSegment[]; error?: string };
+    if (!res.ok || !body.segments)
+      throw new Error(`transcriber error ${res.status}: ${body.error ?? "no result"}`);
+    return body.segments;
   }
 
   async align(req: { audio: Buffer; transcript?: string; language: "vi" }): Promise<{ words: TimedWord[] }> {

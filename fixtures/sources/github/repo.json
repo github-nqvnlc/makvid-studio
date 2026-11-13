@@ -1,0 +1,9 @@
+{
+  "full_name": "example-org/clip-maker",
+  "description": "Tạo video ngắn từ văn bản bằng dòng lệnh",
+  "stargazers_count": 1280,
+  "language": "TypeScript",
+  "topics": ["video", "cli", "vietnamese"],
+  "license": { "spdx_id": "MIT" },
+  "private": false
+}

@@ -104,6 +104,13 @@ export const mockLlm: ChatAdapter = {
           },
         ],
       });
+      // Fewer than 6 sentences (written scripts, short recordings): one sentence per scene, cta last.
+      if (n > 0 && n < SENTENCES.length) {
+        const all = (JSON.parse(text) as { scenes: Array<{ sentences: number[] }> }).scenes;
+        const kept = [...all.slice(0, n - 1), all[all.length - 1]!];
+        kept.forEach((sc, i) => (sc.sentences = [i + 1]));
+        text = JSON.stringify({ scenes: kept });
+      }
     } else if (sys.includes("trợ lý chỉnh sửa video"))
       text = mockChatAnswer(sys, messages[messages.length - 1]!.content);
     else text = JSON.stringify({ patches: [{ slot: "title", value: "Ngắn" }] });
@@ -134,6 +141,20 @@ export const mockTts: TtsProvider = {
 };
 
 export class MockAligner extends MfaAligner {
+  /** Fake speech-to-text: one fixed Vietnamese sentence per 3 s of audio (16 kHz mono WAV in). */
+  override async transcribe(wav16k: Buffer) {
+    const ms = Math.round(((wav16k.length - 44) / 2 / 16000) * 1000);
+    const lines = [
+      "Xin chào các bạn.",
+      "Hôm nay mình chia sẻ một mẹo nhỏ.",
+      "Hãy để dành một phần thu nhập mỗi tháng.",
+      "Đặt mục tiêu rõ ràng và kiên trì.",
+      "Cảm ơn các bạn đã lắng nghe.",
+    ];
+    const n = Math.max(1, Math.min(lines.length, Math.floor(ms / 3000)));
+    return lines.slice(0, n).map((text, i) => ({ startMs: i * 3000, endMs: i * 3000 + 2500, text }));
+  }
+
   override async alignMany(utts: Array<{ id: string; wav: Buffer; text: string }>) {
     return new Map(
       utts.map((u) => [

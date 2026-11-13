@@ -3,7 +3,7 @@
 // one-scene edit cheap), undo / redo (move the head), restore, duplicate. Every query runs through
 // withWorkspace (RLS). Workers persist results through dbSink (sink.ts).
 import { randomUUID } from "node:crypto";
-import { cpSync, existsSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { and, asc, desc, eq, inArray, isNull, max } from "drizzle-orm";
 import type { ConnectionOptions } from "bullmq";
@@ -31,6 +31,7 @@ import {
   type Stage,
   type StoryboardReview,
 } from "./produce";
+import type { SourceMaterial } from "./steps/ai";
 import { chatEdit, type ChatTurn } from "./steps/chat";
 import { resumeProduction, startProduction } from "./worker";
 
@@ -96,6 +97,11 @@ export interface CreateProjectInput {
   mode: "auto" | "review";
   voiceId: string;
   styleId?: string;
+  /** Already-ingested source (script, article, GitHub, table); `prompt` is then its short label. */
+  source?: SourceMaterial;
+  /** Uploaded audio/video: saved in the work dir and transcribed by the worker. */
+  media?: { bytes: Buffer; ext: string };
+  useSourceAudio?: boolean;
 }
 
 export async function createProject(deps: ServiceDeps, c: CreateProjectInput): Promise<string> {
@@ -109,17 +115,25 @@ export async function createProject(deps: ServiceDeps, c: CreateProjectInput): P
     mode: c.mode,
     voiceId: c.voiceId,
     ...(c.styleId ? { styleId: c.styleId } : {}),
+    ...(c.source ? { source: c.source } : {}),
+    ...(c.media && c.useSourceAudio ? { useSourceAudio: true } : {}),
   };
+  const kind = c.source?.kind ?? (c.media ? "media" : "prompt");
   const projectId = await withWorkspace(deps.db, c.workspaceId, async (tx) => {
     const [src] = await tx
       .insert(sourceMaterials)
-      .values({ workspaceId: c.workspaceId, kind: "prompt", markdown: prompt })
+      .values({
+        workspaceId: c.workspaceId,
+        kind,
+        markdown: c.source?.markdown ?? prompt,
+        metadata: c.source?.metadata ?? {},
+      })
       .returning();
     const [p] = await tx
       .insert(projects)
       .values({
         workspaceId: c.workspaceId,
-        title: [...prompt].slice(0, 80).join(""),
+        title: [...(c.source?.title ?? prompt)].slice(0, 80).join(""),
         mode: c.mode,
         status: "scripting",
         sourceMaterialId: src!.id,
@@ -136,7 +150,13 @@ export async function createProject(deps: ServiceDeps, c: CreateProjectInput): P
       .returning();
     return p!.id;
   });
-  mkdirSync(workDirOf(deps, c.workspaceId, projectId), { recursive: true });
+  const workDir = workDirOf(deps, c.workspaceId, projectId);
+  mkdirSync(join(workDir, "source"), { recursive: true });
+  if (c.media) {
+    if (!/^[a-z0-9]{2,5}$/.test(c.media.ext)) throw new ProjectError("invalid");
+    input.mediaFile = join(workDir, "source", `upload.${c.media.ext}`);
+    writeFileSync(input.mediaFile, c.media.bytes);
+  }
   await startProduction(deps.connection, jobData(deps, c.workspaceId, projectId, runId, input), qopts(deps));
   return projectId;
 }

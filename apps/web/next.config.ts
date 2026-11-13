@@ -27,6 +27,7 @@ const config: NextConfig = {
   ],
   serverExternalPackages: [
     "esbuild",
+    "linkedom",
     "@resvg/resvg-js",
     "sharp",
     "puppeteer-core",

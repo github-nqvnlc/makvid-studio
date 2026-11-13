@@ -24,6 +24,7 @@
   "dependencies": {
     "@makvid/ai": "workspace:*",
     "@makvid/db": "workspace:*",
+    "@makvid/media": "workspace:*",
     "@makvid/pipeline": "workspace:*",
     "@makvid/queue": "workspace:*",
     "@makvid/spec": "workspace:*",

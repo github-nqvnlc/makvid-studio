@@ -243,18 +243,18 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 ### Tests for User Story 4
 
-- [ ] T109 [P] [US4] SSRF tests (private IPs, localhost, DNS rebinding, redirects to private ranges, non-http schemes) in `packages/media/test/ssrf.test.ts`
-- [ ] T110 [P] [US4] Ingest tests per source with fixtures in `packages/media/test/ingest.test.ts` (written script preserved verbatim after NFC; article main content only; CSV numbers equal chart values)
+- [x] T109 [P] [US4] SSRF tests (private IPs, localhost, DNS rebinding, redirects to private ranges, non-http schemes) in `packages/media/test/ssrf.test.ts`
+- [x] T110 [P] [US4] Ingest tests per source with fixtures in `packages/media/test/ingest.test.ts` (written script preserved verbatim after NFC; article main content only; CSV numbers equal chart values)
 
 ### Implementation for User Story 4
 
-- [ ] T111 [P] [US4] Implement SSRF-safe fetcher (resolve + block private ranges, re-check after redirect, size/time limits) in `packages/media/src/net/safe-fetch.ts`
-- [ ] T112 [P] [US4] Implement written-script ingest (keep narration verbatim, only split scenes) in `packages/media/src/ingest/script.ts` and storyboard mode flag in `apps/worker-ai/src/steps/storyboard.ts`
-- [ ] T113 [P] [US4] Implement article ingest with `@mozilla/readability` + `linkedom`, image extraction only when license/robots allow, in `packages/media/src/ingest/article.ts`
-- [ ] T114 [P] [US4] Implement public GitHub ingest (README, releases, recent commits via REST API) in `packages/media/src/ingest/github.ts`
-- [ ] T115 [P] [US4] Implement CSV/JSON ingest with type inference and chart-ready series in `packages/media/src/ingest/table.ts`
-- [ ] T116 [P] [US4] Implement audio/video ingest → word-timestamped transcript via `Aligner`, option to use the source audio as narration, in `packages/media/src/ingest/media.ts`
-- [ ] T117 [US4] Add source pickers (script, URL, GitHub, file upload) to `apps/web/src/app/[locale]/projects/new/page.tsx`
+- [x] T111 [P] [US4] Implement SSRF-safe fetcher (resolve + block private ranges, re-check after redirect, size/time limits) in `packages/media/src/net/safe-fetch.ts`
+- [x] T112 [P] [US4] Implement written-script ingest (keep narration verbatim, only split scenes) in `packages/media/src/ingest/script.ts` and storyboard mode flag in `apps/worker-ai/src/steps/storyboard.ts` — _verbatim script in packages/pipeline (scriptFromSource), no separate storyboard mode needed_
+- [x] T113 [P] [US4] Implement article ingest with `@mozilla/readability` + `linkedom`, image extraction only when license/robots allow, in `packages/media/src/ingest/article.ts`
+- [x] T114 [P] [US4] Implement public GitHub ingest (README, releases, recent commits via REST API) in `packages/media/src/ingest/github.ts`
+- [x] T115 [P] [US4] Implement CSV/JSON ingest with type inference and chart-ready series in `packages/media/src/ingest/table.ts`
+- [ ] T116 [P] [US4] Implement audio/video ingest → word-timestamped transcript via `Aligner`, option to use the source audio as narration, in `packages/media/src/ingest/media.ts` — _code + mocked tests done (whisper.cpp + MFA, ADR 0010); real-recording check pending (Docker)_
+- [ ] T117 [US4] Add source pickers (script, URL, GitHub, file upload) to `apps/web/src/app/[locale]/projects/new/page.tsx` — _UI + API done; browser check pending (Docker)_
 - [ ] T118 [US4] Create `fixtures/sources/` (one per type) and render acceptance videos into `docs/reports/assets/M4/sources/`
 
 ---
@@ -267,7 +267,7 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 ### Tests for User Story 8
 
-- [ ] T119 [P] [US8] Upload validation tests (MIME allowlist + magic-byte sniff + size limits per kind) in `apps/web/test/upload.test.ts`
+- [x] T119 [P] [US8] Upload validation tests (MIME allowlist + magic-byte sniff + size limits per kind) in `apps/web/test/upload.test.ts`
 - [ ] T120 [P] [US8] Brand override visual test across 4 aspects in `tests/visual/brand-kit.test.ts`
 
 ### Implementation for User Story 8

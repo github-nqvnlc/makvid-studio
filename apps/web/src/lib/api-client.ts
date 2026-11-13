@@ -8,6 +8,11 @@ const CODES = [
   "nothing_to_redo",
   "unauthorized",
   "generic",
+  "file_type",
+  "file_too_large",
+  "file_empty",
+  "source_unreachable",
+  "source_unreadable",
 ] as const;
 export type ErrorKey = (typeof CODES)[number];
 

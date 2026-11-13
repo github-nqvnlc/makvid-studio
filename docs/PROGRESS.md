@@ -100,3 +100,12 @@
 
 - Product owner approved M3. Next: M4 — US4 source ingest (T109–T118) and US8 brand kit / assets / AI media
   (T119–T125).
+
+## 2026-11-13 — M4 in progress: US4 sources (Claude Code)
+
+- Done + tested: SSRF-safe fetcher (28 tests), ingest for written script (verbatim), article (Readability,
+  images only when CC-licensed + robots allow), GitHub (REST), CSV/JSON (VN/EN numbers, chart = file values),
+  audio/video (whisper.cpp + MFA per segment, "keep original voice", ADR 0010); pipeline wiring (3 integration
+  tests), upload validation (12 tests), create-form source picker + multipart API.
+- Pending: Docker was stopped — worker-align image with whisper not built yet, real-recording check, E2E of
+  the source picker, acceptance videos (T118); then US8 (T120–T125).

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "v2.0.0",
+    "tag_name": "v2.0.0",
+    "body": "- Render nhanh gấp 3 lần\n- Thêm khung hình 4:5\n- Sửa lỗi phụ đề tiếng Việt",
+    "published_at": "2026-10-20T08:00:00Z"
+  },
+  {
+    "name": "v1.5.0",
+    "tag_name": "v1.5.0",
+    "body": "- Thêm giọng đọc nữ miền Nam",
+    "published_at": "2026-08-02T08:00:00Z"
+  }
+]

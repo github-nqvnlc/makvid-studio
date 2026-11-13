@@ -128,6 +128,50 @@
     "nothing_to_undo": "Nothing to undo.",
     "nothing_to_redo": "Nothing to redo.",
     "unauthorized": "Please sign in.",
-    "generic": "Something went wrong. Please try again in a few minutes."
+    "generic": "Something went wrong. Please try again in a few minutes.",
+    "file_type": "This file type is not supported. Use CSV/JSON for data, or MP3/WAV/M4A/MP4/MOV/WEBM for audio and video.",
+    "file_too_large": "The file is too large (data up to 2 MB, audio/video up to 200 MB and 5 minutes).",
+    "file_empty": "The file is empty.",
+    "source_unreachable": "Could not open this link. Please check it (it must be a public page).",
+    "source_unreadable": "Could not read content from this source. Please try another one."
+  },
+  "source": {
+    "title": "Content source",
+    "scriptTooShort": "The script is too short.",
+    "linkMissing": "Please paste a link.",
+    "fileMissing": "Please choose a file.",
+    "prompt": {
+      "name": "Idea",
+      "hint": "One sentence; the AI writes the voice-over."
+    },
+    "script": {
+      "name": "Written script",
+      "hint": "Your words kept as is, only split into scenes.",
+      "label": "Script (voice-over)",
+      "placeholder": "Paste your voice-over here, one idea per sentence."
+    },
+    "url": {
+      "name": "Article / web page",
+      "hint": "Uses the main content of the page.",
+      "label": "Article link",
+      "placeholder": "https://…"
+    },
+    "github": {
+      "name": "GitHub repository",
+      "hint": "Introduce a project or its latest changes.",
+      "label": "Public GitHub repository link",
+      "placeholder": "https://github.com/owner/repo"
+    },
+    "table": {
+      "name": "Data file",
+      "hint": "CSV or JSON as animated charts.",
+      "label": "CSV or JSON file (up to 2 MB)"
+    },
+    "media": {
+      "name": "Audio / video",
+      "hint": "Turn speech into a captioned video.",
+      "label": "Audio or video file (up to 5 minutes)",
+      "useSourceAudio": "Keep the original voice as the voice-over"
+    }
   }
 }

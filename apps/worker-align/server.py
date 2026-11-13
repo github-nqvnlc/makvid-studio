@@ -2,6 +2,8 @@
 
 POST /align  {"utterances": [{"id": "u1", "wav_base64": "...", "text": "lời đọc"}]}
   -> {"utterances": [{"id": "u1", "words": [{"text": "lời", "startMs": 120, "endMs": 310}, ...]}], "seconds": 31.2}
+POST /transcribe {"wav_base64": "<16 kHz mono WAV>", "language": "vi", "prompt": "optional context"}
+  -> {"segments": [{"startMs": 0, "endMs": 4200, "text": "..."}], "seconds": 12.3}   (whisper.cpp, recognition only)
 GET  /health -> {"ok": true}
 
 Python stdlib only (runs inside the MFA conda env). Not exposed outside the internal network.
@@ -20,6 +22,10 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 PORT = int(os.environ.get("PORT", "8090"))
 JOBS = os.environ.get("MFA_JOBS", "4")
 MAX_BODY = 200 * 1024 * 1024
+WHISPER_BIN = os.environ.get("WHISPER_BIN", "/opt/whisper/whisper-cli")
+WHISPER_MODEL = os.environ.get("WHISPER_MODEL_PATH", "/opt/whisper/model.bin")
+WHISPER_THREADS = os.environ.get("WHISPER_THREADS", "4")
+LANG_RE = re.compile(r"^[a-z]{2}$")
 ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 
 
@@ -66,6 +72,33 @@ def align(utterances):
         shutil.rmtree(work, ignore_errors=True)
 
 
+def transcribe(wav_b64, language="vi", prompt=""):
+    if not LANG_RE.match(language):
+        raise ValueError("invalid language")
+    work = tempfile.mkdtemp(prefix="whisper-")
+    try:
+        wav = os.path.join(work, "in.wav")
+        with open(wav, "wb") as f:
+            f.write(base64.b64decode(wav_b64))
+        cmd = [WHISPER_BIN, "-m", WHISPER_MODEL, "-f", wav, "-l", language, "-t", WHISPER_THREADS,
+               "-oj", "-of", os.path.join(work, "out"), "-np"]
+        if prompt:
+            cmd += ["--prompt", unicodedata.normalize("NFC", prompt)[:400]]
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        if proc.returncode != 0:
+            raise RuntimeError("whisper failed: " + proc.stderr[-800:])
+        with open(os.path.join(work, "out.json"), encoding="utf-8") as f:
+            data = json.load(f)
+        segs = []
+        for s in data.get("transcription", []):
+            text = unicodedata.normalize("NFC", s.get("text", "")).strip()
+            if text:
+                segs.append({"startMs": int(s["offsets"]["from"]), "endMs": int(s["offsets"]["to"]), "text": text})
+        return segs
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+
+
 class Handler(BaseHTTPRequestHandler):
     def _send(self, code, obj):
         body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
@@ -82,7 +115,7 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, {"error": "not found"})
 
     def do_POST(self):
-        if self.path != "/align":
+        if self.path not in ("/align", "/transcribe"):
             return self._send(404, {"error": "not found"})
         n = int(self.headers.get("content-length", "0"))
         if n <= 0 or n > MAX_BODY:
@@ -90,6 +123,9 @@ class Handler(BaseHTTPRequestHandler):
         try:
             req = json.loads(self.rfile.read(n))
             t0 = time.time()
+            if self.path == "/transcribe":
+                segs = transcribe(req["wav_base64"], req.get("language", "vi"), req.get("prompt", ""))
+                return self._send(200, {"segments": segs, "seconds": round(time.time() - t0, 2)})
             res = align(req["utterances"])
             self._send(200, {"utterances": res, "seconds": round(time.time() - t0, 2)})
         except (ValueError, KeyError) as e:

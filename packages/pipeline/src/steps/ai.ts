@@ -16,17 +16,23 @@ import {
 } from "@makvid/ai";
 import { nfc } from "@makvid/spec";
 import { listPacks, loadPack } from "@makvid/style-kit/node";
+import type { SourceMaterial } from "@makvid/media";
 import type { PipelineContext, Step } from "../context";
 
-export interface SourceMaterial {
-  kind: "prompt";
-  markdown: string;
-}
+export type { SourceMaterial };
 
 export function ingest(prompt: string): SourceMaterial {
   const text = nfc(prompt).replace(/\s+/g, " ").trim();
   if (text.length < 3) throw new Error("prompt is too short");
-  return { kind: "prompt", markdown: text.slice(0, 8000) };
+  return { kind: "prompt", markdown: text.slice(0, 8000), metadata: {} };
+}
+
+/** A written script is narrated verbatim: only the title is derived when the user gave none. */
+export function scriptFromSource(source: SourceMaterial): ScriptResult {
+  const sentences = source.sentences ?? [];
+  const first = (sentences[0] ?? "").replace(/[.!?…]+$/, "");
+  const title = source.title ?? ([...first].length <= 60 ? first : `${[...first].slice(0, 57).join("")}…`);
+  return { title, sentences };
 }
 
 export const logUsage = (ctx: Pick<PipelineContext, "onUsage">, step: Step, usage: TokenUsage[]) => {

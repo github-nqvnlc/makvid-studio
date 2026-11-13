@@ -12,6 +12,7 @@ import {
 } from "@makvid/spec";
 import { loadPack } from "@makvid/style-kit/node";
 import { hashOf } from "../context";
+import type { SourceMaterial } from "@makvid/media";
 import type { ScriptResult } from "./ai";
 
 export const FPS = 30;
@@ -131,3 +132,26 @@ export const videoDurationMs = (spec: VideoSpec) => {
   const last = spec.scenes.at(-1)!.timing!;
   return last.startMs + last.durationMs;
 };
+
+/**
+ * Table sources (T115): every `stat` scene shows the file's series exactly (labels shortened only), and its
+ * headline value must be one of the file's values (else the latest one), so charts never show invented numbers.
+ */
+export function applySourceData(spec: VideoSpec, source: SourceMaterial): VideoSpec {
+  if (!source.series?.length) return spec;
+  const points = source.series
+    .slice(-10)
+    .map((p) => ({ label: [...p.label].slice(0, 12).join(""), value: p.value }));
+  const values = new Set(points.map((p) => p.value));
+  const scenes = spec.scenes.map((s) => {
+    if (s.templateId !== "stat") return s;
+    const v =
+      typeof s.slots.value === "number" && values.has(s.slots.value)
+        ? s.slots.value
+        : points[points.length - 1]!.value;
+    return { ...s, slots: { ...s.slots, value: v, series: { series: points } } };
+  });
+  const r = parseVideoSpec({ ...spec, scenes });
+  if (!r.ok) throw new Error(`source data produced an invalid VideoSpec: ${r.issues.join("; ")}`);
+  return r.spec;
+}

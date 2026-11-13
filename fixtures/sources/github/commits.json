@@ -1,0 +1,5 @@
+[
+  { "commit": { "message": "feat: add 4:5 aspect ratio\n\nlong body" } },
+  { "commit": { "message": "fix: Vietnamese caption line breaks" } },
+  { "commit": { "message": "perf: parallel scene rendering" } }
+]

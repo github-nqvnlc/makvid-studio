@@ -128,6 +128,50 @@
     "nothing_to_undo": "Không còn gì để hoàn tác.",
     "nothing_to_redo": "Không còn gì để làm lại.",
     "unauthorized": "Bạn cần đăng nhập.",
-    "generic": "Có lỗi xảy ra. Bạn thử lại sau ít phút nhé."
+    "generic": "Có lỗi xảy ra. Bạn thử lại sau ít phút nhé.",
+    "file_type": "Loại file này chưa được hỗ trợ. Hãy dùng CSV/JSON cho dữ liệu, hoặc MP3/WAV/M4A/MP4/MOV/WEBM cho âm thanh, video.",
+    "file_too_large": "File quá lớn (dữ liệu tối đa 2 MB, âm thanh/video tối đa 200 MB và 5 phút).",
+    "file_empty": "File trống.",
+    "source_unreachable": "Không mở được đường dẫn này. Hãy kiểm tra lại link (phải là trang công khai).",
+    "source_unreadable": "Không đọc được nội dung từ nguồn này. Hãy thử một nguồn khác."
+  },
+  "source": {
+    "title": "Nguồn nội dung",
+    "scriptTooShort": "Kịch bản quá ngắn.",
+    "linkMissing": "Hãy dán đường dẫn.",
+    "fileMissing": "Hãy chọn file.",
+    "prompt": {
+      "name": "Ý tưởng",
+      "hint": "Một câu mô tả, AI viết lời đọc."
+    },
+    "script": {
+      "name": "Kịch bản có sẵn",
+      "hint": "Giữ nguyên lời bạn viết, chỉ chia cảnh.",
+      "label": "Kịch bản (lời đọc)",
+      "placeholder": "Dán lời đọc của bạn vào đây, mỗi câu một ý."
+    },
+    "url": {
+      "name": "Bài báo / trang web",
+      "hint": "Lấy nội dung chính của bài.",
+      "label": "Đường dẫn bài viết",
+      "placeholder": "https://…"
+    },
+    "github": {
+      "name": "Kho GitHub",
+      "hint": "Giới thiệu dự án hoặc thay đổi mới.",
+      "label": "Đường dẫn kho GitHub công khai",
+      "placeholder": "https://github.com/chu-so-huu/ten-kho"
+    },
+    "table": {
+      "name": "File dữ liệu",
+      "hint": "CSV hoặc JSON thành biểu đồ động.",
+      "label": "File CSV hoặc JSON (tối đa 2 MB)"
+    },
+    "media": {
+      "name": "Âm thanh / video",
+      "hint": "Chuyển lời nói thành video có phụ đề.",
+      "label": "File âm thanh hoặc video (tối đa 5 phút)",
+      "useSourceAudio": "Giữ giọng gốc trong file làm lời đọc"
+    }
   }
 }

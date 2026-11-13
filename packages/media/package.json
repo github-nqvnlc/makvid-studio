@@ -14,5 +14,10 @@
   },
   "devDependencies": {
     "@makvid/config": "workspace:*"
+  },
+  "dependencies": {
+    "@makvid/tts": "workspace:*",
+    "@mozilla/readability": "0.6.0",
+    "linkedom": "0.18.14"
   }
 }
