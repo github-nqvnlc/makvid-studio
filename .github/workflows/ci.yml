@@ -50,6 +50,8 @@ jobs:
           cache: pnpm
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: pnpm install --frozen-lockfile
+      - name: Pinned chrome-headless-shell (QA captures frames even with mock providers)
+        run: cd "$RUNNER_TEMP" && npx --yes @puppeteer/browsers@3.2.2 install chrome-headless-shell@153.0.8010.36 --path ~/.cache/puppeteer
       - name: Infra (postgres, valkey, seaweedfs)
         run: docker compose -f docker/compose.dev.yml up -d --wait postgres valkey seaweedfs
       - name: DB, billing, web (RLS, quota, webhooks)
