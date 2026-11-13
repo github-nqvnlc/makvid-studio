@@ -1,6 +1,7 @@
 // Mock providers (no network): LLM, TTS, aligner, renderer. Used by integration tests and, with
 // MAKVID_MOCK_PROVIDERS=1, by the workers + web app for end-to-end tests without paid calls.
-import { execFileSync } from "node:child_process";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { estimateSeconds, type ChatAdapter } from "@makvid/ai";
@@ -179,7 +180,8 @@ export const stubRenderer: Renderer = {
     calls.renders++;
     const frames =
       Number(/data-duration="([\d.]+)"/.exec(readFileSync(join(i.sceneDir, "index.html"), "utf8"))![1]) * 30;
-    execFileSync("ffmpeg", [
+    // Async: a synchronous ffmpeg call blocks the event loop and BullMQ then loses the job lock (slow CI).
+    await promisify(execFile)("ffmpeg", [
       "-hide_banner",
       "-loglevel",
       "error",

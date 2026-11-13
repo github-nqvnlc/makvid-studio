@@ -107,10 +107,10 @@ services:
     image: makvid-align:dev
     networks: [internal]
     healthcheck:
-      test:
-        [
+      test: [
           "CMD",
-          "python",
+          # micromamba image: python is not on PATH outside its entrypoint
+          "/opt/conda/bin/python",
           "-c",
           "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/health', timeout=3)",
         ]
