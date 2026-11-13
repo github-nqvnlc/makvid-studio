@@ -1,0 +1,19 @@
+{
+  "video": {
+    "scenes": 16,
+    "seconds": 30.5,
+    "size": "1080x1920",
+    "fps": 30
+  },
+  "results": [
+    {
+      "workers": 1,
+      "capture": 4,
+      "renderSec": 96.3,
+      "muxSec": 11.5,
+      "perVideoMinute": 212,
+      "durationSec": 61.014,
+      "speedup": 1
+    }
+  ]
+}

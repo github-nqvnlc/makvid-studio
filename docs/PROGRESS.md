@@ -167,3 +167,20 @@
 - Product owner approved M4. Style-mixing toggle in the web create form not decided yet (CLI `--mix-styles`
   works); planned alongside M5 form work unless told otherwise.
 - Next: M5 (batch from template + CSV, roles/quota/billing, public API + webhooks, platform admin).
+
+## 2026-11-13 — M5 in progress (Claude Code)
+
+- ADR 0004 (Polar + PayOS, product-owner choice) and ADR 0013 (batches, quota, API, scene fan-out).
+- Migration 0006: templates/batches, invitations, plans/subscriptions/credits/usage periods/reservations,
+  payment orders/events, abuse signals, API keys, webhooks, idempotency; service/admin RLS scopes.
+- US5: template variables + CSV check, batch flow (priority, concurrency, retry failed, ZIP), pages.
+  Integration: 10 rows / 2 injected failures / retry only those (pass); single video overtakes a batch (pass).
+- US6: quota reserve/commit/release + credits (10 concurrent on free → exactly 3), Polar/PayOS/mock providers
+  (PayOS doc vector matches), watermark, abuse signals, RBAC matrix + route coverage, members/invitations,
+  billing page with mock checkout.
+- US7: /api/v1 per OpenAPI 1.0.0, argon2id keys, Valkey rate limit, Idempotency-Key, signed webhooks with
+  retries and SSRF guard, docs page. Contract test on the mock stack 6/6.
+- US9: admin area (queues/workers, AI cost vs revenue, plans, manual grants).
+- T132: scene-level distributed rendering (RENDER_DISTRIBUTED=1), integration 3/3.
+- Fixed: empty values in .env (WORK_ROOT=, QUEUE_PREFIX=) split work dirs between web and workers.
+- Next: render scaling benchmark in the container, 100-row batch acceptance, M5 report, GATE M5.

@@ -60,7 +60,8 @@ const video = await compileVideo(spec, {
     return `${r.id}@${r.version}`;
   })(),
 });
-const seconds = video.durationMs / 1000;
+// Sum of the scenes (each copy keeps its own timing, so the timeline end is not the video length).
+const seconds = video.scenes.reduce((n, s) => n + s.durationMs, 0) / 1000;
 console.log(
   `video: ${video.scenes.length} scenes, ${seconds.toFixed(1)} s, ${video.width}x${video.height}@${video.fps}`,
 );

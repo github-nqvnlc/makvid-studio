@@ -1,0 +1,37 @@
+{
+  "video": {
+    "scenes": 16,
+    "seconds": 30.5,
+    "size": "1080x1920",
+    "fps": 30
+  },
+  "results": [
+    {
+      "workers": 1,
+      "capture": 1,
+      "renderSec": 225.9,
+      "muxSec": 14.8,
+      "perVideoMinute": 473.6,
+      "durationSec": 61.014,
+      "speedup": 1
+    },
+    {
+      "workers": 2,
+      "capture": 1,
+      "renderSec": 133.2,
+      "muxSec": 11.7,
+      "perVideoMinute": 285,
+      "durationSec": 61.014,
+      "speedup": 1.7
+    },
+    {
+      "workers": 4,
+      "capture": 1,
+      "renderSec": 94.8,
+      "muxSec": 11.8,
+      "perVideoMinute": 209.8,
+      "durationSec": 61.014,
+      "speedup": 2.38
+    }
+  ]
+}
