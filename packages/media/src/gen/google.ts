@@ -135,7 +135,9 @@ export class GoogleImageProvider implements MediaGenProvider {
       const timeout = e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError");
       throw new MediaGenError(timeout ? "timeout" : "http", timeout ? "image request timed out" : String(e));
     }
-    const json = (await res.json().catch(() => ({}))) as InteractionResponse;
+    const raw: unknown = await res.json().catch(() => ({}));
+    // Error bodies come either as an object or wrapped in a one-element array.
+    const json = (Array.isArray(raw) ? (raw[0] ?? {}) : raw) as InteractionResponse;
     // Never echo the request (it carries the key); the provider message is enough to debug.
     if (!res.ok)
       throw new MediaGenError("http", `image request failed (${res.status}): ${json.error?.message ?? ""}`);

@@ -91,6 +91,12 @@ describe("Google image adapter", () => {
     expect((err as MediaGenError).code).toBe("http");
     expect(String((err as Error).message)).not.toContain("secret-key");
 
+    const wrapped = new GoogleImageProvider({
+      apiKey: "k",
+      fetch: fakeFetch([{ error: { message: "service account disabled" } }], 401).f,
+    });
+    await expect(wrapped.generateImage(REQ)).rejects.toThrow("(401): service account disabled");
+
     const blocked = new GoogleImageProvider({
       apiKey: "k",
       fetch: fakeFetch({ status: "failed", steps: [] }).f,
