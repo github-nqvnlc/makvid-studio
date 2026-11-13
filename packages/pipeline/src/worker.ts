@@ -10,7 +10,7 @@ import {
   type StageDef,
 } from "@makvid/queue";
 import { createRenderer, type Renderer } from "@makvid/renderer";
-import { FptTtsProvider, MfaAligner } from "@makvid/tts";
+import { FptTtsProvider, MfaAligner, type TtsProvider } from "@makvid/tts";
 import { musicProviderFromEnv } from "@makvid/media";
 import { Worker, type ConnectionOptions, type Job, type JobNode } from "bullmq";
 import type { PipelineContext, UsageEntry } from "./context";
@@ -73,7 +73,15 @@ export function contextFromEnv(
   const key = process.env.FPT_AI_API_KEY ?? "";
   if (!key && requireKey) throw new Error("FPT_AI_API_KEY is not set");
   const llm = createLlm(configFromEnv());
-  const tts = new FptTtsProvider(key);
+  // Without a key (render worker, AI calls via worker-ai) the voice provider must never be built: its client
+  // refuses an empty key at construction. A stand-in fails only if something tries to synthesize.
+  const tts: TtsProvider = key
+    ? new FptTtsProvider(key)
+    : {
+        id: "fpt",
+        listVoices: () => Promise.resolve([]),
+        synthesize: () => Promise.reject(new Error("FPT_AI_API_KEY is not set")),
+      };
   const aligner = new MfaAligner();
   const music = musicProviderFromEnv();
   return (workDir, hooks) => ({
