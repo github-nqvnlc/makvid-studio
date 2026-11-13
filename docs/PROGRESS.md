@@ -207,3 +207,8 @@
 - Cross-machine determinism: 13 packs x 32 golden frames made on Windows (container) match on the GitHub Linux
   runner. CI green on all 5 jobs (run #14) for the first time since M3.
 - Pending: T170 (product owner sends the Webflow GSAP confirmation for docs/legal/). Report docs/reports/M6.md.
+
+## 2026-11-14 — GATE M6 approved (Claude Code)
+
+- Product owner approved M6. All milestones M0–M6 approved.
+- Open: T170 (Webflow GSAP confirmation file into docs/legal/), plan prices, Polar/PayOS accounts, CSP, shared auth rate limit, external pentest, multi-host scaling test, style-mixing toggle in the web UI.
