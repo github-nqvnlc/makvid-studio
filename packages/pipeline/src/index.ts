@@ -12,3 +12,4 @@ export * from "./sink";
 export * from "./service";
 export * from "./app";
 export * from "./steps/source-narration";
+export * from "./mediagen-store";

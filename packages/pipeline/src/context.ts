@@ -19,7 +19,8 @@ export type Step =
   | "compile"
   | "qa"
   | "render_scene"
-  | "mux";
+  | "mux"
+  | "media_gen";
 
 export interface UsageEntry {
   step: Step;
@@ -29,6 +30,7 @@ export interface UsageEntry {
   tokensOut?: number;
   ttsChars?: number;
   renderSeconds?: number;
+  images?: number;
   costUsd: number | null;
 }
 

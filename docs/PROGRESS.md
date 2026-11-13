@@ -121,3 +121,11 @@
   Brand E2E passes.
 - Next: T124 AI media provider (cost decision for the product owner), styles T155–T159, mixing T160, guide T161,
   report T162.
+
+## 2026-11-13 — M4: T124 AI media generation (Claude Code)
+
+- Product owner chose Google. `packages/media/src/gen/`: `MediaGenProvider`, Google Nano Banana 2.1 adapter
+  (Interactions API), mock, content-hash cache, cost from token usage; off by default (zero cost). DB store
+  `dbMediaGenStore` (ai asset + media_gen_cache, RLS) in the pipeline; ADR 0011. Unit 7/7, infra test 1/1.
+- Not verified live: `GEMINI_API_KEY` is empty in `.env`. Scene selection for AI images and plan quota later.
+- Next: styles T155–T159, mixing T160, guide T161, report T162.

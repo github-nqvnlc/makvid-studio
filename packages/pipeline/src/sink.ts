@@ -106,6 +106,7 @@ export function dbSink(db: Db, store: ObjectStore): StageHooks {
           tokensOut: u.tokensOut ?? 0,
           ttsChars: u.ttsChars ?? 0,
           renderSeconds: u.renderSeconds ?? 0,
+          images: u.images ?? 0,
           costUsd: u.costUsd === null ? null : u.costUsd.toFixed(6),
         }),
       );

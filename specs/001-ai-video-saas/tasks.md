@@ -275,7 +275,7 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 - [x] T121 [P] [US8] Create tables `brand_kits`, `assets` (unique(workspace_id, sha256); `kind` enum per data-model.md; license jsonb), `music_tracks`, `sfx`, `voices` in `packages/db/src/schema/assets.ts`
 - [x] T122 [P] [US8] Implement upload service (validation, sha256 dedupe, font glyph check for Vietnamese) in `apps/web/src/server/uploads.ts`
 - [x] T123 [US8] Implement brand-kit token override in `packages/compiler/src/brand.ts`
-- [ ] T124 [P] [US8] Implement `MediaGenProvider` interface + one provider adapter with content-hash cache and cost logging in `packages/media/src/gen/`
+- [x] T124 [P] [US8] Implement `MediaGenProvider` interface + one provider adapter with content-hash cache and cost logging in `packages/media/src/gen/`
 - [x] T125 [US8] Build brand kit and asset library pages in `apps/web/src/app/[locale]/workspace/brand/` and `.../assets/`
 
 ---

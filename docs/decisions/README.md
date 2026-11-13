@@ -14,6 +14,7 @@ One file per decision: `NNNN-short-title.md`, numbered sequentially, never renum
 | [0008](0008-web-app-m3.md)             | Web app: Next.js 16, Better Auth, chat edits in web, MP4 preview      | Accepted                    |
 | [0009](0009-style-packs-4-8.md)        | Style packs 4–8, narration cues, bitmap glass background, perf budget | Accepted                    |
 | [0010](0010-speech-to-text.md)         | Speech-to-text: whisper.cpp words + MFA timing, self-hosted           | Accepted                    |
+| [0011](0011-ai-media-generation.md)    | AI images: Google Nano Banana 2.1, off by default, content-hash cache | Accepted                    |
 
 ## Template
 
