@@ -192,3 +192,8 @@
 - Render benchmark (61 s 1080p30, container): one standard worker 108 s; 1/2/4 workers on one 12-CPU host
   226/133/95 s (1.70x, 2.38x; host CPU bound).
 - Report docs/reports/M5.md. Next: GATE M5 approval, then M6.
+
+## 2026-11-14 — GATE M5 approved (Claude Code)
+
+- Product owner approved M5 (batch acceptance accepted at 71/100). Open: plan prices, Polar/PayOS accounts, multi-host scaling test (M5 report section 8).
+- Next: M6 (polish and cross-cutting).
