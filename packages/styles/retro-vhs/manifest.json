@@ -1,0 +1,27 @@
+{
+  "id": "retro-vhs",
+  "version": "1.0.0",
+  "name": {
+    "vi": "Băng VHS cổ điển",
+    "en": "Retro VHS"
+  },
+  "description": {
+    "vi": "Băng video thập niên 90: chữ pixel, nhiễu hạt, lệch màu đỏ-xanh, dòng chữ PLAY trên màn hình. Hợp hoài niệm, giải trí, kể chuyện vui.",
+    "en": "90s videotape look: pixel type, grain, red/cyan colour shift and an on-screen PLAY display. For nostalgia and fun stories."
+  },
+  "contentTypes": ["entertainment", "nostalgia", "story", "music"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    }
+  ],
+  "musicMoods": ["upbeat", "energetic"],
+  "perfBudget": {
+    "maxMsPerFrame": 200
+  }
+}

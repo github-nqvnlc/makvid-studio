@@ -21,6 +21,7 @@ import {
 } from "@makvid/style-kit";
 import { loadPack, type LoadedPack, type TemplateSchema } from "@makvid/style-kit/node";
 import { bundlePack, vendorFiles } from "./bundle";
+import { primaryCaptionCss, primaryCaptionFaces, splitCaptionCss, transitionFor } from "./mix-styles";
 import { applyBrand, fontFormat, logoHtml, servedFontName, type BrandKit } from "./brand";
 import { captionsHtml, layoutCaptions, type CaptionChunkOut, type CaptionStyle } from "./captions";
 import { hashDir, sceneCacheKey } from "./hash";
@@ -114,8 +115,8 @@ function slotsData(scene: Scene): Record<string, SlotData> {
   return out;
 }
 
-function fontFaceCss(pack: LoadedPack): string {
-  return pack.fontsManifest.faces
+function fontFaceCss(pack: LoadedPack, extra: LoadedPack["fontsManifest"]["faces"] = []): string {
+  return [...pack.fontsManifest.faces, ...extra]
     .map(
       (f) =>
         `@font-face{font-family:"${f.family}";font-style:${f.style};font-weight:${f.weight};font-display:block;src:url("assets/fonts/${servedFontName(f.file)}") format("${fontFormat(f.file)}");unicode-range:${f.unicodeRange};}`,
@@ -195,7 +196,14 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
     if (!pack.manifest.aspectRatios.includes(opts.aspect))
       issues.push(`pack "${s.styleId}" does not support ${opts.aspect}`);
   }
-  if (issues.length) throw new CompileError(issues);
+  // Captions always use the primary style (ADR 0012); it must load even if no scene uses it.
+  let primary: LoadedPack | undefined;
+  try {
+    primary = getPack(spec.meta.primaryStyleId);
+  } catch {
+    issues.push(`primary style "${spec.meta.primaryStyleId}" not found`);
+  }
+  if (issues.length || !primary) throw new CompileError(issues);
 
   const timings = sceneTimings(spec);
   const words = wordsByScene(spec, timings);
@@ -206,6 +214,8 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
 
   for (const [i, scene] of spec.scenes.entries()) {
     const pack = getPack(scene.styleId);
+    const mixed = pack.id !== primary.id;
+    const capPack = mixed ? primary : pack;
     const runtime: RuntimeId = opts.runtime ?? pack.manifest.runtime;
     const tpl = pack.templates[scene.templateId as keyof LoadedPack["templates"]];
     const timing = timings[i]!;
@@ -214,13 +224,13 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
     mkdirSync(join(dir, "assets", "vendor"), { recursive: true });
 
     const measureCache = new Map<string, Measure>();
-    const measureFor = (role: string, features: string[] = []): Measure => {
-      const key = `${role}|${features.join(",")}`;
+    const measureFor = (role: string, features: string[] = [], from: LoadedPack = pack): Measure => {
+      const key = `${from.id}|${role}|${features.join(",")}`;
       let m = measureCache.get(key);
       if (!m) {
-        const f = pack.tokens.fonts[role];
-        if (!f) throw new CompileError([`pack "${pack.id}" has no font role "${role}"`]);
-        const raw = pack.fonts.measure(f.family, f.weight, features);
+        const f = from.tokens.fonts[role];
+        if (!f) throw new CompileError([`pack "${from.id}" has no font role "${role}"`]);
+        const raw = from.fonts.measure(f.family, f.weight, features);
         m = (t, s) => raw(t, s) * 1.02; // 2% safety margin vs browser shaping
         measureCache.set(key, m);
       }
@@ -245,27 +255,34 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
     let chunks: CaptionChunkOut[] = [];
     let capHtml = "";
     if (spec.captions.enabled && sceneWords.length) {
-      const style = captionStyleFor(pack, opts.aspect);
+      const style = captionStyleFor(capPack, opts.aspect);
       chunks = layoutCaptions(
         sceneWords,
         style,
         opts.aspect,
-        measureFor(style.font),
+        measureFor(style.font, [], capPack),
         spec.captions.maxLines,
         timing.startMs + timing.durationMs,
       );
       capHtml = captionsHtml(chunks, style, Math.round(safeAreaPx(opts.aspect).width * style.boxWidth));
     }
     const capBottom = Math.round(
-      safeAreaPx(opts.aspect, pack.manifest.safeArea?.[opts.aspect]).bottom +
-        height * pack.captions.default.bottom,
+      safeAreaPx(opts.aspect, capPack.manifest.safeArea?.[opts.aspect]).bottom +
+        height * capPack.captions.default.bottom,
     );
 
-    for (const f of pack.fontsManifest.faces)
-      copyFileSync(
-        isAbsolute(f.file) ? f.file : join(pack.dir, "fonts", f.file),
-        join(dir, "assets", "fonts", servedFontName(f.file)),
-      );
+    const capFaces = mixed ? primaryCaptionFaces(primary) : [];
+    for (const [p, faces] of [
+      [pack, pack.fontsManifest.faces],
+      [primary, capFaces],
+    ] as const)
+      for (const f of faces)
+        copyFileSync(
+          isAbsolute(f.file) ? f.file : join(p.dir, "fonts", f.file),
+          join(dir, "assets", "fonts", servedFontName(f.file)),
+        );
+    const transition = transitionFor(spec.scenes, i);
+    const prevPack = i > 0 ? getPack(spec.scenes[i - 1]!.styleId) : undefined;
     const logo = logoHtml(opts.brand);
     if (logo.file && opts.brand?.logo) {
       mkdirSync(join(dir, "assets", "brand"), { recursive: true });
@@ -291,11 +308,14 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
       speed: scene.tuning?.speed ?? 1,
       emphasisWords: emphasis.map((p) => p.join(" ")),
       ...(scene.tuning?.accentColor ? { accentColor: scene.tuning.accentColor } : {}),
-      ...(scene.transitionIn
+      ...(transition
         ? {
             transitionIn: {
-              presetId: scene.transitionIn.presetId,
-              duration: scene.transitionIn.durationMs / 1000,
+              presetId: transition.presetId,
+              duration: transition.durationMs / 1000,
+              ...(transition.styleChange && prevPack?.tokens.colors.bg
+                ? { fromColor: prevPack.tokens.colors.bg }
+                : {}),
             },
           }
         : {}),
@@ -317,11 +337,16 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
 <meta name="viewport" content="width=${width},height=${height}">
 <title>${escapeHtml(scene.id)}</title>
 <style>
-${fontFaceCss(pack)}
+${fontFaceCss(pack, capFaces)}
 ${tokensCss(pack, opts.aspect, scene.tuning?.accentColor)}
 ${BASE_CSS}
 #captions{bottom:${capBottom}px;}
-${pack.css}
+${
+  mixed
+    ? `${splitCaptionCss(pack.css).rest}
+${primaryCaptionCss(primary)}`
+    : pack.css
+}
 ${logo.css}
 </style>
 </head>

@@ -27,7 +27,8 @@ export interface SceneData {
   speed: number;
   accentColor?: string;
   emphasisWords: string[];
-  transitionIn?: { presetId: string; duration: number };
+  /** fromColor: background of the previous scene when the style changes (style bridge, ADR 0012). */
+  transitionIn?: { presetId: string; duration: number; fromColor?: string };
   exit: number; // seconds of fade-out at the end (0 = none)
   captions: CaptionChunk[];
   /** Spoken words of this scene with scene-local start times (seconds); empty before narration exists. */
@@ -127,6 +128,16 @@ export function mountScene(
           ? { opacity: 1, scale: 1 }
           : { opacity: 1 };
     tl.fromTo(content, from, to, { duration: t.duration, ease: "power2.out" }, 0);
+    if (t.fromColor) {
+      // Style bridge: the previous style's background covers the stage and fades out, so two different
+      // backgrounds never meet in a hard cut. Painted above the stage, below captions and logo.
+      const bridge = doc.createElement("div");
+      bridge.className = "mkv-bridge";
+      bridge.setAttribute("aria-hidden", "true");
+      bridge.style.cssText = `position:absolute;inset:0;pointer-events:none;background:${t.fromColor}`;
+      root.after(bridge);
+      tl.fromTo(bridge, { opacity: 1 }, { opacity: 0 }, { duration: t.duration * 1.2, ease: "power1.inOut" }, 0);
+    }
   }
   if (data.exit > 0) {
     tl.fromTo(

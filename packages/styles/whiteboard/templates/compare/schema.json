@@ -1,0 +1,31 @@
+{
+  "slots": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "maxLength": 40
+    },
+    "leftLabel": {
+      "type": "text",
+      "required": true,
+      "maxLength": 20
+    },
+    "leftItems": {
+      "type": "list",
+      "required": true,
+      "maxItems": 3,
+      "itemMaxLength": 32
+    },
+    "rightLabel": {
+      "type": "text",
+      "required": true,
+      "maxLength": 20
+    },
+    "rightItems": {
+      "type": "list",
+      "required": true,
+      "maxItems": 3,
+      "itemMaxLength": 32
+    }
+  }
+}

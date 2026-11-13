@@ -1,0 +1,441 @@
+/* Whiteboard — marker on a white board: handwritten words, a hand that writes them, drawn strokes. */
+.a-16x9 {
+  --cap-band: 170px;
+  --gap: 36px;
+}
+.a-9x16 {
+  --cap-band: 200px;
+  --gap: 40px;
+}
+.a-1x1 {
+  --cap-band: 150px;
+  --gap: 28px;
+}
+.a-4x5 {
+  --cap-band: 160px;
+  --gap: 32px;
+}
+.pack-whiteboard {
+  --reserve: 0px;
+  background: var(--c-bg);
+}
+.pack-whiteboard h1,
+.pack-whiteboard h2,
+.pack-whiteboard p,
+.pack-whiteboard blockquote,
+.pack-whiteboard ol,
+.pack-whiteboard ul,
+.pack-whiteboard li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.region {
+  position: absolute;
+  left: var(--safe-left);
+  top: calc(var(--safe-top) + var(--reserve));
+  width: var(--safe-w);
+  height: calc(var(--safe-h) - var(--cap-band) - var(--reserve));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap);
+  box-sizing: border-box;
+  /* own stacking context: decorations with negative z-index stay above the stage background */
+  isolation: isolate;
+}
+.headline,
+.title-text,
+.hl-text,
+.list-title,
+.cmp-title,
+.q-text,
+.cta-head,
+.card-label,
+.stat-value,
+.cta-btn {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--c-fg);
+}
+.kicker,
+.subtitle,
+.item-text,
+.ci,
+.stat-label,
+.q-author,
+.cta-handle {
+  font-family: var(--f-body);
+  font-weight: var(--fw-body);
+  color: var(--c-muted);
+}
+.item-text,
+.ci {
+  color: var(--c-fg);
+}
+.w {
+  position: relative;
+}
+.g {
+  display: inline-block;
+}
+.kicker {
+  color: var(--accent);
+}
+.rule {
+  width: 120px;
+  height: 10px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+}
+.deco {
+  display: none;
+}
+
+.hl-text .w.em {
+  color: var(--accent);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.6);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.bullet {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background: var(--accent);
+  color: var(--c-accentInk);
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  border-radius: 50%;
+}
+.a-16x9 .bullet,
+.a-9x16 .bullet {
+  font-size: 40px;
+}
+.a-1x1 .bullet,
+.a-4x5 .bullet {
+  font-size: 34px;
+}
+
+.cards {
+  display: flex;
+  gap: 48px;
+  align-items: stretch;
+}
+.a-9x16 .cards {
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.7);
+}
+.card {
+  box-sizing: border-box;
+  background: var(--c-surface);
+  border-radius: 18px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.a-9x16 .card {
+  padding: 40px;
+}
+.a-1x1 .card,
+.a-4x5 .card {
+  padding: 32px;
+}
+.card.right .card-label {
+  color: var(--accent);
+}
+.card-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ci {
+  position: relative;
+  padding-left: 36px;
+}
+.ci::before {
+  content: "•";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  color: var(--c-muted);
+}
+.card.right .ci::before {
+  color: var(--accent);
+}
+
+.stat-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.stat-value .suffix,
+.stat-value .prefix {
+  color: var(--c-fg);
+}
+.a-16x9 .stat-value .suffix {
+  font-size: 88px;
+}
+.a-9x16 .stat-value .suffix {
+  font-size: 76px;
+}
+.a-1x1 .stat-value .suffix {
+  font-size: 60px;
+}
+.a-4x5 .stat-value .suffix {
+  font-size: 64px;
+}
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 220px;
+}
+.a-16x9 .bars {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 36%;
+  height: 300px;
+}
+.a-9x16 .bars {
+  height: 300px;
+}
+.a-4x5 .bars {
+  height: 200px;
+}
+.a-1x1 .bars {
+  height: 140px;
+}
+.bar-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.bar {
+  background: var(--c-line);
+  border-radius: 6px 6px 0 0;
+  transform-origin: 50% 100%;
+}
+.bar-col:last-child .bar {
+  background: var(--accent);
+}
+.bar-label {
+  display: none;
+}
+
+.qmark {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--accent);
+  font-size: 220px;
+  line-height: 0.7;
+  height: 0.42em;
+}
+.q-author::before {
+  content: "— ";
+}
+.q-author .fit {
+  display: inline-block;
+}
+
+.cta-btn {
+  align-self: flex-start;
+  background: var(--accent);
+  color: var(--c-accentInk);
+  border-radius: 14px;
+  padding: 0.3em 0.8em;
+}
+.cta-btn .fit {
+  color: var(--c-accentInk);
+}
+
+#captions .fit {
+  font-family: var(--f-caption);
+  font-weight: var(--fw-caption);
+  color: var(--c-captionFg);
+  background: var(--c-captionBg);
+  padding: 0.15em 0.5em;
+  border-radius: 10px;
+}
+#captions .cap-w.on {
+  color: var(--accent);
+}
+
+
+/* ---- whiteboard theme ---- */
+.pack-whiteboard {
+  overflow: hidden;
+}
+/* Faint board frame in the outer margin. */
+.pack-whiteboard::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 3px solid #e3e6ec;
+  border-radius: 10px;
+  pointer-events: none;
+}
+.kicker {
+  color: var(--accent);
+}
+.hl-text .w.em {
+  color: var(--accent);
+}
+.rule {
+  position: relative;
+  width: 320px;
+  height: 28px;
+  background: none;
+}
+.bullet {
+  position: relative;
+  background: none;
+  color: var(--c-fg);
+  border-radius: 0;
+}
+.card {
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+}
+.card.right .card-label {
+  color: var(--c-green);
+}
+.ci::before {
+  content: "–";
+}
+.bar {
+  background: none;
+  border: 4px solid var(--c-blue);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+}
+.bar-col:last-child .bar {
+  border-color: var(--accent);
+  background: repeating-linear-gradient(135deg, rgb(200 16 46 / 0.25) 0 6px, transparent 6px 14px);
+}
+.stat-value {
+  color: var(--accent);
+}
+.qmark {
+  color: var(--c-blue);
+}
+.cta-btn {
+  position: relative;
+  background: transparent;
+  color: var(--accent);
+  border-radius: 0;
+}
+.cta-btn .fit {
+  color: var(--accent);
+}
+#captions .fit {
+  border-radius: 8px;
+}
+#captions .cap-w.on {
+  color: #ffd166;
+}
+
+/* Strokes drawn by lib/board.ts */
+.wb-ul,
+.wb-circle,
+.wb-box,
+.wb-tick {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.wb-ul {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  stroke: var(--accent);
+  stroke-width: 7px;
+}
+.wb-circle {
+  left: -14%;
+  top: -22%;
+  width: 128%;
+  height: 144%;
+  stroke: var(--accent);
+  stroke-width: 5px;
+  z-index: -1;
+}
+.wb-box {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  stroke: var(--c-fg);
+  stroke-width: 4px;
+}
+.card.right .wb-box,
+.cta-btn .wb-box {
+  stroke: var(--accent);
+}
+.wb-tick {
+  inset: 8%;
+  width: 84%;
+  height: 84%;
+  stroke: var(--c-green);
+  stroke-width: 6px;
+}
+.wb-hand {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 220px;
+  pointer-events: none;
+  z-index: 8;
+}
+.wb-hand svg {
+  width: 100%;
+  height: 100%;
+}
+.a-16x9 .wb-hand,
+.a-1x1 .wb-hand,
+.a-4x5 .wb-hand {
+  width: 180px;
+  height: 180px;
+}
+.bullet .wb-circle {
+  left: -8%;
+  top: -8%;
+  width: 116%;
+  height: 116%;
+  stroke: var(--c-blue);
+  stroke-width: 4px;
+}
+.list-title,
+.stat-value {
+  position: relative;
+}
+.wb-title-ul,
+.wb-stat-ul {
+  position: absolute;
+  left: 0;
+  bottom: -18px;
+  width: min(100%, 420px);
+  height: 22px;
+}

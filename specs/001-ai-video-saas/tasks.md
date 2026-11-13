@@ -366,13 +366,13 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 - [x] T152 [P] Create `packages/styles/news/` (lower-third, ticker, "Nóng" label, source image) — _source image deferred to US4 (T113), ADR 0009_
 - [x] T153 [P] Create `packages/styles/slides/` (title + bullets revealed on narration cues)
 - [x] T154 [P] Create `packages/styles/terminal/` (typing effect, syntax highlight; for repo/changelog videos)
-- [ ] T155 [P] Create `packages/styles/neon/` (glow, scanline, seeded glitch)
-- [ ] T156 [P] Create `packages/styles/retro-vhs/` (noise, chroma shift, pixel font with Vietnamese glyphs)
-- [ ] T157 [P] Create `packages/styles/whiteboard/` (SVG stroke-dashoffset drawing, hand-with-pen)
-- [ ] T158 [P] Create `packages/styles/paper-collage/` (paper texture, drop shadows, stop-motion stepping)
-- [ ] T159 [P] Create `packages/styles/three-lite/` (Three.js, deterministic per-frame render in headless Chromium; measure CPU/GPU on worker)
-- [ ] T160 Implement per-scene style mixing with transition scenes and primary-style caption font/logo in `packages/compiler/src/mix-styles.ts` and storyboard prompt support in `packages/ai/src/prompts/storyboard.ts`
-- [ ] T161 Write `docs/style-pack-guide.md` ("how to create a new style pack")
+- [x] T155 [P] Create `packages/styles/neon/` (glow, scanline, seeded glitch)
+- [x] T156 [P] Create `packages/styles/retro-vhs/` (noise, chroma shift, pixel font with Vietnamese glyphs)
+- [x] T157 [P] Create `packages/styles/whiteboard/` (SVG stroke-dashoffset drawing, hand-with-pen)
+- [x] T158 [P] Create `packages/styles/paper-collage/` (paper texture, drop shadows, stop-motion stepping)
+- [x] T159 [P] Create `packages/styles/three-lite/` (Three.js, deterministic per-frame render in headless Chromium; measure CPU/GPU on worker)
+- [x] T160 Implement per-scene style mixing with transition scenes and primary-style caption font/logo in `packages/compiler/src/mix-styles.ts` and storyboard prompt support in `packages/ai/src/prompts/storyboard.ts`
+- [x] T161 Write `docs/style-pack-guide.md` ("how to create a new style pack")
 - [ ] T162 Write M4 report `docs/reports/M4.md` (13 demos, one video per input source)
 
 **🛑 GATE M4**: Every style has a demo; every input source has a QA-passing sample video.

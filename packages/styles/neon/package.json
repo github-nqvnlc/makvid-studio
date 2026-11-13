@@ -1,0 +1,16 @@
+{
+  "name": "@makvid/style-neon",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@makvid/style-kit": "workspace:*"
+  },
+  "devDependencies": {
+    "@makvid/config": "workspace:*"
+  }
+}

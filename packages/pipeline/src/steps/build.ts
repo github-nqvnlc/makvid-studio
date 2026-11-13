@@ -38,6 +38,8 @@ export function buildSpec(opts: {
   script: ScriptResult;
   board: StoryboardOutput;
   styleId: string;
+  /** Extra styles scenes may use (style mixing); anything else falls back to the primary style. */
+  mixStyles?: readonly string[];
   aspects: AspectRatio[];
   durationSec: number;
   voiceId: string;
@@ -54,7 +56,7 @@ export function buildSpec(opts: {
     }
     return {
       id: `sc${i + 1}-${sc.templateId}`,
-      styleId: opts.styleId,
+      styleId: sc.styleId && opts.mixStyles?.includes(sc.styleId) ? sc.styleId : opts.styleId,
       templateId: sc.templateId,
       slots,
       scriptRefs: sc.sentences.map((n) => `s${n}`),

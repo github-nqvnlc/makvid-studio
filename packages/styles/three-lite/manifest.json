@@ -1,0 +1,32 @@
+{
+  "id": "three-lite",
+  "version": "1.0.0",
+  "name": {
+    "vi": "3D nhẹ",
+    "en": "3D lite"
+  },
+  "description": {
+    "vi": "Khối 3D đa giác bay chậm quanh khung hình, màu sáng trên nền xanh đêm, chữ đậm hiện đại. Hợp công nghệ, sản phẩm, giới thiệu thương hiệu.",
+    "en": "Low-poly 3D shapes drifting around the frame, bright colours on midnight blue, bold modern type. For tech, products and brand intros."
+  },
+  "contentTypes": ["tech", "product", "brand", "promo"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    },
+    {
+      "name": "three",
+      "version": "0.186.1",
+      "license": "MIT"
+    }
+  ],
+  "musicMoods": ["tech", "corporate"],
+  "perfBudget": {
+    "maxMsPerFrame": 200
+  }
+}

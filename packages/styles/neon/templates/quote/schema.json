@@ -1,0 +1,14 @@
+{
+  "slots": {
+    "quote": {
+      "type": "text",
+      "required": true,
+      "maxLength": 110
+    },
+    "author": {
+      "type": "text",
+      "required": false,
+      "maxLength": 40
+    }
+  }
+}

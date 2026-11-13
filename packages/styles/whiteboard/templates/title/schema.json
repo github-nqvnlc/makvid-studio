@@ -1,0 +1,14 @@
+{
+  "slots": {
+    "title": {
+      "type": "text",
+      "required": true,
+      "maxLength": 56
+    },
+    "subtitle": {
+      "type": "text",
+      "required": false,
+      "maxLength": 80
+    }
+  }
+}

@@ -1,0 +1,413 @@
+/* Retro VHS — pixel type, grain, red/cyan colour shift, tracking band and an on-screen PLAY display. */
+.a-16x9 {
+  --cap-band: 170px;
+  --gap: 36px;
+}
+.a-9x16 {
+  --cap-band: 200px;
+  --gap: 40px;
+}
+.a-1x1 {
+  --cap-band: 150px;
+  --gap: 28px;
+}
+.a-4x5 {
+  --cap-band: 160px;
+  --gap: 32px;
+}
+.pack-retro-vhs {
+  --reserve: 0px;
+  background: var(--c-bg);
+}
+.pack-retro-vhs h1,
+.pack-retro-vhs h2,
+.pack-retro-vhs p,
+.pack-retro-vhs blockquote,
+.pack-retro-vhs ol,
+.pack-retro-vhs ul,
+.pack-retro-vhs li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.region {
+  position: absolute;
+  left: var(--safe-left);
+  top: calc(var(--safe-top) + var(--reserve));
+  width: var(--safe-w);
+  height: calc(var(--safe-h) - var(--cap-band) - var(--reserve));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap);
+  box-sizing: border-box;
+  /* own stacking context: decorations with negative z-index stay above the stage background */
+  isolation: isolate;
+}
+.headline,
+.title-text,
+.hl-text,
+.list-title,
+.cmp-title,
+.q-text,
+.cta-head,
+.card-label,
+.stat-value,
+.cta-btn {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--c-fg);
+}
+.kicker,
+.subtitle,
+.item-text,
+.ci,
+.stat-label,
+.q-author,
+.cta-handle {
+  font-family: var(--f-body);
+  font-weight: var(--fw-body);
+  color: var(--c-muted);
+}
+.item-text,
+.ci {
+  color: var(--c-fg);
+}
+.w {
+  position: relative;
+}
+.g {
+  display: inline-block;
+}
+.kicker {
+  color: var(--accent);
+}
+.rule {
+  width: 120px;
+  height: 10px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+}
+.deco {
+  display: none;
+}
+
+.hl-text .w.em {
+  color: var(--accent);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.6);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.bullet {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background: var(--accent);
+  color: var(--c-accentInk);
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  border-radius: 50%;
+}
+.a-16x9 .bullet,
+.a-9x16 .bullet {
+  font-size: 40px;
+}
+.a-1x1 .bullet,
+.a-4x5 .bullet {
+  font-size: 34px;
+}
+
+.cards {
+  display: flex;
+  gap: 48px;
+  align-items: stretch;
+}
+.a-9x16 .cards {
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.7);
+}
+.card {
+  box-sizing: border-box;
+  background: var(--c-surface);
+  border-radius: 18px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.a-9x16 .card {
+  padding: 40px;
+}
+.a-1x1 .card,
+.a-4x5 .card {
+  padding: 32px;
+}
+.card.right .card-label {
+  color: var(--accent);
+}
+.card-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ci {
+  position: relative;
+  padding-left: 36px;
+}
+.ci::before {
+  content: "•";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  color: var(--c-muted);
+}
+.card.right .ci::before {
+  color: var(--accent);
+}
+
+.stat-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.stat-value .suffix,
+.stat-value .prefix {
+  color: var(--c-fg);
+}
+.a-16x9 .stat-value .suffix {
+  font-size: 88px;
+}
+.a-9x16 .stat-value .suffix {
+  font-size: 76px;
+}
+.a-1x1 .stat-value .suffix {
+  font-size: 60px;
+}
+.a-4x5 .stat-value .suffix {
+  font-size: 64px;
+}
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 220px;
+}
+.a-16x9 .bars {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 36%;
+  height: 300px;
+}
+.a-9x16 .bars {
+  height: 300px;
+}
+.a-4x5 .bars {
+  height: 200px;
+}
+.a-1x1 .bars {
+  height: 140px;
+}
+.bar-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.bar {
+  background: var(--c-line);
+  border-radius: 6px 6px 0 0;
+  transform-origin: 50% 100%;
+}
+.bar-col:last-child .bar {
+  background: var(--accent);
+}
+.bar-label {
+  display: none;
+}
+
+.qmark {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--accent);
+  font-size: 220px;
+  line-height: 0.7;
+  height: 0.42em;
+}
+.q-author::before {
+  content: "— ";
+}
+.q-author .fit {
+  display: inline-block;
+}
+
+.cta-btn {
+  align-self: flex-start;
+  background: var(--accent);
+  color: var(--c-accentInk);
+  border-radius: 14px;
+  padding: 0.3em 0.8em;
+}
+.cta-btn .fit {
+  color: var(--c-accentInk);
+}
+
+#captions .fit {
+  font-family: var(--f-caption);
+  font-weight: var(--fw-caption);
+  color: var(--c-captionFg);
+  background: var(--c-captionBg);
+  padding: 0.15em 0.5em;
+  border-radius: 10px;
+}
+#captions .cap-w.on {
+  color: var(--accent);
+}
+
+/* ---- VHS theme ---- */
+.pack-retro-vhs {
+  overflow: hidden;
+}
+/* Display text: red/cyan channel offset (chroma shift). */
+.headline,
+.title-text,
+.cta-head,
+.hl-text,
+.q-text,
+.list-title,
+.cmp-title,
+.stat-value,
+.card-label {
+  text-shadow:
+    -3px 0 var(--c-chromaR),
+    3px 0 var(--c-chromaB);
+}
+.kicker {
+  color: var(--accent);
+}
+.hl-text .w.em {
+  color: var(--c-accentInk);
+  background: var(--accent);
+  text-shadow: none;
+}
+.rule {
+  height: 8px;
+  width: 200px;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 16px, transparent 16px 24px);
+}
+.bullet {
+  border-radius: 0;
+  background: var(--accent);
+  color: var(--c-accentInk);
+}
+.card {
+  border-radius: 0;
+  background: var(--c-surface);
+  border: 4px solid var(--c-line);
+}
+.card.right {
+  border-color: var(--accent);
+}
+.ci::before {
+  content: ">";
+}
+.bar {
+  border-radius: 0;
+  background: var(--c-line);
+}
+.bar-col:last-child .bar {
+  background: var(--accent);
+}
+.cta-btn {
+  border-radius: 0;
+  box-shadow: 6px 6px 0 var(--c-chromaR);
+}
+#captions .fit {
+  border-radius: 0;
+  text-shadow:
+    -2px 0 var(--c-chromaR),
+    2px 0 var(--c-chromaB);
+}
+#captions .cap-w.on {
+  color: var(--accent);
+}
+
+/* Overlays added by lib/vhs.ts (decorative; the display sits in the top margin, outside the safe area). */
+.vhs-noise {
+  position: absolute;
+  inset: -64px;
+  pointer-events: none;
+  /* no blend mode: a blended full-frame layer that moves every frame costs ~100 ms/frame */
+  opacity: 0.1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  will-change: transform;
+  z-index: 6;
+}
+.vhs-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 7%;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgb(255 255 255 / 0.07) 40%,
+    rgb(255 255 255 / 0.12) 50%,
+    transparent
+  );
+  will-change: transform;
+  z-index: 6;
+}
+.vhs-osd {
+  position: absolute;
+  left: var(--safe-left);
+  top: calc(var(--safe-top) - 60px);
+  width: var(--safe-w);
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--f-display);
+  font-size: 52px;
+  line-height: 1;
+  color: var(--c-fg);
+  text-shadow:
+    -2px 0 var(--c-chromaR),
+    2px 0 var(--c-chromaB);
+  z-index: 7;
+}
+.vhs-play {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.vhs-play::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 26px solid var(--c-fg);
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+}
+.a-1x1 .vhs-osd,
+.a-4x5 .vhs-osd {
+  font-size: 44px;
+}

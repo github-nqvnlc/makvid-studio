@@ -1,0 +1,14 @@
+{
+  "slots": {
+    "text": {
+      "type": "text",
+      "required": true,
+      "maxLength": 80
+    },
+    "highlight": {
+      "type": "text",
+      "required": false,
+      "maxLength": 32
+    }
+  }
+}

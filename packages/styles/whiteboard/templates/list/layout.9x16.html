@@ -1,0 +1,15 @@
+<div class="region list">
+  <h2 class="list-title" data-qa="title">
+    {{fit title w=864 h=224 max=100 min=68 lh=1.12 font=display lines=2}}
+  </h2>
+  <ol class="items">
+    {{#each items}}
+    <li class="item" data-qa="item">
+      <span class="bullet" style="width: 109px">{{@num}}</span
+      ><span class="item-text"
+        >{{fit item w=727 h=156 max=68 min=50 lh=1.25 font=body lines=2 group=items}}</span
+      >
+    </li>
+    {{/each}}
+  </ol>
+</div>

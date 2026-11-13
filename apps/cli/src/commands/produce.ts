@@ -1,4 +1,4 @@
-// makvid produce --prompt "<text>" [--aspect 9:16] [--duration 45] [--style id] [--out dir] [--renderer ...] [--voice id]
+// makvid produce --prompt "<text>" [--aspect 9:16] [--duration 45] [--style id] [--mix-styles a,b] [--out dir] [--renderer ...] [--voice id]
 // Headless US1 run (T085): prompt -> MP4 with voice, captions, music, QA, cost report.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -15,6 +15,8 @@ export interface ProduceOptions {
   aspects: AspectRatio[];
   durationSec?: number;
   styleId?: string;
+  /** Other styles scenes may use (style mixing). */
+  mixStyles?: string[];
   out: string;
   renderer: "hyperframes" | "fallback";
   voiceId?: string;
@@ -47,6 +49,7 @@ export async function produce(o: ProduceOptions): Promise<ProduceResult> {
         aspects: o.aspects,
         ...(o.durationSec ? { durationSec: o.durationSec } : {}),
         ...(o.styleId ? { styleId: o.styleId } : {}),
+        ...(o.mixStyles?.length ? { mixStyles: o.mixStyles } : {}),
       },
       o.cacheDir ? { cacheDir: o.cacheDir } : {},
     );

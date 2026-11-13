@@ -1,0 +1,27 @@
+{
+  "id": "whiteboard",
+  "version": "1.0.0",
+  "name": {
+    "vi": "Bảng trắng",
+    "en": "Whiteboard"
+  },
+  "description": {
+    "vi": "Bảng trắng và bút lông: chữ viết tay hiện dần theo bàn tay cầm bút, nét gạch chân và khoanh tròn được vẽ trực tiếp. Hợp giải thích, dạy học, hướng dẫn.",
+    "en": "Whiteboard and marker: handwritten words appear as a hand writes them, with underlines and circles drawn live. For explainers and lessons."
+  },
+  "contentTypes": ["education", "explainer", "tutorial", "tips"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    }
+  ],
+  "musicMoods": ["calm", "upbeat"],
+  "perfBudget": {
+    "maxMsPerFrame": 200
+  }
+}

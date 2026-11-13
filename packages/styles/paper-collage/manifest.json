@@ -1,0 +1,27 @@
+{
+  "id": "paper-collage",
+  "version": "1.0.0",
+  "name": {
+    "vi": "Cắt dán giấy",
+    "en": "Paper collage"
+  },
+  "description": {
+    "vi": "Giấy cắt dán trên nền giấy kraft: chữ trên từng mảnh giấy, băng dính, bóng đổ, chuyển động giật kiểu stop-motion. Hợp thủ công, đời sống, kể chuyện sáng tạo.",
+    "en": "Cut paper on kraft: words on paper strips, tape, drop shadows and stop-motion stepping. For crafts, lifestyle and creative stories."
+  },
+  "contentTypes": ["lifestyle", "story", "creative", "tips"],
+  "aspectRatios": ["16:9", "9:16", "1:1", "4:5"],
+  "templates": ["hook", "title", "highlight", "list", "compare", "stat", "quote", "cta"],
+  "runtime": "gsap",
+  "libraries": [
+    {
+      "name": "gsap",
+      "version": "3.15.1",
+      "license": "GSAP-Standard"
+    }
+  ],
+  "musicMoods": ["upbeat", "calm"],
+  "perfBudget": {
+    "maxMsPerFrame": 200
+  }
+}

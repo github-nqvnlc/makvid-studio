@@ -1,0 +1,11 @@
+{
+  "default": {
+    "font": "caption",
+    "maxFontSize": 60,
+    "minFontSize": 44,
+    "lineHeight": 1.25,
+    "maxWords": 7,
+    "boxWidth": 0.88,
+    "bottom": 0.01
+  }
+}

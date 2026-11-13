@@ -37,6 +37,8 @@ export interface ProduceInput {
   aspects: AspectRatio[];
   durationSec?: number;
   styleId?: string; // forces a style; otherwise the top suggestion
+  /** Other styles scenes may use besides the primary one (style mixing, T160). */
+  mixStyles?: string[];
   /** "auto" (default) never pauses; "review" pauses for the user twice (US3). */
   mode?: "auto" | "review";
   /** Already-ingested source (script, article, GitHub, table, media); `prompt` is then a short label. */
@@ -193,8 +195,11 @@ export async function runStage(
       p("storyboard", "progress.storyboard", 0.2);
       const script = need(state.script, "the script");
       const styleId = need(state.styleId, "a style");
-      state.board = await cache.run("storyboard", { script, styleId, v: PROMPT_VERSION }, () =>
-        storyboard(ctx, script, styleId),
+      const mixStyles = (input.mixStyles ?? []).filter((s) => s !== styleId);
+      state.board = await cache.run(
+        "storyboard",
+        { script, styleId, ...(mixStyles.length ? { mixStyles } : {}), v: PROMPT_VERSION },
+        () => storyboard(ctx, script, styleId, mixStyles),
       );
       const moods = musicMoods(ctx.stylesRoot, styleId);
       const provider = ctx.music ?? new BuiltinMusicProvider();
@@ -212,6 +217,7 @@ export async function runStage(
         script,
         board: state.board,
         styleId,
+        mixStyles,
         aspects: input.aspects,
         durationSec,
         voiceId: ctx.voiceId,

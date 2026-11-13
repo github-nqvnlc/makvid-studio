@@ -1,0 +1,395 @@
+/* Neon — glowing sign type on a dark background, scanlines, seeded glitches. */
+.a-16x9 {
+  --cap-band: 170px;
+  --gap: 36px;
+}
+.a-9x16 {
+  --cap-band: 200px;
+  --gap: 40px;
+}
+.a-1x1 {
+  --cap-band: 150px;
+  --gap: 28px;
+}
+.a-4x5 {
+  --cap-band: 160px;
+  --gap: 32px;
+}
+.pack-neon {
+  --reserve: 0px;
+  background: var(--c-bg);
+}
+.pack-neon h1,
+.pack-neon h2,
+.pack-neon p,
+.pack-neon blockquote,
+.pack-neon ol,
+.pack-neon ul,
+.pack-neon li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.region {
+  position: absolute;
+  left: var(--safe-left);
+  top: calc(var(--safe-top) + var(--reserve));
+  width: var(--safe-w);
+  height: calc(var(--safe-h) - var(--cap-band) - var(--reserve));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap);
+  box-sizing: border-box;
+  /* own stacking context: decorations with negative z-index stay above the stage background */
+  isolation: isolate;
+}
+.headline,
+.title-text,
+.hl-text,
+.list-title,
+.cmp-title,
+.q-text,
+.cta-head,
+.card-label,
+.stat-value,
+.cta-btn {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--c-fg);
+}
+.kicker,
+.subtitle,
+.item-text,
+.ci,
+.stat-label,
+.q-author,
+.cta-handle {
+  font-family: var(--f-body);
+  font-weight: var(--fw-body);
+  color: var(--c-muted);
+}
+.item-text,
+.ci {
+  color: var(--c-fg);
+}
+.w {
+  position: relative;
+}
+.g {
+  display: inline-block;
+}
+.kicker {
+  color: var(--accent);
+}
+.rule {
+  width: 120px;
+  height: 10px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+}
+.deco {
+  display: none;
+}
+
+.hl-text .w.em {
+  color: var(--accent);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.6);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.bullet {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background: var(--accent);
+  color: var(--c-accentInk);
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  border-radius: 50%;
+}
+.a-16x9 .bullet,
+.a-9x16 .bullet {
+  font-size: 40px;
+}
+.a-1x1 .bullet,
+.a-4x5 .bullet {
+  font-size: 34px;
+}
+
+.cards {
+  display: flex;
+  gap: 48px;
+  align-items: stretch;
+}
+.a-9x16 .cards {
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.7);
+}
+.card {
+  box-sizing: border-box;
+  background: var(--c-surface);
+  border-radius: 18px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.a-9x16 .card {
+  padding: 40px;
+}
+.a-1x1 .card,
+.a-4x5 .card {
+  padding: 32px;
+}
+.card.right .card-label {
+  color: var(--accent);
+}
+.card-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ci {
+  position: relative;
+  padding-left: 36px;
+}
+.ci::before {
+  content: "•";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  color: var(--c-muted);
+}
+.card.right .ci::before {
+  color: var(--accent);
+}
+
+.stat-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.stat-value .suffix,
+.stat-value .prefix {
+  color: var(--c-fg);
+}
+.a-16x9 .stat-value .suffix {
+  font-size: 88px;
+}
+.a-9x16 .stat-value .suffix {
+  font-size: 76px;
+}
+.a-1x1 .stat-value .suffix {
+  font-size: 60px;
+}
+.a-4x5 .stat-value .suffix {
+  font-size: 64px;
+}
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 220px;
+}
+.a-16x9 .bars {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 36%;
+  height: 300px;
+}
+.a-9x16 .bars {
+  height: 300px;
+}
+.a-4x5 .bars {
+  height: 200px;
+}
+.a-1x1 .bars {
+  height: 140px;
+}
+.bar-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.bar {
+  background: var(--c-line);
+  border-radius: 6px 6px 0 0;
+  transform-origin: 50% 100%;
+}
+.bar-col:last-child .bar {
+  background: var(--accent);
+}
+.bar-label {
+  display: none;
+}
+
+.qmark {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  color: var(--accent);
+  font-size: 220px;
+  line-height: 0.7;
+  height: 0.42em;
+}
+.q-author::before {
+  content: "— ";
+}
+.q-author .fit {
+  display: inline-block;
+}
+
+.cta-btn {
+  align-self: flex-start;
+  background: var(--accent);
+  color: var(--c-accentInk);
+  border-radius: 14px;
+  padding: 0.3em 0.8em;
+}
+.cta-btn .fit {
+  color: var(--c-accentInk);
+}
+
+#captions .fit {
+  font-family: var(--f-caption);
+  font-weight: var(--fw-caption);
+  color: var(--c-captionFg);
+  background: var(--c-captionBg);
+  padding: 0.15em 0.5em;
+  border-radius: 10px;
+}
+#captions .cap-w.on {
+  color: var(--accent);
+}
+
+
+/* ---- neon theme ---- */
+/* Static scanlines over the whole frame on their own layer (painted once, composited every frame). */
+.pack-neon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.28) 0 2px, transparent 2px 5px);
+  will-change: transform;
+  z-index: 5;
+}
+.headline,
+.title-text,
+.cta-head,
+.hl-text,
+.q-text,
+.list-title,
+.cmp-title {
+  color: var(--c-fg);
+  text-shadow:
+    0 0 6px var(--c-glow),
+    0 0 22px var(--c-glow);
+}
+.kicker,
+.stat-value,
+.card.right .card-label,
+.hl-text .w.em {
+  color: var(--accent);
+  text-shadow:
+    0 0 6px var(--c-glow2),
+    0 0 20px var(--c-glow2);
+}
+.rule {
+  height: 6px;
+  width: 180px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow:
+    0 0 10px var(--c-glow2),
+    0 0 26px var(--c-glow2);
+}
+/* Sign frame in the margins around hook / title / cta: a thin glowing tube, never over text. */
+.hook .deco,
+.title .deco,
+.cta .deco {
+  display: block;
+  position: absolute;
+  inset: -28px;
+  border: 4px solid var(--c-glow);
+  border-radius: 28px;
+  box-shadow:
+    0 0 12px var(--c-glow),
+    inset 0 0 12px var(--c-glow);
+  opacity: 0.85;
+  z-index: -1;
+}
+.bullet {
+  background: transparent;
+  color: var(--accent);
+  border: 3px solid var(--accent);
+  box-shadow:
+    0 0 8px var(--c-glow2),
+    inset 0 0 8px var(--c-glow2);
+  text-shadow: 0 0 8px var(--c-glow2);
+}
+.card {
+  background: rgb(20 10 36 / 0.85);
+  border: 3px solid var(--c-line);
+  border-radius: 20px;
+}
+.card.right {
+  border-color: var(--accent);
+  box-shadow: 0 0 18px rgb(34 229 255 / 0.45);
+}
+.ci::before {
+  color: var(--c-glow);
+}
+.card.right .ci::before {
+  color: var(--accent);
+}
+.bar {
+  background: var(--c-glow);
+  box-shadow: 0 0 12px var(--c-glow);
+  border-radius: 4px 4px 0 0;
+}
+.bar-col:last-child .bar {
+  background: var(--accent);
+  box-shadow: 0 0 14px var(--c-glow2);
+}
+.qmark {
+  color: var(--c-glow);
+  text-shadow: 0 0 18px var(--c-glow);
+}
+.cta-btn {
+  background: transparent;
+  border: 4px solid var(--accent);
+  border-radius: 999px;
+  box-shadow:
+    0 0 14px var(--c-glow2),
+    inset 0 0 14px var(--c-glow2);
+}
+.cta-btn .fit {
+  color: var(--c-fg);
+  text-shadow: 0 0 10px var(--c-glow2);
+}
+#captions .fit {
+  border: 2px solid var(--c-line);
+  border-radius: 12px;
+}
+#captions .cap-w.on {
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--c-glow2);
+}

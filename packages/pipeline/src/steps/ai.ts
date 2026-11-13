@@ -10,6 +10,7 @@ import {
   validateScript,
   validateStoryboard,
   validateStyle,
+  type StyleMix,
   type StyleOption,
   type TemplateSchemas,
   type TokenUsage,
@@ -97,17 +98,31 @@ export function templateSchemas(stylesRoot: string, styleId: string): TemplateSc
   ) as TemplateSchemas;
 }
 
+/** Primary style + allowed extra styles, labelled from the pack manifests (Vietnamese name + description). */
+export function styleMix(stylesRoot: string, primary: string, extra: readonly string[] = []): StyleMix {
+  const label = (id: string) => {
+    const m = loadPack(join(stylesRoot, id)).manifest;
+    return `${m.name.vi}: ${m.description.vi}`;
+  };
+  return {
+    primary: { id: primary, label: label(primary) },
+    others: [...new Set(extra)].filter((id) => id !== primary).map((id) => ({ id, label: label(id) })),
+  };
+}
+
 export async function storyboard(
   ctx: PipelineContext,
   script: ScriptResult,
   styleId: string,
+  mixStyles: readonly string[] = [],
 ): Promise<StoryboardOutput> {
   const schemas = templateSchemas(ctx.stylesRoot, styleId);
+  const mix = mixStyles.length ? styleMix(ctx.stylesRoot, styleId, mixStyles) : undefined;
   const r = await ctx.llm.complete({
     step: "storyboard",
-    messages: storyboardMessages(script.sentences, schemas),
+    messages: storyboardMessages(script.sentences, schemas, mix),
     schema: StoryboardOutput,
-    validate: (o) => validateStoryboard(o, script.sentences.length, schemas),
+    validate: (o) => validateStoryboard(o, script.sentences.length, schemas, mix),
   });
   logUsage(ctx, "storyboard", r.usage);
   return r.output;

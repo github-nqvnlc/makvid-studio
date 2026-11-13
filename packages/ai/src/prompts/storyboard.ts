@@ -15,6 +15,8 @@ export const StoryboardOutput = z.object({
     .array(
       z.object({
         templateId: z.string(),
+        /** Only when style mixing is allowed: one of the allowed style ids (absent = primary style). */
+        styleId: z.string().optional(),
         sentences: z.array(z.number().int().min(1)).min(1).max(3),
         slots: z.record(z.string(), z.unknown()),
       }),
@@ -40,7 +42,29 @@ function describe(schemas: TemplateSchemas): string {
     .join("\n");
 }
 
-export function storyboardMessages(sentences: string[], schemas: TemplateSchemas): ChatMessage[] {
+/** Style mixing (T160): the primary style plus other styles a scene may use. */
+export interface StyleMix {
+  primary: { id: string; label: string };
+  others: Array<{ id: string; label: string }>;
+}
+
+/** Most style switches allowed in one video (each excursion to another style = 2 switches). */
+export const MAX_STYLE_SWITCHES = 4;
+
+function mixRules(mix: StyleMix): string {
+  const list = mix.others.map((o) => `"${o.id}" (${o.label})`).join(", ");
+  return `
+- Phối phong cách: phong cách chính là "${mix.primary.id}" (${mix.primary.label}). Có thể gán "styleId" cho cảnh bằng một trong: ${list}.
+  Cảnh đầu và cảnh cuối dùng phong cách chính (bỏ trống "styleId"). Chỉ đổi phong cách khi nội dung cảnh đổi hẳn sắc thái
+  (ví dụ một con số gây sốc, một trích dẫn), mỗi lần đổi giữ 1–2 cảnh liền nhau rồi quay về phong cách chính,
+  tối đa ${MAX_STYLE_SWITCHES} lần chuyển trong cả video.`;
+}
+
+export function storyboardMessages(
+  sentences: string[],
+  schemas: TemplateSchemas,
+  mix?: StyleMix,
+): ChatMessage[] {
   return [
     {
       role: "system",
@@ -55,7 +79,7 @@ Quy tắc bắt buộc:
 - Slot "highlight" (nếu có) phải là một cụm từ nằm NGUYÊN VĂN trong slot "text" của cùng cảnh.
 - Chỉ dùng "stat" khi lời đọc có con số cụ thể; "value" là số (dùng dấu chấm thập phân), không bịa số liệu.
 - Tuân thủ đúng giới hạn ký tự. Chỉ dùng các template và slot sau:
-${describe(schemas)}`,
+${describe(schemas)}${mix?.others.length ? mixRules(mix) : ""}`,
     },
     { role: "user", content: sentences.map((s, i) => `${i + 1}. ${s}`).join("\n") },
   ];
@@ -66,8 +90,25 @@ export function validateStoryboard(
   out: StoryboardOutput,
   sentenceCount: number,
   schemas: TemplateSchemas,
+  mix?: StyleMix,
 ): string[] {
   const p: string[] = [];
+  const allowed = new Set([mix?.primary.id, ...(mix?.others ?? []).map((o) => o.id)].filter(Boolean));
+  const styleOf = (s: StoryboardOutput["scenes"][number]) => s.styleId || mix?.primary.id || "";
+  out.scenes.forEach((s, i) => {
+    if (!s.styleId) return;
+    if (!mix?.others.length) p.push(`cảnh ${i + 1}: không được gán "styleId" (video dùng một phong cách)`);
+    else if (!allowed.has(s.styleId)) p.push(`cảnh ${i + 1}: phong cách "${s.styleId}" không được phép`);
+  });
+  if (mix?.others.length) {
+    if (out.scenes[0] && styleOf(out.scenes[0]) !== mix.primary.id)
+      p.push(`cảnh 1 phải dùng phong cách chính "${mix.primary.id}"`);
+    const last = out.scenes.at(-1);
+    if (last && styleOf(last) !== mix.primary.id)
+      p.push(`cảnh cuối phải dùng phong cách chính "${mix.primary.id}"`);
+    const switches = out.scenes.filter((s, i) => i > 0 && styleOf(s) !== styleOf(out.scenes[i - 1]!)).length;
+    if (switches > MAX_STYLE_SWITCHES) p.push(`đổi phong cách ${switches} lần, tối đa ${MAX_STYLE_SWITCHES}`);
+  }
   const order = out.scenes.flatMap((s) => s.sentences);
   const expected = Array.from({ length: sentenceCount }, (_, i) => i + 1);
   if (order.join(",") !== expected.join(","))

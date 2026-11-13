@@ -1,7 +1,8 @@
 // Scaffold the 8 templates x 4 aspect layouts of a style pack from a per-pack type scale.
 // The generated layout.*.html files are the source of truth afterwards (hand-editable).
 // Usage: node scripts/scaffold-layouts.mjs <packDir> <variant>
-//   variants: minimal | kinetic | infographic | slides | news | terminal | glass | flat
+//   variants: minimal | kinetic | infographic | slides | news | terminal | glass | flat | neon | vhs |
+//             whiteboard | collage | three
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -64,6 +65,37 @@ const SCALE = {
     "9:16": [116, 96, 64, 46, 36],
     "1:1": [96, 78, 50, 38, 28],
     "4:5": [104, 84, 56, 40, 30],
+  },
+  neon: {
+    "16:9": [112, 84, 54, 40, 30],
+    "9:16": [112, 90, 62, 46, 36],
+    "1:1": [92, 72, 48, 36, 28],
+    "4:5": [100, 80, 54, 40, 30],
+  },
+  // VT323 is a narrow pixel face with a small x-height: a larger scale keeps it legible.
+  vhs: {
+    "16:9": [136, 104, 66, 48, 38],
+    "9:16": [132, 108, 74, 56, 44],
+    "1:1": [104, 80, 54, 42, 32],
+    "4:5": [120, 96, 64, 48, 38],
+  },
+  whiteboard: {
+    "16:9": [124, 94, 60, 44, 34],
+    "9:16": [124, 100, 68, 50, 40],
+    "1:1": [102, 82, 54, 42, 32],
+    "4:5": [110, 88, 60, 44, 34],
+  },
+  collage: {
+    "16:9": [112, 84, 54, 40, 30],
+    "9:16": [112, 92, 62, 46, 36],
+    "1:1": [92, 74, 48, 36, 28],
+    "4:5": [100, 80, 54, 40, 30],
+  },
+  three: {
+    "16:9": [112, 84, 54, 40, 30],
+    "9:16": [112, 90, 62, 46, 36],
+    "1:1": [92, 72, 48, 36, 28],
+    "4:5": [100, 80, 54, 40, 30],
   },
 }[variant];
 if (!SCALE) throw new Error(`unknown variant "${variant}"`);

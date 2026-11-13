@@ -28,7 +28,7 @@ const USAGE = `makvid <command>
   golden <style-id|all> --thumbnails   (style picker thumbnail -> packages/styles/<id>/demo/thumbnail.webp)
   lint-style <style-id>
   validate <spec.json>
-  produce --prompt "<text>" [--aspect 9:16] [--duration 45] [--style id] [--voice vits:banmai] [--out dir]
+  produce --prompt "<text>" [--aspect 9:16] [--duration 45] [--style id] [--mix-styles a,b] [--voice vits:banmai] [--out dir]
 Global: --json (NDJSON events on stdout)`;
 
 const ASPECTS = new Set(["16:9", "9:16", "1:1", "4:5"]);
@@ -51,6 +51,7 @@ async function main(argv: string[]): Promise<number> {
       thumbnails: { type: "boolean" },
       json: { type: "boolean" },
       style: { type: "string" },
+      "mix-styles": { type: "string" },
       prompt: { type: "string" },
       duration: { type: "string" },
       voice: { type: "string" },
@@ -147,6 +148,14 @@ async function main(argv: string[]): Promise<number> {
         renderer: (values.renderer ?? "hyperframes") as "hyperframes" | "fallback",
         ...(values.duration ? { durationSec: Number(values.duration) } : {}),
         ...(values.style ? { styleId: values.style } : {}),
+        ...(values["mix-styles"]
+          ? {
+              mixStyles: values["mix-styles"]
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean),
+            }
+          : {}),
         ...(values.voice ? { voiceId: values.voice } : {}),
       });
       return r.status === "ready" ? EXIT.ok : EXIT.qa;

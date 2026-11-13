@@ -142,3 +142,15 @@
 - Live: the custom image endpoint refuses Nano Banana for our key; the Gemini-compatible route
   (`/v1beta/models/gemini-nano-banana-2.1:generateContent?key=`) works. Adapter switched to it; real 1K image in
   23 s (`docs/reports/assets/M4/mediagen/shopaikey-live.png`). Unit 13/13. Cost per image still an estimate.
+
+## 2026-11-13 — M4: style packs 9–13 and style mixing (Claude Code)
+
+- New packs (ADR 0012): neon (Exo 2), retro-vhs (VT323), whiteboard (Patrick Hand, hand + drawn strokes),
+  paper-collage (Bricolage Grotesque, stop-motion), three-lite (Three.js 0.186.1 SVGRenderer, CPU, no WebGL).
+  `scripts/new-pack.mjs` scaffolds a pack; guide in `docs/style-pack-guide.md`.
+- Render container: goldens written for the 5 packs and all 13 packs match 32/32; overflow harness 66/66;
+  ms/frame (hook 9:16): neon 123, retro-vhs 166 (257 before dropping a blend mode), whiteboard 94,
+  paper-collage 132, three-lite 118.
+- Style mixing (T160): captions in the primary style, bridge fade at style changes, storyboard `styleId` per
+  scene with validator rules (`--mix-styles`), PROMPT_VERSION m4.1. Mixed sample rendered in the container.
+- Next: real-voice demos of the 5 packs + a mixed video, M4 report (T162), GATE M4.
