@@ -161,3 +161,9 @@
   −14 LUFS, $0.013–0.018 each. Whiteboard: an emphasised phrase is now underlined word to word (circle for one
   word); goldens rewritten, overflow 52/52, 101 ms/frame.
 - Report `docs/reports/M4.md`. Next: GATE M4 approval, then M5.
+
+## 2026-11-13 — GATE M4 approved (Claude Code)
+
+- Product owner approved M4. Style-mixing toggle in the web create form not decided yet (CLI `--mix-styles`
+  works); planned alongside M5 form work unless told otherwise.
+- Next: M5 (batch from template + CSV, roles/quota/billing, public API + webhooks, platform admin).
