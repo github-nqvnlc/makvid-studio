@@ -95,3 +95,8 @@
 - 5 real-voice demos (QA first pass, −14 LUFS, ~$0.015 each), walkthrough from E2E screenshots, style cards.
   Report `docs/reports/M3.md`.
 - Next: GATE M3 approval, then M4 (source ingest, uploads).
+
+## 2026-11-13 — GATE M3 approved (Claude Code)
+
+- Product owner approved M3. Next: M4 — US4 source ingest (T109–T118) and US8 brand kit / assets / AI media
+  (T119–T125).
