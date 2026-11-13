@@ -12,6 +12,9 @@ import { startWebhookWorker, withWebhookHooks } from "./webhooks";
 import type { ServiceDeps } from "./service";
 import { dbSink } from "./sink";
 import { contextFromEnv, startStageWorker } from "./worker";
+import { distributedPool, startSceneWorker } from "./distributed";
+import { stubRenderer } from "./testing";
+import { createRenderer } from "@makvid/renderer";
 
 export async function runWorkerApp(
   queue: "ai" | "audio" | "render",
@@ -23,7 +26,7 @@ export async function runWorkerApp(
   const store = db ? createObjectStore(configFromEnv()) : undefined;
   await store?.ensureBucket();
   const connection = connectionFromUrl();
-  const prefix = process.env.QUEUE_PREFIX;
+  const prefix = process.env.QUEUE_PREFIX || undefined;
   const deps: ServiceDeps | undefined =
     db && store
       ? {
@@ -36,8 +39,35 @@ export async function runWorkerApp(
           watermark: async (ws) => (await billingGate(db.db).watermark?.(ws)) ?? false,
         }
       : undefined;
-  const worker = startStageWorker(queue, contextFromEnv(stylesRoot), {
+  // Distributed rendering (T132): RENDER_DISTRIBUTED=1 makes every render worker also render single scenes
+  // for any video, and a video's render stage fan its scenes out to all of them.
+  const distributed = queue === "render" && process.env.RENDER_DISTRIBUTED === "1" && !!store;
+  const renderer =
+    process.env.MAKVID_MOCK_PROVIDERS === "1"
+      ? stubRenderer
+      : queue === "render"
+        ? createRenderer("hyperframes", { workers: Number(process.env.RENDER_WORKERS ?? 4) })
+        : undefined;
+  const sceneWorker =
+    distributed && renderer
+      ? startSceneWorker(renderer, store!, connection, {
+          ...(prefix ? { prefix } : {}),
+          concurrency: Number(process.env.RENDER_SCENE_CONCURRENCY ?? 1),
+        })
+      : null;
+  const worker = startStageWorker(queue, contextFromEnv(stylesRoot, renderer), {
     connection,
+    ...(distributed
+      ? {
+          scenePool: (d: { workspaceId: string }) =>
+            distributedPool({
+              store: store!,
+              connection,
+              workspaceId: d.workspaceId,
+              ...(prefix ? { prefix } : {}),
+            }),
+        }
+      : {}),
     concurrency: Number(process.env.WORKER_CONCURRENCY ?? 1),
     ...(prefix ? { prefix } : {}),
     // Quota (settle) runs before the batch hook, so a finished row frees its quota before the next one starts.
@@ -75,6 +105,7 @@ export async function runWorkerApp(
       : null;
   const stop = async () => {
     await hooksWorker?.close();
+    await sceneWorker?.close();
     await worker.close();
     await db?.close();
     process.exit(0);

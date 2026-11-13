@@ -16,6 +16,7 @@ One file per decision: `NNNN-short-title.md`, numbered sequentially, never renum
 | [0010](0010-speech-to-text.md)          | Speech-to-text: whisper.cpp words + MFA timing, self-hosted           | Accepted                    |
 | [0011](0011-ai-media-generation.md)     | AI images: ShopAIKey → Google fallback, off by default, hash cache    | Accepted                    |
 | [0012](0012-style-packs-9-13-mixing.md) | Style packs 9–13, CPU 3D (SVGRenderer), per-scene style mixing        | Accepted                    |
+| [0013](0013-batch-quota-api-distributed.md) | M5: template batches, quota reservations, public API, scene fan-out | Accepted |
 
 ## Template
 

@@ -79,6 +79,9 @@ const SELF_CHECKED = new Set([
   "DELETE /api/workspace/members/[userId]",
   "GET /api/billing/mock-checkout",
   "POST /api/billing/mock-checkout",
+  // platform admin only (viewer.isPlatformAdmin), not a workspace role
+  "PATCH /api/admin/plans/[id]",
+  "POST /api/admin/grant",
 ]);
 
 describe("route coverage", () => {
@@ -97,9 +100,13 @@ describe("route coverage", () => {
     }
   });
 
-  it("self-checked routes still require a session", () => {
+  it("self-checked routes still require a session; admin routes check the platform-admin flag", () => {
     for (const r of all.filter((x) => SELF_CHECKED.has(`${x.method} ${x.path}`)))
       expect(r.body, `${r.method} ${r.path}`).toMatch(/guarded\(/);
+    const admin = all.filter((x) => x.path.startsWith("/api/admin/"));
+    expect(admin.length).toBe(2);
+    for (const r of admin)
+      expect(r.body, `${r.method} ${r.path}`).toMatch(/if \(!v\.isPlatformAdmin\) return fail\("forbidden"\)/);
   });
 });
 

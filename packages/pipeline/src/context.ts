@@ -7,6 +7,7 @@ import type { Renderer } from "@makvid/renderer";
 import type { BrandKit } from "@makvid/compiler";
 import type { MusicProvider } from "@makvid/media";
 import type { MfaAligner, TtsProvider } from "@makvid/tts";
+import type { ScenePool } from "./distributed";
 
 export type Step =
   | "ingest"
@@ -55,6 +56,8 @@ export interface PipelineContext {
   music?: MusicProvider;
   /** Workspace brand kit with local file paths (US8); applied to every compile. */
   brand?: BrandKit;
+  /** Where uncached scenes render (T132): this process by default, or every render worker (distributed). */
+  scenePool?: ScenePool;
   onUsage(u: UsageEntry): void;
   onProgress(p: Progress): void;
 }

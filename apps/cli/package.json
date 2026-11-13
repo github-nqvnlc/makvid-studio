@@ -22,10 +22,13 @@
     "@makvid/compiler": "workspace:*",
     "@makvid/media": "workspace:*",
     "@makvid/pipeline": "workspace:*",
+    "@makvid/queue": "workspace:*",
     "@makvid/renderer": "workspace:*",
     "@makvid/spec": "workspace:*",
+    "@makvid/storage": "workspace:*",
     "@makvid/style-kit": "workspace:*",
-    "@makvid/tts": "workspace:*"
+    "@makvid/tts": "workspace:*",
+    "bullmq": "5.81.5"
   },
   "bin": {
     "makvid": "./src/main.ts"

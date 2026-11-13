@@ -369,5 +369,29 @@
     "webhooksHelp": "We send signed notifications when a video is done, a video fails and a batch completes.",
     "addWebhook": "Add webhook",
     "remove": "Remove"
+  },
+  "admin": {
+    "title": "Platform admin",
+    "queues": "Queues and workers",
+    "queue": "Queue",
+    "workers": "Workers",
+    "waiting": "Waiting",
+    "active": "Active",
+    "failed": "Failed",
+    "costRevenue": "AI cost and revenue",
+    "totals": "Total AI cost {cost} · revenue {usd} + {vnd} ₫",
+    "workspace": "Workspace",
+    "owner": "Owner",
+    "plan": "Plan",
+    "videos": "Videos",
+    "aiCost": "AI cost",
+    "revenue": "Revenue",
+    "byStep": "Cost by step",
+    "plans": "Plans",
+    "save": "Save",
+    "saved": "Saved",
+    "grant": "Grant plan",
+    "granted": "Plan granted",
+    "users": "Users ({n})"
   }
 }

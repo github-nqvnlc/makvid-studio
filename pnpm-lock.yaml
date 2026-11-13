@@ -247,18 +247,27 @@ importers:
       '@makvid/pipeline':
         specifier: workspace:*
         version: link:../../packages/pipeline
+      '@makvid/queue':
+        specifier: workspace:*
+        version: link:../../packages/queue
       '@makvid/renderer':
         specifier: workspace:*
         version: link:../../packages/renderer
       '@makvid/spec':
         specifier: workspace:*
         version: link:../../packages/spec
+      '@makvid/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
       '@makvid/style-kit':
         specifier: workspace:*
         version: link:../../packages/style-kit
       '@makvid/tts':
         specifier: workspace:*
         version: link:../../packages/tts
+      bullmq:
+        specifier: 5.81.5
+        version: 5.81.5
     devDependencies:
       '@makvid/config':
         specifier: workspace:*
@@ -311,6 +320,9 @@ importers:
       better-auth:
         specifier: 1.7.14
         version: 1.7.14(@opentelemetry/api@1.10.0)(drizzle-kit@0.31.11)(drizzle-orm@0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.8)(postgres@3.4.9))(next@16.4.3(@opentelemetry/api@1.10.0)(@playwright/test@1.64.1)(@types/node@22.20.5)(react-dom@19.2.9(react@19.2.9))(react@19.2.9))(react-dom@19.2.9(react@19.2.9))(react@19.2.9)(vitest@5.1.0(@opentelemetry/api@1.10.0)(@types/node@22.20.5)(vite@8.3.7(@types/node@22.20.5)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1)))
+      bullmq:
+        specifier: 5.81.5
+        version: 5.81.5
       drizzle-orm:
         specifier: 0.45.4
         version: 0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.8)(postgres@3.4.9)

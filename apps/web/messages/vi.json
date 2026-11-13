@@ -369,5 +369,29 @@
     "webhooksHelp": "Chúng tôi gửi thông báo có chữ ký khi video xong, video lỗi và lô hoàn thành.",
     "addWebhook": "Thêm webhook",
     "remove": "Xoá"
+  },
+  "admin": {
+    "title": "Quản trị nền tảng",
+    "queues": "Hàng đợi và máy xử lý",
+    "queue": "Hàng đợi",
+    "workers": "Máy xử lý",
+    "waiting": "Đang chờ",
+    "active": "Đang chạy",
+    "failed": "Lỗi",
+    "costRevenue": "Chi phí AI và doanh thu",
+    "totals": "Tổng chi phí AI {cost} · doanh thu {usd} + {vnd} ₫",
+    "workspace": "Không gian",
+    "owner": "Chủ sở hữu",
+    "plan": "Gói",
+    "videos": "Video",
+    "aiCost": "Chi phí AI",
+    "revenue": "Doanh thu",
+    "byStep": "Chi phí theo bước",
+    "plans": "Gói cước",
+    "save": "Lưu",
+    "saved": "Đã lưu",
+    "grant": "Cấp gói",
+    "granted": "Đã cấp gói",
+    "users": "Người dùng ({n})"
   }
 }

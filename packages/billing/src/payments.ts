@@ -57,8 +57,8 @@ export async function startCheckout(db: Db, c: CheckoutInput): Promise<{ orderId
         months = Math.max(1, Math.min(12, c.item.months ?? 1));
         amount = p.priceVnd * months;
       } else {
-        if (!p.polarProductId) throw new PaymentError("not_purchasable");
-        productId = p.polarProductId;
+        if (!p.polarProductId && c.provider.id === "polar") throw new PaymentError("not_purchasable");
+        if (p.polarProductId) productId = p.polarProductId;
         amount = Number(p.priceUsd);
       }
     } else {

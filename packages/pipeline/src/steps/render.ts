@@ -13,6 +13,7 @@ import {
 import { captureFrames, checkFrame, concatAndMux, probe, thumbnail, type QaIssue } from "@makvid/renderer";
 import { z } from "zod";
 import type { PipelineContext } from "../context";
+import { localPool, type SceneJob } from "../distributed";
 
 export interface QaResult {
   spec: VideoSpec;
@@ -157,38 +158,44 @@ export async function renderAll(
     const dir = join(outDir, aspectSlug(aspect));
     mkdirSync(join(dir, "scenes"), { recursive: true });
     const files: string[] = [];
+    const todo: Array<SceneJob & { cached: string }> = [];
     let hits = 0;
     for (const [i, s] of video.scenes.entries()) {
-      ctx.onProgress({
-        step: "render_scene",
-        key: "progress.renderScene",
-        params: { current: i + 1, total: video.scenes.length, aspect },
-        fraction: 0.75 + (0.2 * (i + 1)) / video.scenes.length,
-      });
       const cached = join(cacheDir, `${s.cacheKey}.mp4`);
       const file = join(dir, "scenes", `${String(i + 1).padStart(2, "0")}-${s.sceneId}.mp4`);
       if (existsSync(cached)) {
         copyFileSync(cached, file);
         hits++;
-      } else {
-        const t0 = performance.now();
-        await ctx.renderer.renderScene({
+      } else
+        todo.push({
+          cacheKey: s.cacheKey,
           sceneDir: s.dir,
           width: video.width,
           height: video.height,
           fps: video.fps,
           outPath: file,
+          cached,
         });
-        ctx.onUsage({
-          step: "render_scene",
-          provider: ctx.renderer.id,
-          renderSeconds: (performance.now() - t0) / 1000,
-          costUsd: null,
-        });
-        copyFileSync(file, cached);
-      }
       files.push(file);
     }
+    // Uncached scenes render in this process, or on every render worker when a distributed pool is set.
+    const t0 = performance.now();
+    await (ctx.scenePool ?? localPool(ctx.renderer)).render(todo, (done) =>
+      ctx.onProgress({
+        step: "render_scene",
+        key: "progress.renderScene",
+        params: { current: hits + done, total: video.scenes.length, aspect },
+        fraction: 0.75 + (0.2 * (hits + done)) / video.scenes.length,
+      }),
+    );
+    if (todo.length)
+      ctx.onUsage({
+        step: "render_scene",
+        provider: ctx.scenePool ? "distributed" : ctx.renderer.id,
+        renderSeconds: (performance.now() - t0) / 1000,
+        costUsd: null,
+      });
+    for (const j of todo) copyFileSync(j.outPath, j.cached);
     ctx.onProgress({ step: "mux", key: "progress.mux", params: { aspect }, fraction: 0.97 });
     const mp4 = join(dir, "video.mp4");
     await concatAndMux({ scenes: files, outPath: mp4, fps: video.fps, audioPath: mixedWav });

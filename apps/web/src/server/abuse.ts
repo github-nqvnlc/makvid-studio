@@ -5,8 +5,10 @@
 // videos (paid plans are unaffected).
 import "server-only";
 import { createHmac } from "node:crypto";
+import { isIP } from "node:net";
 import { and, eq, gt, inArray, or, sql } from "drizzle-orm";
 import { abuseSignals, withService, type Db } from "@makvid/db";
+import { isBlockedAddress } from "@makvid/media";
 
 export const MAX_FREE_SIGNUPS = 3;
 const WINDOW_DAYS = 30;
@@ -61,10 +63,12 @@ export async function recordSignup(
   ctx: SignupContext,
 ): Promise<boolean> {
   const emailDomain = email.split("@")[1]?.toLowerCase() ?? "";
-  const ipHash = ctx.ip ? hmac(`ip:${ctx.ip}`) : null;
-  const deviceHash = ctx.userAgent
-    ? hmac(`dev:${ctx.userAgent}|${ctx.acceptLanguage ?? ""}|${ctx.ip ?? ""}`)
-    : null;
+  // No public IP (local development, tests, misconfigured proxy): only the email domain is checked.
+  const ip = ctx.ip?.replace(/^::ffff:/, "") ?? "";
+  const publicIp = isIP(ip) && !isBlockedAddress(ip) ? ip : null;
+  const ipHash = publicIp ? hmac(`ip:${publicIp}`) : null;
+  const deviceHash =
+    publicIp && ctx.userAgent ? hmac(`dev:${ctx.userAgent}|${ctx.acceptLanguage ?? ""}|${publicIp}`) : null;
   return withService(db, async (tx) => {
     const since = new Date(Date.now() - WINDOW_DAYS * 86400_000);
     const count = async (

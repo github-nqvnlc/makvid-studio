@@ -14,6 +14,7 @@ import { FptTtsProvider, MfaAligner } from "@makvid/tts";
 import { musicProviderFromEnv } from "@makvid/media";
 import { Worker, type ConnectionOptions, type Job, type JobNode } from "bullmq";
 import type { PipelineContext, UsageEntry } from "./context";
+import type { ScenePool } from "./distributed";
 import {
   applyScriptReview,
   applyStoryboardReview,
@@ -95,6 +96,8 @@ export function startStageWorker(
     onUsage?: (data: ProduceJobData, u: UsageEntry) => void;
     /** Persistence hooks (status, versions, outputs): see sink.ts. Errors here are logged, never fatal. */
     hooks?: StageHooks;
+    /** Distributed scene rendering (T132): pool for the scenes of this job's video. */
+    scenePool?: (data: ProduceJobData<ProduceInput>) => ScenePool;
   } = {},
 ): Worker {
   const log = createLogger(`worker-${queue}`);
@@ -118,7 +121,7 @@ export function startStageWorker(
         }
       };
       await safe("start", () => opts.hooks?.onStageStart?.(data, stage));
-      const ctx = makeCtx(data.workDir, {
+      const base = makeCtx(data.workDir, {
         onUsage: (u) => (opts.onUsage?.(data, u), void safe("usage", () => opts.hooks?.onUsage?.(data, u))),
         onProgress: (p) => (
           void safe("progress", () => opts.hooks?.onProgress?.(data, stage, p)),
@@ -127,6 +130,7 @@ export function startStageWorker(
             .catch(() => undefined)
         ),
       });
+      const ctx = opts.scenePool ? { ...base, scenePool: opts.scenePool(data) } : base;
       log.info({ jobId: job.id, stage, projectId: data.projectId }, "stage start");
       const state = await runStage(ctx, stage, data.input);
       await safe("done", () => opts.hooks?.onStageDone?.(data, stage, state));

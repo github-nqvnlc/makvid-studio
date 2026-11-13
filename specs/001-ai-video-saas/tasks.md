@@ -295,10 +295,10 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 ### Implementation for User Story 5
 
 - [x] T129 [P] [US5] Create tables `templates` (variables jsonb: name, type, required, maxLength), `batches` (status enum `validating|queued|running|completed|completed_with_errors|paused_quota|cancelled`), `batch_items` in `packages/db/src/schema/batch.ts`
-- [ ] T130 [US5] Implement "save as template" + variable extraction in `apps/web/src/server/templates.ts`
-- [ ] T131 [US5] Implement batch flow (CSV validation, fan-out at batch priority, per-workspace concurrency limit, pause on quota, ZIP assembly) in `packages/queue/src/flows/batch.ts`
-- [ ] T132 [US5] Implement distributed render: scene/chunk fan-out across N `worker-render` containers using `planV2WithPublisher` artifacts on object storage in `apps/worker-render/src/distributed.ts`
-- [ ] T133 [US5] Build batch pages (upload CSV, mapping check, progress per row, retry failed, download ZIP) in `apps/web/src/app/[locale]/batches/`
+- [x] T130 [US5] Implement "save as template" + variable extraction in `apps/web/src/server/templates.ts`
+- [x] T131 [US5] Implement batch flow (CSV validation, fan-out at batch priority, per-workspace concurrency limit, pause on quota, ZIP assembly) in `packages/queue/src/flows/batch.ts`
+- [x] T132 [US5] Implement distributed render: scene/chunk fan-out across N `worker-render` containers using `planV2WithPublisher` artifacts on object storage in `apps/worker-render/src/distributed.ts`
+- [x] T133 [US5] Build batch pages (upload CSV, mapping check, progress per row, retry failed, download ZIP) in `apps/web/src/app/[locale]/batches/`
 - [ ] T134 [US5] Run 100-video acceptance (`fixtures/batch/100.csv`) and scaling benchmark with 1/2/4 workers; record in `docs/reports/M5.md`
 
 ---
@@ -311,7 +311,7 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 ### Tests for User Story 6
 
-- [ ] T135 [P] [US6] Workspace isolation test suite (every table/API route/signed URL) in `tests/isolation/workspace-isolation.test.ts`
+- [x] T135 [P] [US6] Workspace isolation test suite (every table/API route/signed URL) in `tests/isolation/workspace-isolation.test.ts`
 - [x] T136 [P] [US6] Role permission matrix tests (owner/admin/editor/viewer) in `apps/web/test/rbac.test.ts`
 - [x] T137 [P] [US6] Quota reserve/commit/refund tests incl. concurrent reservations in `packages/billing/test/quota.test.ts`
 
@@ -321,7 +321,7 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 - [x] T139 [US6] Implement quota service with atomic reservation before enqueue in `packages/billing/src/quota.ts` and wire into `packages/queue/src/flows/*`
 - [x] T140 [US6] Implement `PaymentProvider` interface + provider chosen by product owner (ADR 0004) in `packages/billing/src/providers/`
 - [x] T141 [US6] Implement watermark overlay for free plan in `packages/compiler/src/watermark.ts`, and free-plan abuse signals in `apps/web/src/server/abuse.ts`
-- [ ] T142 [US6] Build members/invitations, usage meters, plans/checkout pages in `apps/web/src/app/[locale]/workspace/`
+- [x] T142 [US6] Build members/invitations, usage meters, plans/checkout pages in `apps/web/src/app/[locale]/workspace/`
 
 ---
 
@@ -351,7 +351,7 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 **Independent Test**: After several videos across workspaces, admin sees per-step usage and totals that match `usage_records`.
 
-- [ ] T149 [US9] Build admin area (users, plans, cost vs revenue per workspace, queue depth, worker health) guarded by platform-admin role in `apps/web/src/app/[locale]/admin/`
+- [x] T149 [US9] Build admin area (users, plans, cost vs revenue per workspace, queue depth, worker health) guarded by platform-admin role in `apps/web/src/app/[locale]/admin/`
 
 **🛑 GATE M5**: 100-video batch clean; render speed target met and near-linear scaling; quota blocking correct.
 
