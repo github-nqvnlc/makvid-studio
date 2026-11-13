@@ -194,6 +194,7 @@ export function dbSink(db: Db, store: ObjectStore): StageHooks {
               height,
               fps: 30,
               loudnessLufs: Number.isFinite(state.loudnessLufs) ? state.loudnessLufs! : null,
+              watermarked: state.spec?.meta.watermark === true,
             });
           }
           set.headVersionId = d.versionId;

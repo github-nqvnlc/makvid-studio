@@ -6,7 +6,7 @@ import { server } from "@/server/deps";
 export const dynamic = "force-dynamic";
 
 export function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
-  return guarded(async (v) => {
+  return guarded("GET /api/projects/[id]", async (v) => {
     const id = projectId((await ctx.params).id);
     return Response.json(await projectView(server().deps, v.workspaceId, id));
   });

@@ -7,7 +7,7 @@ import { server } from "@/server/deps";
 export const dynamic = "force-dynamic";
 
 export function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
-  return guarded(async (v) => {
+  return guarded("GET /api/projects/[id]/events", async (v) => {
     const id = projectId((await ctx.params).id);
     const locale = new URL(req.url).searchParams.get("locale") === "en" ? "en" : "vi";
     const enc = new TextEncoder();

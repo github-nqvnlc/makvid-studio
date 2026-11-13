@@ -9,3 +9,4 @@ export { bundlePack, vendorFiles } from "./bundle";
 export { lintFreeform } from "./freeform";
 export * from "./brand";
 export * from "./mix-styles";
+export * from "./watermark";

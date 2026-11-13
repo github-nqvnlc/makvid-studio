@@ -6,7 +6,7 @@ import { UploadError } from "@/server/uploads";
 export const dynamic = "force-dynamic";
 
 export function GET(req: Request) {
-  return guarded(async (v) => {
+  return guarded("GET /api/assets", async (v) => {
     const kind = new URL(req.url).searchParams.get("kind");
     const kinds = kind === "image" || kind === "font" ? [kind] : ["image", "font"];
     return Response.json({ assets: await listAssets(v.workspaceId, kinds) });
@@ -14,7 +14,7 @@ export function GET(req: Request) {
 }
 
 export function POST(req: Request) {
-  return guarded(async (v) => {
+  return guarded("POST /api/assets", async (v) => {
     const form = await req.formData().catch(() => null);
     const file = form?.get("file");
     const kind = form?.get("kind");

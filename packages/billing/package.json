@@ -13,6 +13,11 @@
     "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {
-    "@makvid/config": "workspace:*"
+    "@makvid/config": "workspace:*",
+    "postgres": "3.4.9"
+  },
+  "dependencies": {
+    "@makvid/db": "workspace:*",
+    "drizzle-orm": "0.45.4"
   }
 }

@@ -6,6 +6,7 @@ import { connect } from "@makvid/db";
 import { connectionFromUrl } from "@makvid/queue";
 import { configFromEnv, createObjectStore } from "@makvid/storage";
 import { withBatchHooks, type BatchGate } from "./batch";
+import { billingGate, withQuotaHooks } from "./quota";
 import type { ServiceDeps } from "./service";
 import { dbSink } from "./sink";
 import { contextFromEnv, startStageWorker } from "./worker";
@@ -30,13 +31,23 @@ export async function runWorkerApp(
           workRoot: process.env.WORK_ROOT ?? resolve(stylesRoot, "..", "..", ".work"),
           stylesRoot,
           ...(prefix ? { prefix } : {}),
+          watermark: async (ws) => (await billingGate(db.db).watermark?.(ws)) ?? false,
         }
       : undefined;
   const worker = startStageWorker(queue, contextFromEnv(stylesRoot), {
     connection,
     concurrency: Number(process.env.WORKER_CONCURRENCY ?? 1),
     ...(prefix ? { prefix } : {}),
-    ...(deps ? { hooks: withBatchHooks(dbSink(deps.db, deps.store), deps, opts.gate?.(deps)) } : {}),
+    // Quota (settle) runs before the batch hook, so a finished row frees its quota before the next one starts.
+    ...(deps
+      ? {
+          hooks: withBatchHooks(
+            withQuotaHooks(dbSink(deps.db, deps.store), deps.db),
+            deps,
+            opts.gate?.(deps) ?? billingGate(deps.db),
+          ),
+        }
+      : {}),
   });
   const stop = async () => {
     await worker.close();

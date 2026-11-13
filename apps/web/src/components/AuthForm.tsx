@@ -24,7 +24,9 @@ export function AuthForm({ mode, google }: { mode: "sign-in" | "sign-up"; google
       setError(mode === "sign-up" ? t("signUpFailed") : t("failed"));
       return;
     }
-    router.push("/");
+    // Only same-site relative paths (e.g. an invitation link) are honoured after sign-in.
+    const next = new URLSearchParams(window.location.search).get("next");
+    router.push(next && /^\/(?!\/)[\w\-/]*$/.test(next) ? next : "/");
     router.refresh();
   }
 

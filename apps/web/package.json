@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@makvid/ai": "workspace:*",
+    "@makvid/billing": "workspace:*",
     "@makvid/compiler": "workspace:*",
     "@makvid/db": "workspace:*",
     "@makvid/media": "workspace:*",

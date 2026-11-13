@@ -12,6 +12,8 @@ import {
   SafeFetchError,
   type SourceMaterial,
 } from "@makvid/media";
+import { attachReservation, planOf, QuotaError, reserve, settle } from "@makvid/billing";
+import { freeBlocked } from "@/server/abuse";
 import { createProject } from "@makvid/pipeline";
 import { voiceCatalog } from "@makvid/tts";
 import { fail, guarded } from "@/server/api";
@@ -22,7 +24,7 @@ import { UploadError, validateUpload } from "@/server/uploads";
 export const dynamic = "force-dynamic";
 
 export function GET() {
-  return guarded(async (v) => {
+  return guarded("GET /api/projects", async (v) => {
     const rows = await withWorkspace(server().db, v.workspaceId, (tx) =>
       tx
         .select({
@@ -76,7 +78,7 @@ async function parse(req: Request): Promise<Parsed | null> {
 }
 
 export function POST(req: Request) {
-  return guarded(async (v) => {
+  return guarded("POST /api/projects", async (v) => {
     const p = await parse(req);
     if (!p) return fail("invalid");
     const { common: c, source: s } = p;
@@ -129,18 +131,37 @@ export function POST(req: Request) {
       return fail("source_unreadable");
     }
     const brand = c.useBrand ? await resolveBrandKit(v.workspaceId) : null;
-    const id = await createProject(server().deps, {
-      workspaceId: v.workspaceId,
-      userId: v.userId,
-      prompt: [...label.normalize("NFC").trim()].slice(0, 200).join("") || "Video",
-      aspects: [c.aspect],
-      durationSec: c.durationSec,
-      mode: c.mode,
-      voiceId: c.voiceId,
-      ...(source ? { source } : {}),
-      ...(media ? { media, useSourceAudio: s.kind === "media" && s.useSourceAudio === "true" } : {}),
-      ...(brand ? { brand } : {}),
+    // Free plan refused to accounts flagged at sign-up (many accounts from one IP/device, disposable email).
+    if (
+      (await planOf(server().db, v.workspaceId)).id === "free" &&
+      (await freeBlocked(server().db, [v.userId]))
+    )
+      throw new QuotaError("videos");
+    // Quota is reserved before any paid work is queued (SC-008); QuotaError -> 402 in guarded().
+    const words = s.kind === "script" ? s.text : (source?.markdown ?? "");
+    const r = await reserve(server().db, v.workspaceId, {
+      videoSeconds: c.durationSec,
+      ttsChars: Math.min([...words].length || c.durationSec * 15, c.durationSec * 25),
     });
+    let id: string;
+    try {
+      id = await createProject(server().deps, {
+        workspaceId: v.workspaceId,
+        userId: v.userId,
+        prompt: [...label.normalize("NFC").trim()].slice(0, 200).join("") || "Video",
+        aspects: [c.aspect],
+        durationSec: c.durationSec,
+        mode: c.mode,
+        voiceId: c.voiceId,
+        ...(source ? { source } : {}),
+        ...(media ? { media, useSourceAudio: s.kind === "media" && s.useSourceAudio === "true" } : {}),
+        ...(brand ? { brand } : {}),
+        onCreated: (pid) => attachReservation(server().db, v.workspaceId, r.id, pid),
+      });
+    } catch (e) {
+      await settle(server().db, v.workspaceId, { reservationId: r.id }, false);
+      throw e;
+    }
     return Response.json({ id }, { status: 201 });
   });
 }

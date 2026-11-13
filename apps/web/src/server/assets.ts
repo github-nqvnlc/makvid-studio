@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { and, desc, eq, inArray } from "drizzle-orm";
-import type { BRAND_COLOR_KEYS} from "@makvid/compiler";
+import type { BRAND_COLOR_KEYS } from "@makvid/compiler";
 import { brandFontMissingGlyphs, type BrandKit } from "@makvid/compiler";
 import { assets, brandKits, withWorkspace } from "@makvid/db";
 import { fontInfo } from "@makvid/style-kit/node";

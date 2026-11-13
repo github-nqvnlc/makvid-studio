@@ -13,7 +13,7 @@ const Body = z.discriminatedUnion("action", [
 ]);
 
 export function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
-  return guarded(async (v) => {
+  return guarded("POST /api/projects/[id]/actions", async (v) => {
     const id = projectId((await ctx.params).id);
     const b = Body.safeParse(await req.json().catch(() => null));
     if (!b.success) return fail("invalid");

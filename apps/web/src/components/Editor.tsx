@@ -8,6 +8,7 @@ import type { StyleCard } from "@/server/catalog";
 import { useRouter } from "@/i18n/navigation";
 import { apiError, postJson, type ErrorKey } from "@/lib/api-client";
 import { Downloads } from "./Downloads";
+import { SaveTemplate } from "./SaveTemplate";
 import { VersionHistory } from "./VersionHistory";
 import { ScriptReview } from "@/app/[locale]/projects/[id]/review/ScriptReview";
 import { StoryboardReview } from "@/app/[locale]/projects/[id]/review/StoryboardReview";
@@ -166,6 +167,9 @@ export function Editor({ projectId, styles }: { projectId: string; styles: Style
               </div>
             </div>
             <Downloads outputs={view.outputs} />
+            {status === "ready" && view.spec && (
+              <SaveTemplate projectId={projectId} title={view.project.title} />
+            )}
           </section>
 
           <aside className="stack">

@@ -9,7 +9,7 @@ import { server } from "@/server/deps";
 export const dynamic = "force-dynamic";
 
 export function GET(_req: Request, ctx: { params: Promise<{ id: string; sceneId: string }> }) {
-  return guarded(async (v) => {
+  return guarded("GET /api/projects/[id]/previews/[sceneId]", async (v) => {
     const p = await ctx.params;
     const id = projectId(p.id);
     // The project must be visible to this workspace (RLS) before any of its files are served.

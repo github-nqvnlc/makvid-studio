@@ -44,6 +44,8 @@ export interface ServiceDeps {
   workRoot: string;
   stylesRoot: string;
   prefix?: string;
+  /** Free-plan watermark for a workspace (US6). Absent = never. */
+  watermark?: (workspaceId: string) => Promise<boolean>;
 }
 
 /** Errors the UI turns into friendly messages (code -> i18n key). */
@@ -105,14 +107,18 @@ export interface CreateProjectInput {
   useSourceAudio?: boolean;
   /** Workspace brand kit resolved to local files (US8). */
   brand?: { id: string; kit: BrandKit };
+  /** Called with the new project id before any work is queued (e.g. link the quota reservation). */
+  onCreated?: (projectId: string) => Promise<void>;
 }
 
 export async function createProject(deps: ServiceDeps, c: CreateProjectInput): Promise<string> {
   const prompt = c.prompt.normalize("NFC").trim();
   if (prompt.length < 3) throw new ProjectError("invalid");
   const runId = randomUUID();
+  const watermark = (await deps.watermark?.(c.workspaceId)) ?? false;
   const input: ProduceInput = {
     prompt,
+    ...(watermark ? { watermark } : {}),
     aspects: c.aspects,
     durationSec: c.durationSec,
     mode: c.mode,
@@ -162,6 +168,7 @@ export async function createProject(deps: ServiceDeps, c: CreateProjectInput): P
     input.mediaFile = join(workDir, "source", `upload.${c.media.ext}`);
     writeFileSync(input.mediaFile, c.media.bytes);
   }
+  await c.onCreated?.(projectId);
   await startProduction(deps.connection, jobData(deps, c.workspaceId, projectId, runId, input), qopts(deps));
   return projectId;
 }
@@ -217,7 +224,10 @@ async function rerender(
 ): Promise<void> {
   const workDir = workDirOf(deps, workspaceId, projectId);
   const state = inputOf(deps, workspaceId, projectId);
-  const next: ProduceState = { ...state, spec, usage: [] };
+  const watermark = (await deps.watermark?.(workspaceId)) ?? false;
+  const input: ProduceInput = { ...state.input, watermark };
+  if (!watermark) delete input.watermark;
+  const next: ProduceState = { ...state, input, spec, usage: [] };
   delete next.outputs;
   delete next.qa;
   delete next.mixedWav;
@@ -225,7 +235,7 @@ async function rerender(
   await enqueueProduceVideo(
     deps.connection,
     RERENDER.map((name) => ({ name, queue: STAGE_QUEUE[name] })),
-    jobData(deps, workspaceId, projectId, runId, state.input),
+    jobData(deps, workspaceId, projectId, runId, input),
     qopts(deps),
   );
 }

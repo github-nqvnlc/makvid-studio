@@ -19,11 +19,11 @@ const Body = z.object({
 });
 
 export function GET() {
-  return guarded(async (v) => Response.json({ kit: await getBrandKit(v.workspaceId) }));
+  return guarded("GET /api/brand", async (v) => Response.json({ kit: await getBrandKit(v.workspaceId) }));
 }
 
 export function PUT(req: Request) {
-  return guarded(async (v) => {
+  return guarded("PUT /api/brand", async (v) => {
     const b = Body.safeParse(await req.json().catch(() => null));
     if (!b.success) return fail("invalid");
     const c = b.data.colors;

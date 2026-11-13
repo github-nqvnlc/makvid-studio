@@ -255,7 +255,7 @@ export async function advanceBatch(
   gate?: BatchGate,
 ): Promise<{ started: number; status: BatchStatus }> {
   const planConcurrency = gate ? await gate.concurrency(workspaceId) : Number.POSITIVE_INFINITY;
-  const watermark = (await gate?.watermark?.(workspaceId)) ?? false;
+  const watermark = (await (gate?.watermark ?? deps.watermark)?.(workspaceId)) ?? false;
   const toStart: Array<{
     itemId: string;
     projectId: string;
@@ -289,7 +289,6 @@ export async function advanceBatch(
     });
     for (const item of pickNext(items, free)) {
       const spec = substituteVariables(t.spec as VideoSpec, item.variables);
-      if (watermark) spec.meta.watermark = true;
       const runId = randomUUID();
       let projectId = item.projectId;
       const created = !projectId;
@@ -369,6 +368,7 @@ export async function advanceBatch(
         prompt: s.spec.script[0]?.text ?? "Video",
         aspects: s.settings.aspects,
         mode: "auto",
+        ...(watermark ? { watermark } : {}),
         ...(s.settings.voiceId ? { voiceId: s.settings.voiceId } : {}),
         ...(s.settings.durationSec ? { durationSec: s.settings.durationSec } : {}),
         ...(s.settings.brand ? { brand: s.settings.brand } : {}),

@@ -23,6 +23,7 @@ import { loadPack, type LoadedPack, type TemplateSchema } from "@makvid/style-ki
 import { bundlePack, vendorFiles } from "./bundle";
 import { primaryCaptionCss, primaryCaptionFaces, splitCaptionCss, transitionFor } from "./mix-styles";
 import { applyBrand, fontFormat, logoHtml, servedFontName, type BrandKit } from "./brand";
+import { watermarkHtml } from "./watermark";
 import { captionsHtml, layoutCaptions, type CaptionChunkOut, type CaptionStyle } from "./captions";
 import { hashDir, sceneCacheKey } from "./hash";
 import { escapeHtml, parseLayout, renderLayout, wordKey, type FitIssue } from "./layout";
@@ -284,6 +285,7 @@ export async function compileVideo(spec: VideoSpec, opts: CompileOptions): Promi
     const transition = transitionFor(spec.scenes, i);
     const prevPack = i > 0 ? getPack(spec.scenes[i - 1]!.styleId) : undefined;
     const logo = logoHtml(opts.brand);
+    const mark = watermarkHtml(spec.meta.watermark, opts.brand);
     if (logo.file && opts.brand?.logo) {
       mkdirSync(join(dir, "assets", "brand"), { recursive: true });
       copyFileSync(opts.brand.logo.file, join(dir, "assets", "brand", logo.file));
@@ -348,6 +350,7 @@ ${primaryCaptionCss(primary)}`
     : pack.css
 }
 ${logo.css}
+${mark.css}
 </style>
 </head>
 <body>
@@ -358,6 +361,7 @@ ${layoutHtml}
 </div></div>
 ${capHtml}
 ${logo.html}
+${mark.html}
 </div>
 </div>
 ${runtime === "gsap" ? '<script src="assets/vendor/gsap.min.js"></script>\n' : ""}<script src="assets/vendor/hyperframe.runtime.iife.js"></script>

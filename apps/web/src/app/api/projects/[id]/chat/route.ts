@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 const Body = z.object({ message: z.string().trim().min(1).max(1000) });
 
 export function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
-  return guarded(async (v) => {
+  return guarded("POST /api/projects/[id]/chat", async (v) => {
     const id = projectId((await ctx.params).id);
     const b = Body.safeParse(await req.json().catch(() => null));
     if (!b.success) return fail("invalid");

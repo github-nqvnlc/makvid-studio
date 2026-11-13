@@ -272,6 +272,9 @@ importers:
       '@makvid/ai':
         specifier: workspace:*
         version: link:../../packages/ai
+      '@makvid/billing':
+        specifier: workspace:*
+        version: link:../../packages/billing
       '@makvid/compiler':
         specifier: workspace:*
         version: link:../../packages/compiler
@@ -408,10 +411,20 @@ importers:
         version: link:../config
 
   packages/billing:
+    dependencies:
+      '@makvid/db':
+        specifier: workspace:*
+        version: link:../db
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@opentelemetry/api@1.10.0)(kysely@0.29.8)(postgres@3.4.9)
     devDependencies:
       '@makvid/config':
         specifier: workspace:*
         version: link:../config
+      postgres:
+        specifier: 3.4.9
+        version: 3.4.9
 
   packages/compiler:
     dependencies:
@@ -481,6 +494,9 @@ importers:
       '@makvid/ai':
         specifier: workspace:*
         version: link:../ai
+      '@makvid/billing':
+        specifier: workspace:*
+        version: link:../billing
       '@makvid/compiler':
         specifier: workspace:*
         version: link:../compiler

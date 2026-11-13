@@ -3,6 +3,7 @@
 import "server-only";
 import { join, resolve } from "node:path";
 import { configFromEnv as llmConfigFromEnv, createLlm, DEFAULT_STEPS } from "@makvid/ai";
+import { planOf } from "@makvid/billing";
 import { connect, type Db } from "@makvid/db";
 import type { PipelineContext, ServiceDeps } from "@makvid/pipeline";
 import { mockLlm } from "@makvid/pipeline/testing";
@@ -29,6 +30,8 @@ function create(): Singletons {
     workRoot: process.env.WORK_ROOT ?? join(REPO_ROOT, ".work"),
     stylesRoot: join(REPO_ROOT, "packages", "styles"),
     ...(process.env.QUEUE_PREFIX ? { prefix: process.env.QUEUE_PREFIX } : {}),
+    // Free-plan watermark follows the workspace's current plan (US6).
+    watermark: async (workspaceId) => (await planOf(db, workspaceId)).watermark,
   };
   const llm =
     process.env.MAKVID_MOCK_PROVIDERS === "1"
@@ -40,4 +43,12 @@ function create(): Singletons {
 export function server(): Singletons {
   g.__makvid ??= create();
   return g.__makvid;
+}
+
+// Payment providers (ADR 0004), configured from env once per process.
+import { paymentsFromEnv, type Payments } from "@makvid/billing";
+const gp = globalThis as typeof globalThis & { __makvidPayments?: Payments };
+export function payments(): Payments {
+  gp.__makvidPayments ??= paymentsFromEnv();
+  return gp.__makvidPayments;
 }

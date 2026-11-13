@@ -14,6 +14,7 @@ import {
   withWorkspace,
   workspaces,
 } from "@makvid/db";
+import { contextFrom, recordSignup } from "./abuse";
 import { server } from "./deps";
 
 function createAuth() {
@@ -39,7 +40,14 @@ function createAuth() {
     databaseHooks: {
       user: {
         create: {
-          after: async (user) => {
+          after: async (user, ctx) => {
+            // Free-plan abuse signals (hashed); never blocks the sign-up itself.
+            await recordSignup(
+              db,
+              user.id,
+              user.email,
+              contextFrom(ctx?.headers ?? ctx?.request?.headers),
+            ).catch((e: unknown) => console.warn("abuse signal failed", (e as Error).message));
             const id = randomUUID();
             await withWorkspace(db, id, async (tx) => {
               await tx.insert(workspaces).values({

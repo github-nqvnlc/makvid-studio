@@ -312,15 +312,15 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 ### Tests for User Story 6
 
 - [ ] T135 [P] [US6] Workspace isolation test suite (every table/API route/signed URL) in `tests/isolation/workspace-isolation.test.ts`
-- [ ] T136 [P] [US6] Role permission matrix tests (owner/admin/editor/viewer) in `apps/web/test/rbac.test.ts`
-- [ ] T137 [P] [US6] Quota reserve/commit/refund tests incl. concurrent reservations in `packages/billing/test/quota.test.ts`
+- [x] T136 [P] [US6] Role permission matrix tests (owner/admin/editor/viewer) in `apps/web/test/rbac.test.ts`
+- [x] T137 [P] [US6] Quota reserve/commit/refund tests incl. concurrent reservations in `packages/billing/test/quota.test.ts`
 
 ### Implementation for User Story 6
 
-- [ ] T138 [P] [US6] Create tables `invitations`, `plans` (limits jsonb per data-model.md; `free`: 3 videos/month, ≤60 s, watermark, no batch/API/mediagen), `subscriptions`, `credit_ledger`, `usage_periods`, `payment_events` (unique event_id), `abuse_signals` in `packages/db/src/schema/billing.ts`; enable RLS policies on all tenant tables
-- [ ] T139 [US6] Implement quota service with atomic reservation before enqueue in `packages/billing/src/quota.ts` and wire into `packages/queue/src/flows/*`
-- [ ] T140 [US6] Implement `PaymentProvider` interface + provider chosen by product owner (ADR 0004) in `packages/billing/src/providers/`
-- [ ] T141 [US6] Implement watermark overlay for free plan in `packages/compiler/src/watermark.ts`, and free-plan abuse signals in `apps/web/src/server/abuse.ts`
+- [x] T138 [P] [US6] Create tables `invitations`, `plans` (limits jsonb per data-model.md; `free`: 3 videos/month, ≤60 s, watermark, no batch/API/mediagen), `subscriptions`, `credit_ledger`, `usage_periods`, `payment_events` (unique event_id), `abuse_signals` in `packages/db/src/schema/billing.ts`; enable RLS policies on all tenant tables
+- [x] T139 [US6] Implement quota service with atomic reservation before enqueue in `packages/billing/src/quota.ts` and wire into `packages/queue/src/flows/*`
+- [x] T140 [US6] Implement `PaymentProvider` interface + provider chosen by product owner (ADR 0004) in `packages/billing/src/providers/`
+- [x] T141 [US6] Implement watermark overlay for free plan in `packages/compiler/src/watermark.ts`, and free-plan abuse signals in `apps/web/src/server/abuse.ts`
 - [ ] T142 [US6] Build members/invitations, usage meters, plans/checkout pages in `apps/web/src/app/[locale]/workspace/`
 
 ---

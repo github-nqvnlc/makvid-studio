@@ -51,6 +51,8 @@ export interface ProduceInput {
   brand?: BrandKit;
   /** Voice chosen by the user (voice picker); defaults to the context voice. */
   voiceId?: string;
+  /** Free plan (US6): every rendered scene carries the watermark. Decided per run from the current plan. */
+  watermark?: boolean;
 }
 
 export const STAGES = ["script", "style", "storyboard", "audio", "qa", "render"] as const;
@@ -234,6 +236,9 @@ export async function runStage(
     case "audio": {
       p("tts", "progress.voice", 0.35);
       let spec = need(state.spec, "a storyboard");
+      // The watermark follows the plan at render time: an upgrade removes it from every later render.
+      spec = { ...spec, meta: { ...spec.meta, watermark: input.watermark === true } };
+      if (!input.watermark) delete spec.meta.watermark;
       const parts = spec.script.map((s) => ({ scriptId: s.id, text: s.text }));
       const fromSource = input.useSourceAudio && state.source?.kind === "media";
       const nar = fromSource
