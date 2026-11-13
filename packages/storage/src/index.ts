@@ -1,5 +1,6 @@
 // ObjectStore over the S3 API (AWS SDK v3). Works with SeaweedFS (dev/self-host), Cloudflare R2 and
 // AWS S3 by configuration only. Keys are always workspace-scoped by the caller (ws/<workspaceId>/...).
+import { createReadStream, statSync } from "node:fs";
 import {
   CreateBucketCommand,
   DeleteObjectCommand,
@@ -28,6 +29,10 @@ export interface PutOptions {
 export interface ObjectStore {
   put(key: string, body: Buffer | Uint8Array | string, opts?: PutOptions): Promise<void>;
   get(key: string): Promise<Buffer>;
+  /** Upload a local file as a stream (large files: batch ZIPs). */
+  putFile(key: string, path: string, opts?: PutOptions): Promise<void>;
+  /** Download as a stream (large files). */
+  getStream(key: string): Promise<NodeJS.ReadableStream>;
   exists(key: string): Promise<boolean>;
   delete(key: string): Promise<void>;
   /** Time-limited download URL (default 15 min). */
@@ -92,6 +97,24 @@ export function createObjectStore(cfg: ObjectStoreConfig): ObjectStore {
           ...(opts.cacheControl ? { CacheControl: opts.cacheControl } : {}),
         }),
       );
+    },
+    async putFile(key, path, opts = {}) {
+      assertKey(key);
+      await client.send(
+        new PutObjectCommand({
+          Bucket,
+          Key: key,
+          Body: createReadStream(path),
+          ContentLength: statSync(path).size,
+          ...(opts.contentType ? { ContentType: opts.contentType } : {}),
+        }),
+      );
+    },
+    async getStream(key) {
+      assertKey(key);
+      const r = await client.send(new GetObjectCommand({ Bucket, Key: key }));
+      if (!r.Body) throw new Error(`empty object ${key}`);
+      return r.Body as NodeJS.ReadableStream;
     },
     async get(key) {
       assertKey(key);

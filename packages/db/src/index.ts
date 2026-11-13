@@ -47,7 +47,29 @@ export async function withUser<T>(db: Db, userId: string, fn: (tx: Tx) => Promis
   });
 }
 
-const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
+/**
+ * Run `fn` as makvid_app with app.scope = 'service': full access across workspaces. Only for flows that
+ * start without a tenant and must find it first (payment webhooks, API-key lookup, invitation acceptance,
+ * batch dispatch from workers). Callers MUST filter by workspace explicitly once they know it.
+ */
+export async function withService<T>(db: Db, fn: (tx: Tx) => Promise<T>): Promise<T> {
+  return db.transaction(async (tx) => {
+    await tx.execute(sql`SET LOCAL ROLE makvid_app`);
+    await tx.execute(sql`SELECT set_config('app.scope', 'service', true)`);
+    return fn(tx);
+  });
+}
+
+/** Read-only view across every workspace for the platform admin area (US9). Writes are refused by RLS. */
+export async function withAdmin<T>(db: Db, fn: (tx: Tx) => Promise<T>): Promise<T> {
+  return db.transaction(async (tx) => {
+    await tx.execute(sql`SET LOCAL ROLE makvid_app`);
+    await tx.execute(sql`SELECT set_config('app.scope', 'admin', true)`);
+    return fn(tx);
+  });
+}
+
+const migrationsDir =join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
 
 /** Apply pending SQL migrations in file order; each runs in its own transaction and is recorded. */
 export async function migrate(url: string = process.env.DATABASE_URL ?? ""): Promise<string[]> {

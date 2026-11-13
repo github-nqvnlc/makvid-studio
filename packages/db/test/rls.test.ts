@@ -14,6 +14,11 @@ import {
   brandKits,
   chatMessages,
   withUser,
+  withService,
+  withAdmin,
+  apiKeys,
+  plans,
+  paymentEvents,
   withWorkspace,
   workspaces,
   type Db,
@@ -50,6 +55,7 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
       "0003_auth_chat.sql",
       "0004_jobs_run_id.sql",
       "0005_brand_assets.sql",
+      "0006_batch_billing_api.sql",
     ]);
     expect(await migrate(url)).toEqual([]); // idempotent
     ({ db, close } = connect(url, 4));
@@ -209,15 +215,13 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
     expect(await withWorkspace(db, ids.w2, (tx) => tx.select().from(assets))).toHaveLength(1);
     const [a] = await withWorkspace(db, ids.w1, (tx) => tx.select().from(assets));
     await withWorkspace(db, ids.w1, (tx) =>
-      tx
-        .insert(brandKits)
-        .values({
-          workspaceId: ids.w1,
-          name: "Brand",
-          logoAssetId: a!.id,
-          colors: { accent: "#f7c948" },
-          isDefault: true,
-        }),
+      tx.insert(brandKits).values({
+        workspaceId: ids.w1,
+        name: "Brand",
+        logoAssetId: a!.id,
+        colors: { accent: "#f7c948" },
+        isDefault: true,
+      }),
     );
     expect(
       await pgError(
@@ -227,5 +231,35 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
       ),
     ).toMatch(/brand_kits_default_uq|duplicate key/);
     expect(await withWorkspace(db, ids.w2, (tx) => tx.select().from(brandKits))).toEqual([]);
+  });
+
+  it("service scope crosses workspaces; admin scope reads but cannot write; plans are readable", async () => {
+    const all = await withService(db, (tx) => tx.select().from(memberships));
+    expect(all.map((m) => m.workspaceId).sort()).toEqual([ids.w1, ids.w2].sort());
+    const seen = await withAdmin(db, (tx) => tx.select().from(workspaces));
+    expect(seen).toHaveLength(2);
+    expect(
+      await pgError(
+        withAdmin(db, (tx) =>
+          tx
+            .insert(apiKeys)
+            .values({ workspaceId: ids.w1, name: "x", prefix: "mk_x", hash: "h", scopes: [] }),
+        ),
+      ),
+    ).toMatch(/row-level security/);
+    const p = await withWorkspace(db, ids.w1, (tx) => tx.select().from(plans));
+    expect(p.map((x) => x.id)).toEqual(expect.arrayContaining(["free", "starter", "pro"]));
+    expect(
+      await pgError(withWorkspace(db, ids.w1, (tx) => tx.update(plans).set({ watermark: false }))),
+    ).toMatch(/row-level security|0 rows|no error/);
+    const free = (await withWorkspace(db, ids.w1, (tx) => tx.select().from(plans))).find(
+      (x) => x.id === "free",
+    );
+    expect(free!.watermark).toBe(true); // a tenant cannot change the catalog
+    // Platform tables are invisible to tenants.
+    await withService(db, (tx) =>
+      tx.insert(paymentEvents).values({ provider: "mock", eventId: "e1", type: "t", payload: {} }),
+    );
+    expect(await withWorkspace(db, ids.w1, (tx) => tx.select().from(paymentEvents))).toEqual([]);
   });
 });

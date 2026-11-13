@@ -288,13 +288,13 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 ### Tests for User Story 5
 
-- [ ] T126 [P] [US5] Template variable substitution + missing-column validation tests in `packages/spec/test/variables.test.ts`
-- [ ] T127 [P] [US5] Integration test: 10-row batch with 2 injected failures, retry-failed reprocesses only those rows, in `tests/integration/batch.test.ts`
-- [ ] T128 [P] [US5] Priority test: single video enqueued during a running batch starts first, in `tests/integration/priority.test.ts`
+- [x] T126 [P] [US5] Template variable substitution + missing-column validation tests in `packages/spec/test/variables.test.ts`
+- [x] T127 [P] [US5] Integration test: 10-row batch with 2 injected failures, retry-failed reprocesses only those rows, in `tests/integration/batch.test.ts`
+- [x] T128 [P] [US5] Priority test: single video enqueued during a running batch starts first, in `tests/integration/priority.test.ts`
 
 ### Implementation for User Story 5
 
-- [ ] T129 [P] [US5] Create tables `templates` (variables jsonb: name, type, required, maxLength), `batches` (status enum `validating|queued|running|completed|completed_with_errors|paused_quota|cancelled`), `batch_items` in `packages/db/src/schema/batch.ts`
+- [x] T129 [P] [US5] Create tables `templates` (variables jsonb: name, type, required, maxLength), `batches` (status enum `validating|queued|running|completed|completed_with_errors|paused_quota|cancelled`), `batch_items` in `packages/db/src/schema/batch.ts`
 - [ ] T130 [US5] Implement "save as template" + variable extraction in `apps/web/src/server/templates.ts`
 - [ ] T131 [US5] Implement batch flow (CSV validation, fan-out at batch priority, per-workspace concurrency limit, pause on quota, ZIP assembly) in `packages/queue/src/flows/batch.ts`
 - [ ] T132 [US5] Implement distributed render: scene/chunk fan-out across N `worker-render` containers using `planV2WithPublisher` artifacts on object storage in `apps/worker-render/src/distributed.ts`

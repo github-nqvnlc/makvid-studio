@@ -22,6 +22,7 @@ export const users = pgTable("users", {
   locale: text("locale").notNull().default("vi"),
   emailVerified: boolean("email_verified").notNull().default(false),
   image: text("image"),
+  isPlatformAdmin: boolean("is_platform_admin").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
@@ -119,6 +120,7 @@ export const projects = pgTable("projects", {
   settings: jsonb("settings").notNull().default({}),
   runId: uuid("run_id"),
   brandKitId: uuid("brand_kit_id"),
+  templateId: uuid("template_id"),
 });
 
 export const projectVersions = pgTable("project_versions", {
@@ -331,3 +333,8 @@ export const mediaGenCache = pgTable("media_gen_cache", {
   costUsd: numeric("cost_usd", { precision: 12, scale: 6 }),
   createdAt: ts("created_at").notNull().defaultNow(),
 });
+
+// ---- 0006: templates/batches, billing, public API ----
+export * from "./schema/batch";
+export * from "./schema/billing";
+export * from "./schema/api";

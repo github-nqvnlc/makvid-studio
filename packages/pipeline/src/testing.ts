@@ -52,6 +52,8 @@ export function mockScript(durationSec: number): string[] {
 }
 
 export const calls = { llm: 0, tts: 0, renders: 0 };
+/** Fault injection for integration tests: mock TTS throws while a narration text matches. */
+export const mockFaults: { ttsFailIf: ((text: string) => boolean) | null } = { ttsFailIf: null };
 export const mockLlm: ChatAdapter = {
   provider: "fpt",
   async chat(_model, messages) {
@@ -125,6 +127,7 @@ export const mockTts: TtsProvider = {
   },
   async synthesize({ text }): Promise<SynthesisResult> {
     calls.tts++;
+    if (mockFaults.ttsFailIf?.(text)) throw new Error("mock tts failure (injected)");
     const ms = text.split(/\s+/).length * 250;
     const rate = 22050;
     const n = Math.round((rate * (ms + 200)) / 1000);

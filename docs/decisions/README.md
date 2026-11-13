@@ -7,7 +7,7 @@ One file per decision: `NNNN-short-title.md`, numbered sequentially, never renum
 | [0001](0001-gsap-license.md)            | GSAP behind AnimationRuntime; ask Webflow                             | Accepted                    |
 | [0002](0002-default-tts.md)             | Default TTS: FPT AI Marketplace `FPT.AI-VITs`                         | Accepted                    |
 | [0003](0003-render-worker-baseline.md)  | Render worker 8 vCPU / 16 GB / no GPU                                 | Accepted                    |
-| 0004                                    | Payment gateway (before M5)                                           | Pending                     |
+| [0004](0004-payment-gateway.md)         | Payments: Polar (cards, subscriptions) + PayOS (VietQR)               | Accepted                    |
 | [0005](0005-default-llm.md)             | Default LLMs: FPT, per-step models                                    | Accepted                    |
 | [0006](0006-word-alignment-mfa.md)      | Word timing: Montreal Forced Aligner                                  | Accepted                    |
 | [0007](0007-licensed-music.md)          | Music: Soundstripe API, procedural fallback                           | Accepted (contract pending) |
