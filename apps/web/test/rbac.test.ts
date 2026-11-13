@@ -65,7 +65,13 @@ function routes() {
 }
 
 // Routes without a session on purpose: auth, provider webhooks, public API (API-key auth), public assets.
-const PUBLIC = [/^\/api\/auth\//, /^\/api\/billing\/webhooks\//, /^\/api\/v1\//, /^\/api\/styles\//, /^\/api\/voices\//];
+const PUBLIC = [
+  /^\/api\/auth\//,
+  /^\/api\/billing\/webhooks\//,
+  /^\/api\/v1\//,
+  /^\/api\/styles\//,
+  /^\/api\/voices\//,
+];
 // Routes that check rights themselves (any member, or a narrower inline check).
 const SELF_CHECKED = new Set([
   "POST /api/invitations/accept",

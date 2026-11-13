@@ -93,6 +93,10 @@ export interface SafeFetchOptions {
   resolve?: Resolver;
   /** Address policy (tests may allow a loopback test server explicitly). */
   isBlocked?: (ip: string) => boolean;
+  /** POST a body (webhooks). Redirects are then never followed (a POST must not be replayed elsewhere). */
+  method?: "GET" | "POST";
+  body?: string | Buffer;
+  userAgent?: string;
 }
 
 export interface SafeResponse {
@@ -146,8 +150,13 @@ function requestOnce(
         hostname: u.hostname.replace(/^\[|\]$/g, ""),
         port,
         path: `${u.pathname}${u.search}`,
-        method: "GET",
-        headers: { "user-agent": USER_AGENT, accept: "*/*", ...o.headers },
+        method: o.method ?? "GET",
+        headers: {
+          "user-agent": o.userAgent ?? USER_AGENT,
+          accept: "*/*",
+          ...(o.body !== undefined ? { "content-length": String(Buffer.byteLength(o.body)) } : {}),
+          ...o.headers,
+        },
         signal,
         // Pin the connection to the vetted address; TLS still verifies the hostname (SNI + cert).
         lookup: (_host, opts, cb) => {
@@ -184,7 +193,7 @@ function requestOnce(
           : new SafeFetchError("network", e.message),
       ),
     );
-    req.end();
+    req.end(o.body);
   });
 }
 
@@ -203,7 +212,7 @@ export async function safeFetch(url: string, opts: SafeFetchOptions = {}): Promi
     for (let hop = 0; ; hop++) {
       const { port, address } = await vet(current, o);
       const r = await requestOnce(current, address, port, o, ac.signal);
-      if ([301, 302, 303, 307, 308].includes(r.status) && r.headers.location) {
+      if (o.method !== "POST" && [301, 302, 303, 307, 308].includes(r.status) && r.headers.location) {
         if (hop >= maxRedirects) throw new SafeFetchError("too_many_redirects", "too many redirects");
         current = new URL(r.headers.location, current);
         continue;

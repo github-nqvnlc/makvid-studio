@@ -15,7 +15,8 @@
     "batches": "Batch",
     "members": "Members",
     "billing": "Plan & usage",
-    "workspace": "Workspace"
+    "workspace": "Workspace",
+    "api": "API"
   },
   "auth": {
     "signInTitle": "Sign in",
@@ -350,5 +351,23 @@
     "batch": "Batch",
     "api": "API",
     "mediagen": "AI images"
+  },
+  "api": {
+    "title": "API & webhooks",
+    "intro": "Use API keys to create videos from your own systems.",
+    "docs": "API docs",
+    "planNeeded": "The API is available on paid plans.",
+    "keys": "API keys",
+    "keyName": "Key name",
+    "createKey": "Create key",
+    "keyOnce": "Copy this key now, it is shown only once:",
+    "secretOnce": "Copy the signing secret to verify webhooks, it is shown only once:",
+    "revoke": "Revoke",
+    "lastUsed": "Last used {at}",
+    "neverUsed": "Never used",
+    "webhooks": "Webhooks",
+    "webhooksHelp": "We send signed notifications when a video is done, a video fails and a batch completes.",
+    "addWebhook": "Add webhook",
+    "remove": "Remove"
   }
 }

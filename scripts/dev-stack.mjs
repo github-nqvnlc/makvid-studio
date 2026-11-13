@@ -15,8 +15,9 @@ try {
 }
 const env = {
   ...process.env,
-  ...(mock ? { MAKVID_MOCK_PROVIDERS: "1", QUEUE_PREFIX: process.env.QUEUE_PREFIX ?? "mkvmock" } : {}),
-  WORK_ROOT: process.env.WORK_ROOT ?? join(root, ".work", mock ? "mock" : "dev"),
+  ...(mock ? { MAKVID_MOCK_PROVIDERS: "1", QUEUE_PREFIX: process.env.QUEUE_PREFIX || "mkvmock" } : {}),
+  // "||": an empty value in .env means "not set".
+  WORK_ROOT: process.env.WORK_ROOT || join(root, ".work", mock ? "mock" : "dev"),
   MAKVID_ROOT: root,
 };
 const children = [];

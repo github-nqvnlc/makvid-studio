@@ -15,7 +15,8 @@
     "batches": "Tạo hàng loạt",
     "members": "Thành viên",
     "billing": "Gói & hạn mức",
-    "workspace": "Không gian làm việc"
+    "workspace": "Không gian làm việc",
+    "api": "API"
   },
   "auth": {
     "signInTitle": "Đăng nhập",
@@ -350,5 +351,23 @@
     "batch": "Tạo hàng loạt",
     "api": "API",
     "mediagen": "Ảnh AI"
+  },
+  "api": {
+    "title": "API & webhook",
+    "intro": "Dùng khóa API để tạo video từ hệ thống của bạn.",
+    "docs": "Tài liệu API",
+    "planNeeded": "API có ở gói trả phí.",
+    "keys": "Khóa API",
+    "keyName": "Tên khóa",
+    "createKey": "Tạo khóa",
+    "keyOnce": "Lưu khóa này ngay, nó chỉ hiện một lần:",
+    "secretOnce": "Lưu mã bí mật để kiểm tra chữ ký webhook, nó chỉ hiện một lần:",
+    "revoke": "Thu hồi",
+    "lastUsed": "Dùng lần cuối {at}",
+    "neverUsed": "Chưa dùng",
+    "webhooks": "Webhook",
+    "webhooksHelp": "Chúng tôi gửi thông báo có chữ ký khi video xong, video lỗi và lô hoàn thành.",
+    "addWebhook": "Thêm webhook",
+    "remove": "Xoá"
   }
 }

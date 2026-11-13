@@ -333,15 +333,15 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 
 ### Tests for User Story 7
 
-- [ ] T143 [P] [US7] Contract tests validating responses against `contracts/public-api.openapi.yaml` in `apps/web/test/api-v1.contract.test.ts`
-- [ ] T144 [P] [US7] Webhook signature (`t=<unix>,v1=<hex HMAC-SHA256 of "t.body">`), retry and SSRF tests in `apps/web/test/webhooks.test.ts`
+- [x] T143 [P] [US7] Contract tests validating responses against `contracts/public-api.openapi.yaml` in `apps/web/test/api-v1.contract.test.ts`
+- [x] T144 [P] [US7] Webhook signature (`t=<unix>,v1=<hex HMAC-SHA256 of "t.body">`), retry and SSRF tests in `apps/web/test/webhooks.test.ts`
 
 ### Implementation for User Story 7
 
-- [ ] T145 [P] [US7] Create tables `api_keys` (argon2id hash, prefix, scopes, revoked_at) and `webhook_endpoints` (`secret_enc`) in `packages/db/src/schema/api.ts`
-- [ ] T146 [US7] Implement `/api/v1` routes (videos, download, templates/{id}/videos, batches, retry-failed, styles, voices) with API-key auth, Idempotency-Key and Valkey rate limit (429 + Retry-After) in `apps/web/src/app/api/v1/`
-- [ ] T147 [US7] Implement webhook dispatcher with HMAC signing and backoff retries in `apps/worker-ai/src/webhooks.ts`
-- [ ] T148 [US7] Serve generated OpenAPI docs page at `apps/web/src/app/[locale]/docs/api/page.tsx`
+- [x] T145 [P] [US7] Create tables `api_keys` (argon2id hash, prefix, scopes, revoked_at) and `webhook_endpoints` (`secret_enc`) in `packages/db/src/schema/api.ts`
+- [x] T146 [US7] Implement `/api/v1` routes (videos, download, templates/{id}/videos, batches, retry-failed, styles, voices) with API-key auth, Idempotency-Key and Valkey rate limit (429 + Retry-After) in `apps/web/src/app/api/v1/`
+- [x] T147 [US7] Implement webhook dispatcher with HMAC signing and backoff retries in `apps/worker-ai/src/webhooks.ts`
+- [x] T148 [US7] Serve generated OpenAPI docs page at `apps/web/src/app/[locale]/docs/api/page.tsx`
 
 ---
 

@@ -3,10 +3,12 @@
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { connect } from "@makvid/db";
+import { isBlockedAddress } from "@makvid/media";
 import { connectionFromUrl } from "@makvid/queue";
 import { configFromEnv, createObjectStore } from "@makvid/storage";
 import { withBatchHooks, type BatchGate } from "./batch";
 import { billingGate, withQuotaHooks } from "./quota";
+import { startWebhookWorker, withWebhookHooks } from "./webhooks";
 import type { ServiceDeps } from "./service";
 import { dbSink } from "./sink";
 import { contextFromEnv, startStageWorker } from "./worker";
@@ -28,7 +30,7 @@ export async function runWorkerApp(
           db: db.db,
           connection,
           store,
-          workRoot: process.env.WORK_ROOT ?? resolve(stylesRoot, "..", "..", ".work"),
+          workRoot: process.env.WORK_ROOT || resolve(stylesRoot, "..", "..", ".work"),
           stylesRoot,
           ...(prefix ? { prefix } : {}),
           watermark: async (ws) => (await billingGate(db.db).watermark?.(ws)) ?? false,
@@ -42,14 +44,37 @@ export async function runWorkerApp(
     ...(deps
       ? {
           hooks: withBatchHooks(
-            withQuotaHooks(dbSink(deps.db, deps.store), deps.db),
+            withWebhookHooks(
+              withQuotaHooks(dbSink(deps.db, deps.store), deps.db),
+              deps.db,
+              connection,
+              prefix,
+            ),
             deps,
             opts.gate?.(deps) ?? billingGate(deps.db),
           ),
         }
       : {}),
   });
+  // Webhook deliveries run next to the AI stages (light, network-bound).
+  // Mock stacks only (E2E): MAKVID_WEBHOOK_TEST_PORT lets deliveries reach a receiver on 127.0.0.1:<port>.
+  const testPort =
+    process.env.MAKVID_MOCK_PROVIDERS === "1" ? Number(process.env.MAKVID_WEBHOOK_TEST_PORT || 0) : 0;
+  const fetchOpts = testPort
+    ? {
+        allowedPorts: [80, 443, testPort],
+        isBlocked: (ip: string) => ip !== "127.0.0.1" && isBlockedAddress(ip),
+      }
+    : undefined;
+  const hooksWorker =
+    queue === "ai" && deps
+      ? startWebhookWorker(deps.db, connection, {
+          ...(prefix ? { prefix } : {}),
+          ...(fetchOpts ? { fetchOpts } : {}),
+        })
+      : null;
   const stop = async () => {
+    await hooksWorker?.close();
     await worker.close();
     await db?.close();
     process.exit(0);

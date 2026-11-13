@@ -13,6 +13,7 @@ const config: NextConfig = {
   poweredByHeader: false,
   transpilePackages: [
     "@makvid/ai",
+    "@makvid/billing",
     "@makvid/compiler",
     "@makvid/db",
     "@makvid/media",
@@ -27,6 +28,7 @@ const config: NextConfig = {
   ],
   serverExternalPackages: [
     "esbuild",
+    "@node-rs/argon2",
     "linkedom",
     "@resvg/resvg-js",
     "sharp",

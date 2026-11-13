@@ -47,6 +47,7 @@ import { workspaceKey } from "@makvid/storage";
 import { loadState, saveState, STAGE_QUEUE, type ProduceInput, type ProduceState } from "./produce";
 import { ProjectError, workDirOf, type ServiceDeps } from "./service";
 import type { StageHooks } from "./worker";
+import { emitWebhook } from "./webhooks";
 
 /** Settings a template copies from its source project (everything a row needs besides the spec). */
 export interface TemplateSettings {
@@ -175,7 +176,8 @@ export async function checkBatchCsv(
 
 export interface CreateBatchInput {
   workspaceId: string;
-  userId: string;
+  /** null for API-created batches. */
+  userId: string | null;
   templateId: string;
   csv: string;
   name?: string;
@@ -438,8 +440,19 @@ export async function batchProjectFinished(
   if (!item) return;
   await gate?.settle(workspaceId, projectId, ok);
   const { status } = await advanceBatch(deps, workspaceId, item.batchId, gate);
-  if (status === "completed" || status === "completed_with_errors")
+  if (status === "completed" || status === "completed_with_errors") {
     await assembleZip(deps, workspaceId, item.batchId);
+    const v = await batchView(deps, workspaceId, item.batchId);
+    // Event id includes the counts: a retry that completes the batch again sends a new event.
+    await emitWebhook(
+      deps.db,
+      deps.connection,
+      workspaceId,
+      `batch.completed:${item.batchId}:${v.batch.counts.succeeded}:${v.batch.counts.failed}`,
+      { event: "batch.completed", batchId: item.batchId, status },
+      qopts(deps),
+    ).catch((e: unknown) => console.warn("batch webhook failed", (e as Error).message));
+  }
 }
 
 /** Put every failed row back to pending and start them again; other rows are not touched. */
@@ -654,4 +667,93 @@ export function withBatchHooks(base: StageHooks, deps: ServiceDeps, gate?: Batch
       await batchProjectFinished(deps, d.workspaceId, d.projectId, false, gate, `${stage}_failed`);
     },
   };
+}
+
+export interface TemplateVideoInput {
+  workspaceId: string;
+  userId: string | null;
+  templateId: string;
+  values: Record<string, string>;
+  aspects?: AspectRatio[];
+  /** Called with the new project id before work is queued (link the quota reservation). */
+  onCreated?: (projectId: string) => Promise<void>;
+}
+
+/** One video from a template + variables at single-video priority (public API: templates/{id}/videos). */
+export async function createVideoFromTemplate(deps: ServiceDeps, c: TemplateVideoInput): Promise<string> {
+  const t = await withWorkspace(deps.db, c.workspaceId, (tx) => getTemplate(tx, c.templateId));
+  const values = Object.fromEntries(
+    Object.entries(c.values).map(([k, v]) => [k.normalize("NFC").trim().toLowerCase(), String(v)]),
+  );
+  const names = t.variables.map((v) => v.name);
+  const check = checkTable([names, names.map((n) => values[n] ?? "")], t.variables);
+  if (check.missingColumns.length || check.issues.length) throw new ProjectError("invalid");
+  const settings = t.settings as unknown as TemplateSettings;
+  const aspects = c.aspects?.length ? c.aspects : settings.aspects;
+  const spec = substituteVariables(t.spec as VideoSpec, check.rows[0]!);
+  spec.meta.aspectRatios = aspects;
+  const runId = randomUUID();
+  const projectId = await withWorkspace(deps.db, c.workspaceId, async (tx) => {
+    const [p] = await tx
+      .insert(projects)
+      .values({
+        workspaceId: c.workspaceId,
+        title: [...`${t.name} · ${Object.values(check.rows[0]!)[0] ?? ""}`].slice(0, 80).join(""),
+        mode: "auto",
+        status: "producing_audio",
+        primaryAspect: aspects[0]!,
+        exportAspects: aspects,
+        createdBy: c.userId,
+        settings: {
+          ...(settings.voiceId ? { voiceId: settings.voiceId } : {}),
+          ...(settings.durationSec ? { durationSec: settings.durationSec } : {}),
+        },
+        runId,
+        templateId: t.id,
+      })
+      .returning();
+    return p!.id;
+  });
+  const watermark = (await deps.watermark?.(c.workspaceId)) ?? false;
+  const workDir = workDirOf(deps, c.workspaceId, projectId);
+  const input: ProduceInput = {
+    prompt: spec.script[0]?.text ?? "Video",
+    aspects,
+    mode: "auto",
+    ...(watermark ? { watermark } : {}),
+    ...(settings.voiceId ? { voiceId: settings.voiceId } : {}),
+    ...(settings.durationSec ? { durationSec: settings.durationSec } : {}),
+    ...(settings.brand ? { brand: settings.brand } : {}),
+  };
+  saveState(workDir, {
+    input,
+    spec,
+    ...(settings.styleId ? { styleId: settings.styleId } : {}),
+    ...(settings.music ? { music: settings.music } : {}),
+    usage: [],
+  });
+  await c.onCreated?.(projectId);
+  await enqueueProduceVideo(
+    deps.connection,
+    BATCH_STAGES.map((name) => ({ name, queue: STAGE_QUEUE[name] })),
+    { workspaceId: c.workspaceId, projectId, versionId: runId, workDir, input },
+    { ...qopts(deps), priority: 5 },
+  );
+  return projectId;
+}
+
+/** Estimated quota of one template video (for reservations before it starts). */
+export async function templateEstimate(
+  deps: ServiceDeps,
+  workspaceId: string,
+  templateId: string,
+  values: Record<string, string>,
+) {
+  const t = await withWorkspace(deps.db, workspaceId, (tx) => getTemplate(tx, templateId));
+  const settings = t.settings as unknown as TemplateSettings;
+  try {
+    return estimate(t.spec as VideoSpec, values, settings.durationSec);
+  } catch {
+    throw new ProjectError("invalid");
+  }
 }

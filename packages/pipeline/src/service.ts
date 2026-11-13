@@ -93,7 +93,8 @@ async function getProjectRow(tx: Tx, projectId: string) {
 
 export interface CreateProjectInput {
   workspaceId: string;
-  userId: string;
+  /** null for API-created videos (no signed-in user). */
+  userId: string | null;
   prompt: string;
   aspects: AspectRatio[];
   durationSec: number;

@@ -27,7 +27,7 @@ function create(): Singletons {
     db,
     connection: connectionFromUrl(),
     store,
-    workRoot: process.env.WORK_ROOT ?? join(REPO_ROOT, ".work"),
+    workRoot: process.env.WORK_ROOT || join(REPO_ROOT, ".work"),
     stylesRoot: join(REPO_ROOT, "packages", "styles"),
     ...(process.env.QUEUE_PREFIX ? { prefix: process.env.QUEUE_PREFIX } : {}),
     // Free-plan watermark follows the workspace's current plan (US6).

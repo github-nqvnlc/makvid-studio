@@ -31,13 +31,22 @@ export async function listBatches(workspaceId: string) {
 export async function readCsvUpload(form: FormData): Promise<string | ApiErrorCode> {
   const file = form.get("file");
   if (!(file instanceof File) || file.size === 0) return "file_empty";
+  const bytes = new Uint8Array(await file.arrayBuffer());
   try {
-    const bytes = new Uint8Array(await file.arrayBuffer());
     const kind = validateUpload(bytes, "table");
     if (kind.ext !== "csv") return "file_type";
     return new TextDecoder("utf-8").decode(bytes);
   } catch (e) {
-    if (e instanceof UploadError) return e.code;
-    throw e;
+    if (!(e instanceof UploadError)) throw e;
+    // A template with one variable gives a one-column CSV (no delimiter on the header line): accept plain
+    // UTF-8 text with line breaks and no NUL bytes, within the table size limit.
+    if (e.code !== "file_type") return e.code;
+    try {
+      const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+      if (!text.includes("\0") && /\r?\n/.test(text.trim() + "\n") && !/^[[{]/.test(text.trim())) return text;
+    } catch {
+      /* not UTF-8 */
+    }
+    return "file_type";
   }
 }

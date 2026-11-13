@@ -11,6 +11,8 @@ COPY apps ./apps
 COPY fixtures ./fixtures
 COPY scripts ./scripts
 COPY tests ./tests
+# Public API contract: served as /api/v1/openapi.yaml and rendered at /docs/api
+COPY specs/001-ai-video-saas/contracts ./specs/001-ai-video-saas/contracts
 RUN pnpm install --frozen-lockfile \
  && pnpm --filter @makvid/web exec next build
 
