@@ -4,11 +4,11 @@
 # whole stack without paid calls.
 #
 # Hardening:
-#   - Two networks. "internal" has no route to the internet: postgres, valkey and worker-align live only there.
-#     "edge" is for what needs the internet or the host: web (users), worker-ai / worker-audio / worker-render
-#     (AI and voice providers; render asks the AI to shorten overflowing text), seaweedfs (browsers download
-#     the signed URLs from it). Compiled scenes never reach the network: the renderer blocks every non-local
-#     request and QA fails a scene that tries.
+#   - Two networks. "internal" has no route to the internet: postgres, valkey, worker-align and worker-render
+#     live only there, so compiled scenes (and the browser that renders them) cannot reach the network.
+#     "edge" is for what needs the internet or the host: web (users, chat edits), worker-ai / worker-audio (AI
+#     and voice providers; worker-ai also answers the render workers' QA text fixes), seaweedfs (browsers
+#     download the signed URLs from it).
 #   - Healthchecks on every long-running service, CPU/memory limits, restart policies, no dev default secrets.
 #   - Render scales out: docker compose -f docker/compose.yml up -d --scale worker-render=3
 #     (RENDER_DISTRIBUTED=1: a video's scenes are spread over every render container, ADR 0013).
@@ -30,6 +30,21 @@ x-app-env: &app-env
   APP_URL: ${APP_URL:-http://localhost:3000}
   QUEUE_PREFIX: ${QUEUE_PREFIX:-mkv}
   LOG_LEVEL: ${LOG_LEVEL:-info}
+  # AI / voice / music / image providers: every app service gets the same set (web runs chat edits,
+  # worker-ai writes scripts, worker-audio voices, worker-ai/render may call the AI for QA fixes).
+  FPT_AI_API_KEY: ${FPT_AI_API_KEY:-}
+  FPT_LLM_BASE_URL: ${FPT_LLM_BASE_URL:-}
+  FPT_TTS_VOICE_ID: ${FPT_TTS_VOICE_ID:-}
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+  LLM_FALLBACK_PROVIDER: ${LLM_FALLBACK_PROVIDER:-}
+  LLM_FALLBACK_MODEL: ${LLM_FALLBACK_MODEL:-}
+  SHOPAIKEY_API_KEY: ${SHOPAIKEY_API_KEY:-}
+  SHOPAIKEY_IMAGE_MODEL: ${SHOPAIKEY_IMAGE_MODEL:-}
+  SHOPAIKEY_IMAGE_COST_USD: ${SHOPAIKEY_IMAGE_COST_USD:-}
+  MAKVID_MEDIAGEN_MODEL: ${MAKVID_MEDIAGEN_MODEL:-}
+  SOUNDSTRIPE_API_KEY: ${SOUNDSTRIPE_API_KEY:-}
 
 x-worker: &worker
   build: { context: .., dockerfile: docker/worker-render.Dockerfile }
@@ -204,9 +219,6 @@ services:
     environment:
       <<: *app-env
       S3_ENDPOINT: "http://seaweedfs:8333"
-      FPT_AI_API_KEY: ${FPT_AI_API_KEY:-}
-      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
-      SHOPAIKEY_API_KEY: ${SHOPAIKEY_API_KEY:-}
     entrypoint: ["node", "--import", "tsx", "apps/worker-ai/src/index.ts"]
     deploy: { resources: { limits: { cpus: "1", memory: 1g } } }
 
@@ -216,21 +228,25 @@ services:
     environment:
       <<: *app-env
       S3_ENDPOINT: "http://seaweedfs:8333"
-      FPT_AI_API_KEY: ${FPT_AI_API_KEY:-}
-      SOUNDSTRIPE_API_KEY: ${SOUNDSTRIPE_API_KEY:-}
     entrypoint: ["node", "--import", "tsx", "apps/worker-audio/src/index.ts"]
     deploy: { resources: { limits: { cpus: "2", memory: 2g } } }
 
   worker-render:
     <<: *worker
-    # Needs the edge network: the QA stage asks the AI provider to shorten text that overflows. Scenes still
-    # cannot reach the network: the renderer blocks every non-local request and QA fails any scene that tries.
-    networks: [internal, edge]
+    # No internet: scenes are self-contained (fonts, scripts, images bundled at compile time). QA's AI text
+    # fixes are answered by worker-ai through the qa-fix queue, so this container holds no provider keys.
+    networks: [internal]
     shm_size: 2g
     environment:
       <<: *app-env
       S3_ENDPOINT: "http://seaweedfs:8333"
-      FPT_AI_API_KEY: ${FPT_AI_API_KEY:-}
+      RENDER_REMOTE_QA_FIX: "1"
+      FPT_AI_API_KEY: ""
+      OPENAI_API_KEY: ""
+      ANTHROPIC_API_KEY: ""
+      GEMINI_API_KEY: ""
+      SHOPAIKEY_API_KEY: ""
+      SOUNDSTRIPE_API_KEY: ""
       RENDER_WORKERS: ${RENDER_WORKERS:-4}
       RENDER_DISTRIBUTED: "1"
     entrypoint: ["node", "--import", "tsx", "apps/worker-render/src/index.ts"]

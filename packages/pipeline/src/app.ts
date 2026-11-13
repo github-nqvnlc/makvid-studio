@@ -13,6 +13,7 @@ import type { ServiceDeps } from "./service";
 import { dbSink } from "./sink";
 import { contextFromEnv, startStageWorker } from "./worker";
 import { distributedPool, startSceneWorker } from "./distributed";
+import { remoteFixer, startQaFixWorker } from "./qa-fix";
 import { stubRenderer } from "./testing";
 import { createRenderer } from "@makvid/renderer";
 
@@ -64,8 +65,13 @@ export async function runWorkerApp(
           concurrency: Number(process.env.RENDER_SCENE_CONCURRENCY ?? 1),
         })
       : null;
-  const worker = startStageWorker(queue, contextFromEnv(stylesRoot, renderer), {
+  // RENDER_REMOTE_QA_FIX=1 (Docker): the render worker has no internet, so QA's AI text fixes run on
+  // worker-ai through the qa-fix queue and the render worker needs no provider key.
+  const remoteQaFix = queue === "render" && process.env.RENDER_REMOTE_QA_FIX === "1";
+  const makeCtx = contextFromEnv(stylesRoot, renderer, !remoteQaFix);
+  const worker = startStageWorker(queue, makeCtx, {
     connection,
+    ...(remoteQaFix ? { textFixer: remoteFixer(connection, prefix ? { prefix } : {}) } : {}),
     ...(distributed
       ? {
           scenePool: (d: { workspaceId: string }) =>
@@ -112,7 +118,18 @@ export async function runWorkerApp(
           ...(fetchOpts ? { fetchOpts } : {}),
         })
       : null;
+  // worker-ai answers the render workers' QA text-fix requests with its LLM.
+  const qaFixWorker =
+    queue === "ai"
+      ? startQaFixWorker(
+          makeCtx(deps?.workRoot ?? stylesRoot, { onUsage: () => undefined, onProgress: () => undefined })
+            .llm,
+          connection,
+          prefix ? { prefix } : {},
+        )
+      : null;
   const stop = async () => {
+    await qaFixWorker?.close();
     await hooksWorker?.close();
     await sceneWorker?.close();
     await worker.close();

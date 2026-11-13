@@ -15,6 +15,7 @@ import { musicProviderFromEnv } from "@makvid/media";
 import { Worker, type ConnectionOptions, type Job, type JobNode } from "bullmq";
 import type { PipelineContext, UsageEntry } from "./context";
 import type { ScenePool } from "./distributed";
+import type { TextFixer } from "./qa-fix";
 import {
   applyScriptReview,
   applyStoryboardReview,
@@ -65,10 +66,12 @@ export function mockContextFactory(stylesRoot: string): ContextFactory {
 export function contextFromEnv(
   stylesRoot: string,
   renderer: Renderer = createRenderer("hyperframes", { workers: Number(process.env.RENDER_WORKERS ?? 4) }),
+  /** false for the render worker when AI calls go through worker-ai (no provider key needed there). */
+  requireKey = true,
 ): ContextFactory {
   if (process.env.MAKVID_MOCK_PROVIDERS === "1") return mockContextFactory(stylesRoot);
-  const key = process.env.FPT_AI_API_KEY;
-  if (!key) throw new Error("FPT_AI_API_KEY is not set");
+  const key = process.env.FPT_AI_API_KEY ?? "";
+  if (!key && requireKey) throw new Error("FPT_AI_API_KEY is not set");
   const llm = createLlm(configFromEnv());
   const tts = new FptTtsProvider(key);
   const aligner = new MfaAligner();
@@ -98,6 +101,8 @@ export function startStageWorker(
     hooks?: StageHooks;
     /** Distributed scene rendering (T132): pool for the scenes of this job's video. */
     scenePool?: (data: ProduceJobData<ProduceInput>) => ScenePool;
+    /** QA text fixes sent to worker-ai (qa-fix.ts). */
+    textFixer?: TextFixer;
   } = {},
 ): Worker {
   const log = createLogger(`worker-${queue}`);
@@ -130,7 +135,11 @@ export function startStageWorker(
             .catch(() => undefined)
         ),
       });
-      const ctx = opts.scenePool ? { ...base, scenePool: opts.scenePool(data) } : base;
+      const ctx = {
+        ...base,
+        ...(opts.scenePool ? { scenePool: opts.scenePool(data) } : {}),
+        ...(opts.textFixer ? { textFixer: opts.textFixer } : {}),
+      };
       log.info({ jobId: job.id, stage, projectId: data.projectId }, "stage start");
       const state = await runStage(ctx, stage, data.input);
       await safe("done", () => opts.hooks?.onStageDone?.(data, stage, state));

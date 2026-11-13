@@ -11,9 +11,9 @@ import {
   type VideoSpec,
 } from "@makvid/spec";
 import { captureFrames, checkFrame, concatAndMux, probe, thumbnail, type QaIssue } from "@makvid/renderer";
-import { z } from "zod";
 import type { PipelineContext } from "../context";
 import { localPool, type SceneJob } from "../distributed";
+import { localFixer } from "../qa-fix";
 
 export interface QaResult {
   spec: VideoSpec;
@@ -61,13 +61,6 @@ async function inspect(ctx: PipelineContext, spec: VideoSpec, aspect: AspectRati
   return { video, issues };
 }
 
-const FixOutput = z.object({
-  patches: z
-    .array(z.object({ slot: z.string(), value: z.union([z.string(), z.array(z.string())]) }))
-    .min(1)
-    .max(6),
-});
-
 /** QA every aspect; on problems ask the fast model to shorten the offending slots (≤ maxFix rounds). */
 export async function qaAndFix(ctx: PipelineContext, spec0: VideoSpec, maxFix = 2): Promise<QaResult> {
   let spec = spec0;
@@ -97,24 +90,11 @@ export async function qaAndFix(ctx: PipelineContext, spec0: VideoSpec, maxFix = 
         continue;
       }
       const scene = spec.scenes[idx]!;
-      const r = await ctx.llm.complete({
-        step: "qa_fix",
-        schema: FixOutput,
-        messages: [
-          {
-            role: "system",
-            content:
-              'Chữ trên màn hình của một cảnh video bị tràn hoặc đè lên nhau. Hãy RÚT GỌN các slot chữ (giữ ý, tiếng Việt có dấu, ngắn hơn khoảng 30%). Trả về DUY NHẤT JSON {"patches":[{"slot": tên slot, "value": chuỗi hoặc mảng chuỗi}]}. Không đổi slot số.',
-          },
-          {
-            role: "user",
-            content: `Slots hiện tại: ${JSON.stringify(scene.slots)}\nLỗi: ${issues
-              .filter((i) => i.sceneId === sceneId)
-              .map((i) => i.detail)
-              .join("; ")}`,
-          },
-        ],
-      });
+      // The AI call runs in-process, or on worker-ai when the render worker has no internet (qa-fix.ts).
+      const r = await (ctx.textFixer ?? localFixer(ctx.llm))(
+        scene.slots,
+        issues.filter((i) => i.sceneId === sceneId).map((i) => i.detail),
+      );
       for (const u of r.usage)
         ctx.onUsage({
           step: "qa",
@@ -124,7 +104,7 @@ export async function qaAndFix(ctx: PipelineContext, spec0: VideoSpec, maxFix = 
           tokensOut: u.outputTokens,
           costUsd: u.costUsd,
         });
-      const ops: PatchOp[] = r.output.patches
+      const ops: PatchOp[] = r.patches
         .filter((p) => p.slot in scene.slots && typeof scene.slots[p.slot] !== "number")
         .map((p) => ({ op: "replace", path: `/scenes/${idx}/slots/${p.slot}`, value: p.value }));
       const applied = applySpecPatch(spec, ops);

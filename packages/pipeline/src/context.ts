@@ -8,6 +8,7 @@ import type { BrandKit } from "@makvid/compiler";
 import type { MusicProvider } from "@makvid/media";
 import type { MfaAligner, TtsProvider } from "@makvid/tts";
 import type { ScenePool } from "./distributed";
+import type { TextFixer } from "./qa-fix";
 
 export type Step =
   | "ingest"
@@ -58,6 +59,8 @@ export interface PipelineContext {
   brand?: BrandKit;
   /** Where uncached scenes render (T132): this process by default, or every render worker (distributed). */
   scenePool?: ScenePool;
+  /** Shortens overflowing text during QA; defaults to the context LLM in-process (qa-fix.ts). */
+  textFixer?: TextFixer;
   onUsage(u: UsageEntry): void;
   onProgress(p: Progress): void;
 }

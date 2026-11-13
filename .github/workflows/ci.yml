@@ -60,7 +60,7 @@ jobs:
         run: >-
           pnpm --filter @makvid/tests exec vitest run integration/flow integration/project-service
           integration/batch integration/priority integration/distributed integration/retention
-          integration/mediagen-store isolation
+          integration/mediagen-store integration/qa-fix isolation
 
   images:
     runs-on: ubuntu-24.04
