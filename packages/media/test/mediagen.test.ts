@@ -158,54 +158,72 @@ describe("configuration", () => {
 });
 
 describe("ShopAIKey adapter", () => {
-  const OKR = { created: 1, data: [{ b64_json: PNG.toString("base64") }] };
-  it("sends the documented request (base64, never a public URL) and prices per image", async () => {
-    const { f, calls } = fakeFetch(OKR);
-    const out = await new ShopAiKeyImageProvider({ apiKey: "sk-test", fetch: f }).generateImage(REQ);
+  const OKG = {
+    candidates: [
+      { content: { parts: [{ inlineData: { mimeType: "image/png", data: PNG.toString("base64") } }] } },
+    ],
+    usageMetadata: { promptTokenCount: 93, candidatesTokenCount: 1120 },
+  };
+  it("calls the Gemini-compatible route with the key as a query parameter", async () => {
+    const { f, calls } = fakeFetch(OKG);
+    const out = await new ShopAiKeyImageProvider({ apiKey: "sk test", fetch: f }).generateImage(REQ);
     expect(out.image.equals(PNG)).toBe(true);
     expect(out.mime).toBe("image/png");
-    expect(out.costUsd).toBe(SHOPAIKEY_DEFAULT_COST_USD);
+    expect(out.costUsd).toBeCloseTo(SHOPAIKEY_DEFAULT_COST_USD * 1.5, 6); // 1080x1920 -> 2K
     const c = calls[0]!;
-    expect(c.url).toBe("https://api.shopaikey.com/images/google/generations");
-    expect((c.init.headers as Record<string, string>).Authorization).toBe("Bearer sk-test");
-    expect(JSON.parse(String(c.init.body))).toEqual({
-      model: "nano-banana-2.1",
-      prompt: REQ.prompt,
-      size: "9:16",
-      imageSize: "2K",
-      format: "png",
-      response_format: "b64_json",
-    });
-  });
-
-  it("accepts the price-list model name", () => {
-    expect(new ShopAiKeyImageProvider({ apiKey: "k", model: "gemini-nano-banana-2.1" }).model).toBe(
-      "nano-banana-2.1",
+    expect(c.url).toBe(
+      "https://api.shopaikey.com/v1beta/models/gemini-nano-banana-2.1:generateContent?key=sk%20test",
     );
-  });
-
-  it("maps ratios the reseller lacks to the nearest one it has", async () => {
-    const { f, calls } = fakeFetch(OKR);
-    await new ShopAiKeyImageProvider({ apiKey: "k", fetch: f }).generateImage({
-      ...REQ,
-      width: 400,
-      height: 1600,
+    expect(JSON.parse(String(c.init.body))).toEqual({
+      contents: [{ parts: [{ text: REQ.prompt }] }],
+      generationConfig: {
+        responseModalities: ["IMAGE"],
+        imageConfig: { aspectRatio: "9:16", imageSize: "2K" },
+        seed: 7,
+      },
     });
-    expect(JSON.parse(String(calls[0]!.init.body)).size).toBe("9:16");
   });
 
-  it("errors carry the server message; a non-image payload is rejected", async () => {
+  it("accepts both model spellings and prices 1K images at the base rate", async () => {
+    expect(new ShopAiKeyImageProvider({ apiKey: "k", model: "nano-banana-2.1" }).model).toBe(
+      "gemini-nano-banana-2.1",
+    );
+    const { f } = fakeFetch(OKG);
+    const p = new ShopAiKeyImageProvider({ apiKey: "k", costPerImageUsd: 0.02, fetch: f });
+    expect((await p.generateImage({ ...REQ, width: 1024, height: 1024 })).costUsd).toBe(0.02);
+  });
+
+  it("errors carry the server message but never the key; safety stops are 'blocked'", async () => {
     const bad = new ShopAiKeyImageProvider({
       apiKey: "sk-secret",
-      fetch: fakeFetch({ error: { message: "Invalid API key" } }, 401).f,
+      fetch: fakeFetch({ error: { message: "Authentication failed" } }, 401).f,
     });
     const err = await bad.generateImage(REQ).catch((e: unknown) => e);
     expect(err).toMatchObject({ code: "http" });
-    expect(String((err as Error).message)).toContain("Invalid API key");
+    expect(String((err as Error).message)).toContain("Authentication failed");
     expect(String((err as Error).message)).not.toContain("sk-secret");
+
+    const down = new ShopAiKeyImageProvider({
+      apiKey: "sk-secret",
+      fetch: (async () => {
+        throw new TypeError("fetch failed for https://api.shopaikey.com/...?key=sk-secret");
+      }) as unknown as typeof fetch,
+    });
+    const err2 = await down.generateImage(REQ).catch((e: unknown) => e);
+    expect(String((err2 as Error).message)).not.toContain("sk-secret");
+
+    const safety = new ShopAiKeyImageProvider({
+      apiKey: "k",
+      fetch: fakeFetch({ candidates: [{ finishReason: "IMAGE_SAFETY", content: { parts: [] } }] }).f,
+    });
+    await expect(safety.generateImage(REQ)).rejects.toMatchObject({ code: "blocked" });
     const junk = new ShopAiKeyImageProvider({
       apiKey: "k",
-      fetch: fakeFetch({ data: [{ b64_json: Buffer.from("<html>").toString("base64") }] }).f,
+      fetch: fakeFetch({
+        candidates: [
+          { content: { parts: [{ inlineData: { data: Buffer.from("<html>").toString("base64") } }] } },
+        ],
+      }).f,
     });
     await expect(junk.generateImage(REQ)).rejects.toMatchObject({ code: "no_image" });
   });

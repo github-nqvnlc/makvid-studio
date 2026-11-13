@@ -136,3 +136,9 @@
   `ShopAiKeyImageProvider` (base64 only, price per image from config), `FallbackMediaGen`
   (`MAKVID_MEDIAGEN=shopaikey,google`). Unit 13/13. Live check pending: `SHOPAIKEY_API_KEY` not in `.env` yet.
 - Follow-up for M6 legal pages: list ShopAIKey as a sub-processor in the privacy policy.
+
+## 2026-11-13 — M4: ShopAIKey live image verified (Claude Code)
+
+- Live: the custom image endpoint refuses Nano Banana for our key; the Gemini-compatible route
+  (`/v1beta/models/gemini-nano-banana-2.1:generateContent?key=`) works. Adapter switched to it; real 1K image in
+  23 s (`docs/reports/assets/M4/mediagen/shopaikey-live.png`). Unit 13/13. Cost per image still an estimate.

@@ -9,12 +9,14 @@
 ## Decision
 
 - **Production provider: ShopAIKey** (product-owner decision, 2026-11-13, risks below accepted), a Vietnamese
-  key reseller in front of Google's image models: `POST https://api.shopaikey.com/images/google/generations`,
-  `Authorization: Bearer`, model `nano-banana-2.1`, `size` (10 aspect ratios), `imageSize`, `format`,
-  `response_format: "b64_json"` (docs + OpenAPI read 2026-11-13). No seed, no usage block: cost is a configured
-  price per image (`SHOPAIKEY_IMAGE_COST_USD`, default $0.026 ≈ 0.21 credit at 26,000 VND / 8 per credit).
-  Their default is to upload results to their public bucket and return a URL; we always request base64, and a
-  URL answer is only downloaded through `safeFetch`.
+  key reseller in front of Google's image models. Verified by live calls on 2026-11-13: its documented custom
+  endpoint `/images/google/generations` answers "Model not found" for Nano Banana, while its Gemini-compatible
+  route works: `POST https://api.shopaikey.com/v1beta/models/gemini-nano-banana-2.1:generateContent?key=…`
+  (the `x-goog-api-key` header is refused, so the key travels in the URL and URLs are never logged), with
+  `responseModalities: ["IMAGE"]`, `imageConfig { aspectRatio, imageSize }` and `seed`. A 1K image took 23–79 s.
+  The key must belong to a group that includes Gemini image models ("Gemini API" / "Image Only" groups).
+  Cost is a configured price per 1K image (`SHOPAIKEY_IMAGE_COST_USD`, default $0.026 ≈ 0.21 credit at
+  26,000 VND / 8 per credit; 2K = 1.5×) — to be checked against the dashboard balance.
 - **Fallback chain**: `MAKVID_MEDIAGEN=shopaikey,google` tries providers in order; on HTTP error, timeout or an
   empty answer the next one is used and the usage record names the provider that answered. A safety block is
   final. This limits the impact of the reseller being shut down or a key being revoked.
