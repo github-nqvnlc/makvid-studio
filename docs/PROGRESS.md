@@ -154,3 +154,10 @@
 - Style mixing (T160): captions in the primary style, bridge fade at style changes, storyboard `styleId` per
   scene with validator rules (`--mix-styles`), PROMPT_VERSION m4.1. Mixed sample rendered in the container.
 - Next: real-voice demos of the 5 packs + a mixed video, M4 report (T162), GATE M4.
+
+## 2026-11-13 — M4 done, awaiting GATE M4 (Claude Code)
+
+- Real-voice demos for the 5 new packs and an AI-mixed video (minimal + whiteboard), all QA first pass,
+  −14 LUFS, $0.013–0.018 each. Whiteboard: an emphasised phrase is now underlined word to word (circle for one
+  word); goldens rewritten, overflow 52/52, 101 ms/frame.
+- Report `docs/reports/M4.md`. Next: GATE M4 approval, then M5.

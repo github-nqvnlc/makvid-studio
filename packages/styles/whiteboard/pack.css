@@ -279,7 +279,6 @@
   color: var(--accent);
 }
 
-
 /* ---- whiteboard theme ---- */
 .pack-whiteboard {
   overflow: hidden;
@@ -438,4 +437,19 @@
   bottom: -18px;
   width: min(100%, 420px);
   height: 22px;
+}
+/* Underline of an emphasised phrase, drawn word by word (lib/board.ts) */
+.wb-em-ul {
+  position: absolute;
+  left: -0.05em;
+  right: -0.05em;
+  bottom: -0.16em;
+  height: 0.28em;
+  pointer-events: none;
+}
+.wb-em-ul-join {
+  right: -0.32em;
+}
+.hl-text .wb-ul {
+  stroke-width: 6px;
 }

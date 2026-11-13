@@ -373,7 +373,7 @@ description: "Task list for MakVid Studio — AI video SaaS from HTML animation"
 - [x] T159 [P] Create `packages/styles/three-lite/` (Three.js, deterministic per-frame render in headless Chromium; measure CPU/GPU on worker)
 - [x] T160 Implement per-scene style mixing with transition scenes and primary-style caption font/logo in `packages/compiler/src/mix-styles.ts` and storyboard prompt support in `packages/ai/src/prompts/storyboard.ts`
 - [x] T161 Write `docs/style-pack-guide.md` ("how to create a new style pack")
-- [ ] T162 Write M4 report `docs/reports/M4.md` (13 demos, one video per input source)
+- [x] T162 Write M4 report `docs/reports/M4.md` (13 demos, one video per input source)
 
 **🛑 GATE M4**: Every style has a demo; every input source has a QA-passing sample video.
 
