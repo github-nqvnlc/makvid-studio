@@ -47,7 +47,8 @@ export class ShopAiKeyImageProvider implements MediaGenProvider {
   readonly model: string;
   private readonly fetchImpl: typeof fetch;
   constructor(private readonly opts: ShopAiKeyOptions) {
-    this.model = opts.model ?? SHOPAIKEY_IMAGE_MODEL;
+    // The price list names models "gemini-nano-banana-2.1"; the image endpoint only accepts "nano-banana-2.1".
+    this.model = (opts.model ?? SHOPAIKEY_IMAGE_MODEL).replace(/^gemini-/, "");
     this.fetchImpl = opts.fetch ?? fetch;
   }
 

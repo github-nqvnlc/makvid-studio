@@ -178,6 +178,12 @@ describe("ShopAIKey adapter", () => {
     });
   });
 
+  it("accepts the price-list model name", () => {
+    expect(new ShopAiKeyImageProvider({ apiKey: "k", model: "gemini-nano-banana-2.1" }).model).toBe(
+      "nano-banana-2.1",
+    );
+  });
+
   it("maps ratios the reseller lacks to the nearest one it has", async () => {
     const { f, calls } = fakeFetch(OKR);
     await new ShopAiKeyImageProvider({ apiKey: "k", fetch: f }).generateImage({
