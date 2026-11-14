@@ -1,7 +1,13 @@
 "use client";
-// "Save as template" (US5, T130): pick phrases of the finished video that become `{{variables}}`.
+// "Save as template": pick phrases of the finished video that become `{{variables}}`.
 import { useState } from "react";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Link } from "@/i18n/navigation";
 import { postJson } from "@/lib/api-client";
 
@@ -41,52 +47,66 @@ export function SaveTemplate({ projectId, title }: { projectId: string; title: s
 
   if (!open)
     return (
-      <button className="btn" onClick={() => setOpen(true)} data-testid="save-template">
+      <Button variant="outline" onClick={() => setOpen(true)} data-testid="save-template">
         {t("save")}
-      </button>
+      </Button>
     );
   return (
-    <form className="card stack" onSubmit={(e) => void save(e)} data-testid="template-form">
-      <h2>{t("title")}</h2>
-      <p className="small muted">{t("help")}</p>
-      <label className="stack">
-        {t("name")}
-        <input value={name} maxLength={120} onChange={(e) => setName(e.target.value)} required />
-      </label>
-      {rows.map((r, i) => (
-        <div key={i} className="row">
-          <input
-            aria-label={t("find")}
-            placeholder={t("find")}
-            value={r.find}
-            onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, find: e.target.value } : x)))}
-          />
-          <input
-            aria-label={t("variable")}
-            placeholder={slug(r.find) || t("variable")}
-            value={r.name}
-            pattern="[a-z_][a-z0-9_]{0,39}"
-            onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))}
-          />
-        </div>
-      ))}
-      <div className="row">
-        <button type="button" className="btn" onClick={() => setRows([...rows, { find: "", name: "" }])}>
-          {t("addRow")}
-        </button>
-        <button className="btn primary">{t("save")}</button>
-      </div>
-      {saved && (
-        <p data-testid="template-saved">
-          {t("saved", { vars: saved.vars.join(", ") })}{" "}
-          <Link href={`/batches?template=${saved.id}`}>{t("goBatch")}</Link>
-        </p>
-      )}
-      {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      )}
-    </form>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">{t("title")}</CardTitle>
+        <p className="text-muted-foreground text-sm">{t("help")}</p>
+      </CardHeader>
+      <CardContent>
+        <form className="flex flex-col gap-4" onSubmit={(e) => void save(e)} data-testid="template-form">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="template-name">{t("name")}</Label>
+            <Input id="template-name" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} required />
+          </div>
+          {rows.map((r, i) => (
+            <div key={i} className="grid gap-2 sm:grid-cols-2">
+              <Input
+                aria-label={t("find")}
+                placeholder={t("find")}
+                value={r.find}
+                onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, find: e.target.value } : x)))}
+              />
+              <Input
+                aria-label={t("variable")}
+                placeholder={slug(r.find) || t("variable")}
+                value={r.name}
+                pattern="[a-z_][a-z0-9_]{0,39}"
+                className="font-mono"
+                onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))}
+              />
+            </div>
+          ))}
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="outline" size="sm" className="gap-1.5" onClick={() => setRows([...rows, { find: "", name: "" }])}>
+              <Plus className="size-4" aria-hidden />
+              {t("addRow")}
+            </Button>
+            <Button type="submit" size="sm">
+              {t("save")}
+            </Button>
+          </div>
+          {saved && (
+            <Alert data-testid="template-saved">
+              <AlertDescription>
+                {t("saved", { vars: saved.vars.join(", ") })}{" "}
+                <Link href={`/batches?template=${saved.id}`} className="underline underline-offset-4">
+                  {t("goBatch")}
+                </Link>
+              </AlertDescription>
+            </Alert>
+          )}
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+        </form>
+      </CardContent>
+    </Card>
   );
 }

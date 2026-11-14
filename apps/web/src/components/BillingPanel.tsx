@@ -2,6 +2,12 @@
 // Plan, usage meters, plans and credit packs with checkout (US6, T142; ADR 0004).
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { PageHeader } from "@/components/common/PageHeader";
+import { UsageMeter } from "@/components/common/UsageMeter";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { postJson } from "@/lib/api-client";
 
 export interface PlanCard {
@@ -67,127 +73,151 @@ export function BillingPanel({
     window.location.href = r.data.url;
   }
 
-  const meter = (label: string, key: string, limit: number | null, scale = 1) => {
-    const v = ((usage.used[key] ?? 0) + (usage.reserved[key] ?? 0)) / scale;
-    const max = limit === null ? null : limit / scale;
-    return (
-      <li key={key} className="stack">
-        <span className="row">
-          <span>{label}</span>
-          <span className="small muted" data-testid={`meter-${key}`}>
-            {Math.round(v)} / {max === null ? t("unlimited") : Math.round(max)}
-          </span>
-        </span>
-        {max !== null && (
-          <div className="progress">
-            <div style={{ width: `${Math.min(100, Math.round((v / Math.max(1, max)) * 100))}%` }} />
-          </div>
-        )}
-      </li>
-    );
-  };
+  const used = (key: string) => (usage.used[key] ?? 0) + (usage.reserved[key] ?? 0);
+  const videoPct = usage.limits.videos ? Math.round((used("videos") / usage.limits.videos) * 100) : 0;
 
   return (
-    <div className="stack">
-      <h1>{t("title")}</h1>
-      {paid && <p className="badge">{t("paid")}</p>}
-      <section className="card stack" data-testid="usage">
-        <h2 data-testid="current-plan">{t("current", { plan: usage.planName })}</h2>
-        <p className="small muted">
-          {t("period", { from: date(usage.periodStart), to: date(usage.periodEnd) })}
-        </p>
-        {usage.watermark && <p className="small">{t("watermark")}</p>}
-        <ul className="list">
-          {meter(t("videos"), "videos", usage.limits.videos)}
-          {meter(t("seconds"), "video_seconds", usage.limits.video_seconds, 60)}
-          {meter(t("tts"), "tts_chars", usage.limits.tts_chars)}
-          {usage.limits.mediagen_enabled && meter(t("images"), "ai_images", usage.limits.ai_images)}
-        </ul>
-        <p className="small">{t("credits", { min: Math.floor(usage.credits / 60) })}</p>
-      </section>
-      <section className="card stack">
-        <h2>{t("plans")}</h2>
-        {!canPay && <p className="small muted">{t("ownerOnly")}</p>}
-        {canPay && !card && !qr && <p className="small muted">{t("noProviders")}</p>}
-        <div className="choices">
+    <div className="mx-auto flex max-w-5xl flex-col gap-6">
+      <PageHeader title={t("title")} description={t("current", { plan: usage.planName })} />
+      {paid && (
+        <Alert>
+          <AlertDescription>{t("paid")}</AlertDescription>
+        </Alert>
+      )}
+      {videoPct >= 80 && (
+        <Alert variant="destructive" data-testid="quota-warning">
+          <AlertDescription>{t("nearLimit", { pct: Math.min(100, videoPct) })}</AlertDescription>
+        </Alert>
+      )}
+      <Card data-testid="usage">
+        <CardHeader>
+          <CardTitle data-testid="current-plan">{t("current", { plan: usage.planName })}</CardTitle>
+          <p className="text-muted-foreground text-sm">
+            {t("period", { from: date(usage.periodStart), to: date(usage.periodEnd) })}
+          </p>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {usage.watermark && <p className="text-sm">{t("watermark")}</p>}
+          <UsageMeter label={t("videos")} used={used("videos")} limit={usage.limits.videos} />
+          <UsageMeter
+            label={t("seconds")}
+            used={Math.round(used("video_seconds") / 60)}
+            limit={usage.limits.video_seconds === null ? null : Math.round(usage.limits.video_seconds / 60)}
+          />
+          <UsageMeter label={t("tts")} used={used("tts_chars")} limit={usage.limits.tts_chars} />
+          {usage.limits.mediagen_enabled && (
+            <UsageMeter label={t("images")} used={used("ai_images")} limit={usage.limits.ai_images} />
+          )}
+          <p className="text-sm">{t("credits", { min: Math.floor(usage.credits / 60) })}</p>
+        </CardContent>
+      </Card>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">{t("plans")}</h2>
+        {!canPay && <p className="text-muted-foreground text-sm">{t("ownerOnly")}</p>}
+        {canPay && !card && !qr && <p className="text-muted-foreground text-sm">{t("noProviders")}</p>}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {plans.map((p) => (
-            <div key={p.id} className="choice stack" data-testid={`plan-${p.id}`}>
-              <strong>{p.name}</strong>
-              <span>
-                {p.priceUsd > 0 ? `$${p.priceUsd}${t("perMonth")}` : "0"}
-                {p.priceVnd > 0 && <span className="small muted"> · {vnd(p.priceVnd)}</span>}
-              </span>
-              <span className="small">
-                {t("features", {
-                  videos: p.limits.videos ?? "∞",
-                  minutes: p.limits.video_seconds === null ? "∞" : Math.round(p.limits.video_seconds / 60),
-                  max: p.limits.max_video_seconds,
-                })}
-              </span>
-              <span className="small muted">
-                {[
-                  p.limits.batch_enabled && t("batch"),
-                  p.limits.api_enabled && t("api"),
-                  p.limits.mediagen_enabled && t("mediagen"),
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
-              </span>
-              {canPay && p.id !== "free" && p.id !== usage.planId && (
-                <span className="row">
-                  {card && (p.purchasableCard || card === "mock") && (
-                    <button
-                      className="btn primary"
-                      onClick={() => void pay(card, { kind: "plan", planId: p.id })}
-                    >
-                      {t("payCard")}
-                    </button>
+            <Card
+              key={p.id}
+              data-testid={`plan-${p.id}`}
+              className={p.id === usage.planId ? "border-primary" : undefined}
+            >
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between gap-2">
+                  {p.name}
+                  {p.id === usage.planId && <Badge>{t("currentBadge")}</Badge>}
+                </CardTitle>
+                <p className="text-2xl font-bold">
+                  {p.priceUsd > 0 ? `$${p.priceUsd}` : "0"}
+                  {p.priceUsd > 0 && (
+                    <span className="text-muted-foreground text-sm font-normal">{t("perMonth")}</span>
                   )}
-                  {qr && (
-                    <button
-                      className="btn"
-                      onClick={() => void pay(qr, { kind: "plan", planId: p.id, months: 1 })}
-                    >
-                      {t("payQr")}
-                    </button>
+                  {p.priceVnd > 0 && (
+                    <span className="text-muted-foreground text-sm font-normal"> · {vnd(p.priceVnd)}</span>
                   )}
+                </p>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3 text-sm">
+                <span>
+                  {t("features", {
+                    videos: p.limits.videos ?? "∞",
+                    minutes: p.limits.video_seconds === null ? "∞" : Math.round(p.limits.video_seconds / 60),
+                    max: p.limits.max_video_seconds,
+                  })}
                 </span>
-              )}
-            </div>
+                <span className="text-muted-foreground">
+                  {[
+                    p.limits.batch_enabled && t("batch"),
+                    p.limits.api_enabled && t("api"),
+                    p.limits.mediagen_enabled && t("mediagen"),
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </span>
+                {p.id !== "free" && p.id !== usage.planId && (
+                  <div className="flex flex-wrap gap-2">
+                    {card && (p.purchasableCard || card === "mock") && (
+                      <Button
+                        disabled={!canPay}
+                        onClick={() => void pay(card, { kind: "plan", planId: p.id })}
+                      >
+                        {t("payCard")}
+                      </Button>
+                    )}
+                    {qr && (
+                      <Button
+                        variant="outline"
+                        disabled={!canPay}
+                        onClick={() => void pay(qr, { kind: "plan", planId: p.id, months: 1 })}
+                      >
+                        {t("payQr")}
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           ))}
         </div>
       </section>
+
       {canPay && (card || qr) && (
-        <section className="card stack">
-          <h2>{t("creditsTitle")}</h2>
-          <div className="row">
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold">{t("creditsTitle")}</h2>
+          <div className="flex flex-wrap gap-4">
             {PACKS.map((k) => (
-              <span key={k.id} className="choice stack">
-                <strong>{t("pack", { min: k.min })}</strong>
-                <span className="small">
-                  ${k.usd} · {vnd(k.vnd)}
-                </span>
-                <span className="row">
+              <Card key={k.id} className="min-w-52">
+                <CardHeader>
+                  <CardTitle className="text-base">{t("pack", { min: k.min })}</CardTitle>
+                  <p className="text-muted-foreground text-sm">
+                    ${k.usd} · {vnd(k.vnd)}
+                  </p>
+                </CardHeader>
+                <CardContent className="flex flex-wrap gap-2">
                   {card && (
-                    <button className="btn" onClick={() => void pay(card, { kind: "credits", packId: k.id })}>
+                    <Button
+                      variant="outline"
+                      onClick={() => void pay(card, { kind: "credits", packId: k.id })}
+                    >
                       {t("payCard")}
-                    </button>
+                    </Button>
                   )}
                   {qr && (
-                    <button className="btn" onClick={() => void pay(qr, { kind: "credits", packId: k.id })}>
+                    <Button variant="outline" onClick={() => void pay(qr, { kind: "credits", packId: k.id })}>
                       {t("payQr")}
-                    </button>
+                    </Button>
                   )}
-                </span>
-              </span>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </section>
       )}
       {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
     </div>
   );

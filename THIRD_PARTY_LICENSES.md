@@ -43,3 +43,22 @@ Music and SFX: procedural, project-owned (M2, T072); licensed catalog via Sounds
 Built-in music beds and SFX (`packages/media/library/`) are generated procedurally by
 `packages/media/scripts/gen-beds.mjs` and `gen-sfx.mjs`: project-owned, no third-party rights (T072).
 A curated royalty-free library can be added later; every track must carry license, source URL and access date.
+
+## Web UI revamp (spec 002)
+
+Fonts, self-hosted by `next/font/google` at build time (SIL OFL 1.1; embedding in web and video allowed, license
+kept in the font packages): Plus Jakarta Sans, Be Vietnam Pro, Space Mono (Vietnamese subset used for all three).
+
+| Dependency                                                     | Version                  | License    | Note                                                                                              |
+| -------------------------------------------------------------- | ------------------------ | ---------- | ------------------------------------------------------------------------------------------------- |
+| tailwindcss, @tailwindcss/postcss                              | 4.x                      | MIT        | build-time CSS                                                                                    |
+| lightningcss (+ platform binaries)                             | 1.33.0                   | MPL-2.0    | Tailwind v4 transform; used unmodified at build time only; allowlisted, owner-approved 2026-11-14 |
+| shadcn/ui components (copied into `src/components/ui`), Radix | 4.23.0 CLI / Radix 1.x   | MIT        | source copied into the repo                                                                       |
+| tw-animate-css, class-variance-authority, clsx, tailwind-merge | latest pinned            | MIT        |                                                                                                   |
+| next-themes 0.4.6, sonner 2.0.8, cmdk 1.1.1                    | as listed                | MIT        |                                                                                                   |
+| react-resizable-panels, react-hook-form, @hookform/resolvers   | 4.22.1 / 7.92.0 / 7.0.6  | MIT        |                                                                                                   |
+| react-day-picker 10.0.2, date-fns 4.4.0                        | as listed                | MIT        |                                                                                                   |
+| @axe-core/playwright 4.14.0 (dev)                              | 4.14.0                   | MPL-2.0    | dev/test only, unmodified                                                                         |
+| lucide-react                                                   | existing                 | ISC        |                                                                                                   |
+
+`sharp` was rejected for avatar resizing (libvips is LGPL): avatars are cropped to 256 px in the browser.

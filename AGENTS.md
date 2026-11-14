@@ -61,7 +61,7 @@ Opt-in test suites: `MAKVID_INFRA_TESTS=1` (needs compose stack), `MAKVID_PIPELI
 
 | Path                                                         | What                                                                                             |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `apps/web`                                                   | Next.js 16 app: next-intl (vi/en), Better Auth, API routes, SSE, editor + review UI (ADR 0008)   |
+| `apps/web`                                                   | Next.js 16 app: next-intl (vi/en), Better Auth, API routes, SSE; UI = Tailwind v4 + shadcn/ui (`src/components/ui`), theme poppy-1, route groups `(marketing)`, `(auth)`, `(app)`; shared pieces in `src/components/{common,shell,marketing,projects,create,editor,account}` (ADR 0008, specs/002-saas-ui-revamp) |
 | `apps/cli`                                                   | `makvid` CLI                                                                                     |
 | `apps/worker-*`                                              | BullMQ workers: ai, audio, render, align                                                         |
 | `packages/spec`                                              | VideoSpec (zod), NFC, patches, migrations                                                        |
@@ -74,6 +74,9 @@ Opt-in test suites: `MAKVID_INFRA_TESTS=1` (needs compose stack), `MAKVID_PIPELI
 | `spikes/`, `bench/`                                          | M0 experiments (own npm lockfiles, not in the workspace)                                         |
 
 ## Conventions
+
+- UI (apps/web): colors from theme tokens only and no literal UI text in JSX (ESLint enforces both); use the shared components in `src/components/common`; every new string goes in `messages/vi.json` and `en.json` (a test checks parity).
+- Local e2e on Windows: use `127.0.0.1` for Postgres/object store (a WSL relay may answer on `localhost`/IPv6) and make sure Redis is 6.2 or newer for BullMQ.
 
 - TypeScript strict, ESM, no `any`. Internal packages export TS source (`exports: ./src/index.ts`).
 - Deterministic scenes: no `Math.random`/`Date.now`/timers in compositions; use `rng(seed)` from style-kit.

@@ -1,10 +1,14 @@
-// Platform admin area (US9, T149): only users flagged is_platform_admin (set by an operator in SQL).
+// Platform admin area: only users flagged is_platform_admin (set by an operator in SQL).
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PageHeader } from "@/components/common/PageHeader";
+import { AdminPlans, GrantPlan } from "@/components/AdminPlans";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { redirect } from "@/i18n/navigation";
 import { adminCostByStep, adminPlans, adminUsers, adminWorkspaces, queueHealth } from "@/server/admin";
 import { viewer } from "@/server/session";
-import { AdminPlans, GrantPlan } from "@/components/AdminPlans";
 
 export const dynamic = "force-dynamic";
 
@@ -30,92 +34,98 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
     { cost: 0, usd: 0, vnd: 0 },
   );
   return (
-    <div className="stack" data-testid="admin">
-      <h1>{t("title")}</h1>
+    <div className="flex flex-col gap-6" data-testid="admin">
+      <PageHeader title={t("title")} />
 
-      <section className="card stack">
-        <h2>{t("queues")}</h2>
-        <table data-testid="admin-queues">
-          <thead>
-            <tr>
-              <th>{t("queue")}</th>
-              <th>{t("workers")}</th>
-              <th>{t("waiting")}</th>
-              <th>{t("active")}</th>
-              <th>{t("failed")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {queues.map((q) => (
-              <tr key={q.name}>
-                <td>{q.name}</td>
-                <td>{q.workers}</td>
-                <td>{(q.counts.waiting ?? 0) + (q.counts.prioritized ?? 0) + (q.counts.delayed ?? 0)}</td>
-                <td>{q.counts.active ?? 0}</td>
-                <td>{q.counts.failed ?? 0}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("queues")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table data-testid="admin-queues">
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t("queue")}</TableHead>
+                <TableHead>{t("workers")}</TableHead>
+                <TableHead>{t("waiting")}</TableHead>
+                <TableHead>{t("active")}</TableHead>
+                <TableHead>{t("failed")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {queues.map((q) => (
+                <TableRow key={q.name}>
+                  <TableCell>{q.name}</TableCell>
+                  <TableCell>{q.workers}</TableCell>
+                  <TableCell>{(q.counts.waiting ?? 0) + (q.counts.prioritized ?? 0) + (q.counts.delayed ?? 0)}</TableCell>
+                  <TableCell>{q.counts.active ?? 0}</TableCell>
+                  <TableCell>{q.counts.failed ?? 0}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
-      <section className="card stack">
-        <h2>{t("costRevenue")}</h2>
-        <p className="small" data-testid="admin-totals">
-          {t("totals", {
-            cost: usd(totals.cost),
-            usd: usd(totals.usd),
-            vnd: totals.vnd.toLocaleString("vi-VN"),
-          })}
-        </p>
-        <table data-testid="admin-workspaces">
-          <thead>
-            <tr>
-              <th>{t("workspace")}</th>
-              <th>{t("owner")}</th>
-              <th>{t("plan")}</th>
-              <th>{t("videos")}</th>
-              <th>{t("aiCost")}</th>
-              <th>{t("revenue")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ws.map((w) => (
-              <tr key={w.id}>
-                <td>
-                  {w.name}
-                  <br />
-                  <code className="small">{w.id}</code>
-                </td>
-                <td className="small">{w.owner}</td>
-                <td>{w.plan}</td>
-                <td>{w.videos}</td>
-                <td>{usd(w.costUsd)}</td>
-                <td>
-                  {usd(w.revenueUsd)}
-                  {w.revenueVnd > 0 && ` + ${w.revenueVnd.toLocaleString("vi-VN")} ₫`}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <h3>{t("byStep")}</h3>
-        <table>
-          <tbody>
-            {steps.map((s) => (
-              <tr key={`${s.step}-${s.provider}`}>
-                <td>{s.step}</td>
-                <td>{s.provider}</td>
-                <td>{s.calls}</td>
-                <td>{usd(Number(s.usd))}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("costRevenue")}</CardTitle>
+          <p className="text-sm" data-testid="admin-totals">
+            {t("totals", { cost: usd(totals.cost), usd: usd(totals.usd), vnd: totals.vnd.toLocaleString("vi-VN") })}
+          </p>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-6">
+          <Table data-testid="admin-workspaces">
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t("workspace")}</TableHead>
+                <TableHead>{t("owner")}</TableHead>
+                <TableHead>{t("plan")}</TableHead>
+                <TableHead>{t("videos")}</TableHead>
+                <TableHead>{t("aiCost")}</TableHead>
+                <TableHead>{t("revenue")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {ws.map((w) => (
+                <TableRow key={w.id}>
+                  <TableCell>
+                    {w.name}
+                    <br />
+                    <code className="text-muted-foreground font-mono text-xs">{w.id}</code>
+                  </TableCell>
+                  <TableCell className="text-sm">{w.owner}</TableCell>
+                  <TableCell>{w.plan}</TableCell>
+                  <TableCell>{w.videos}</TableCell>
+                  <TableCell>{usd(w.costUsd)}</TableCell>
+                  <TableCell>
+                    {usd(w.revenueUsd)}
+                    {w.revenueVnd > 0 && ` + ${w.revenueVnd.toLocaleString("vi-VN")} ₫`}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <div>
+            <h3 className="mb-2 text-sm font-semibold">{t("byStep")}</h3>
+            <Table>
+              <TableBody>
+                {steps.map((s) => (
+                  <TableRow key={`${s.step}-${s.provider}`}>
+                    <TableCell>{s.step}</TableCell>
+                    <TableCell>{s.provider}</TableCell>
+                    <TableCell>{s.calls}</TableCell>
+                    <TableCell>{usd(Number(s.usd))}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
 
-      <section className="stack">
-        <h2>{t("plans")}</h2>
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">{t("plans")}</h2>
         <GrantPlan planIds={plans.map((p) => p.id)} />
         <AdminPlans
           plans={plans.map((p) => ({
@@ -131,17 +141,22 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
         />
       </section>
 
-      <section className="card stack">
-        <h2>{t("users", { n: users.length })}</h2>
-        <ul className="list small">
-          {users.slice(0, 100).map((u) => (
-            <li key={u.id}>
-              {u.email} {u.admin && <span className="badge">admin</span>} ·{" "}
-              {u.createdAt.toLocaleDateString(locale)}
-            </li>
-          ))}
-        </ul>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("users", { n: users.length })}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="divide-y text-sm">
+            {users.slice(0, 100).map((u) => (
+              <li key={u.id} className="flex flex-wrap items-center gap-2 py-1.5">
+                <span className="min-w-0 flex-1 truncate">{u.email}</span>
+                {u.admin && <Badge variant="secondary">{t("admin")}</Badge>}
+                <span className="text-muted-foreground">{u.createdAt.toLocaleDateString(locale)}</span>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
 }

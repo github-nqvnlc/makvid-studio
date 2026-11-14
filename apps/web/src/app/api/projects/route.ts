@@ -1,9 +1,7 @@
 // GET: the workspace's projects. POST: create a project from an idea (JSON) or from another source
 // (multipart form: written script, article link, GitHub repo, data file, audio/video upload) and start
 // production (T102, T117). Text sources are ingested here (seconds); uploaded media is transcribed by the worker.
-import { desc, isNull } from "drizzle-orm";
 import { z } from "zod";
-import { projects, withWorkspace } from "@makvid/db";
 import {
   ingestArticle,
   ingestGithub,
@@ -16,28 +14,20 @@ import { attachReservation, planOf, QuotaError, reserve, settle } from "@makvid/
 import { freeBlocked } from "@/server/abuse";
 import { createProject } from "@makvid/pipeline";
 import { voiceCatalog } from "@makvid/tts";
+import { parseListQuery } from "@/lib/project-query";
 import { fail, guarded } from "@/server/api";
+import { listProjects } from "@/server/projects-list";
 import { server } from "@/server/deps";
 import { resolveBrandKit } from "@/server/assets";
 import { UploadError, validateUpload } from "@/server/uploads";
 
 export const dynamic = "force-dynamic";
 
-export function GET() {
+export function GET(req: Request) {
   return guarded("GET /api/projects", async (v) => {
-    const rows = await withWorkspace(server().db, v.workspaceId, (tx) =>
-      tx
-        .select({
-          id: projects.id,
-          title: projects.title,
-          status: projects.status,
-          updatedAt: projects.updatedAt,
-        })
-        .from(projects)
-        .where(isNull(projects.deletedAt))
-        .orderBy(desc(projects.updatedAt)),
-    );
-    return Response.json({ projects: rows });
+    const q = parseListQuery(new URL(req.url).searchParams);
+    if (!q.success) return fail("invalid");
+    return Response.json(await listProjects(server().db, server().deps.store, v.workspaceId, q.data));
   });
 }
 

@@ -16,7 +16,8 @@
     "members": "Thành viên",
     "billing": "Gói & hạn mức",
     "workspace": "Không gian làm việc",
-    "api": "API"
+    "api": "API",
+    "admin": "Quản trị"
   },
   "auth": {
     "signInTitle": "Đăng nhập",
@@ -30,7 +31,18 @@
     "toSignUp": "Chưa có tài khoản? Đăng ký",
     "toSignIn": "Đã có tài khoản? Đăng nhập",
     "failed": "Email hoặc mật khẩu chưa đúng.",
-    "signUpFailed": "Chưa tạo được tài khoản. Kiểm tra email và mật khẩu rồi thử lại."
+    "signUpFailed": "Chưa tạo được tài khoản. Kiểm tra email và mật khẩu rồi thử lại.",
+    "showPassword": "Hiện mật khẩu",
+    "hidePassword": "Ẩn mật khẩu",
+    "nameRequired": "Bạn nhập tên giúp mình nhé.",
+    "emailInvalid": "Email chưa đúng định dạng.",
+    "passwordShort": "Mật khẩu cần ít nhất 8 ký tự.",
+    "passwordLabel": "Mật khẩu",
+    "passwordHint": "Ít nhất 8 ký tự",
+    "panelTitle": "Video ngắn hoàn chỉnh từ một ý tưởng",
+    "panelBody": "Kịch bản, giọng đọc, phụ đề và nhạc nền được làm sẵn. Bạn chỉ cần duyệt và đăng.",
+    "pending": "Đang xử lý…",
+    "or": "hoặc"
   },
   "projects": {
     "title": "Dự án của bạn",
@@ -74,7 +86,30 @@
     "submit": "Tạo video",
     "submitting": "Đang gửi…",
     "tooShort": "Hãy viết ý tưởng dài hơn một chút.",
-    "useBrand": "Dùng bộ nhận diện thương hiệu (màu, font, logo)"
+    "useBrand": "Dùng bộ nhận diện thương hiệu (màu, font, logo)",
+    "sections": {
+      "source": "1. Nội dung",
+      "format": "2. Khung hình và độ dài",
+      "voice": "3. Giọng đọc",
+      "options": "4. Cách làm"
+    },
+    "summary": {
+      "title": "Tóm tắt",
+      "videosLeft": "Video còn lại tháng này",
+      "unlimited": "Không giới hạn",
+      "duration": "Độ dài",
+      "aspect": "Khung hình",
+      "mode": "Cách làm",
+      "voice": "Giọng đọc",
+      "seconds": "{n} giây",
+      "overLimit": "Bạn đã dùng hết số video của gói này.",
+      "overDuration": "Gói này cho video tối đa {n} giây.",
+      "upgrade": "Nâng cấp gói",
+      "loadFailed": "Chưa kiểm tra được hạn mức.",
+      "maxLength": "Tối đa {n} giây"
+    },
+    "durationHint": "Từ 30 đến 180 giây.",
+    "durationSlider": "Kéo để chọn độ dài"
   },
   "voices": {
     "standard": "Tiêu chuẩn",
@@ -87,7 +122,17 @@
     "south": "Miền Nam",
     "other": "Giọng chuẩn",
     "listen": "Nghe thử",
-    "default": "Mặc định"
+    "default": "Mặc định",
+    "tierHint": {
+      "standard": "Giọng chuẩn, phù hợp hầu hết video.",
+      "pro": "Giọng rõ và có cảm xúc hơn.",
+      "ultra": "Tự nhiên nhất, gần giọng người thật."
+    },
+    "gender": "Giới tính",
+    "region": "Vùng miền",
+    "all": "Tất cả",
+    "stop": "Dừng",
+    "empty": "Không có giọng nào khớp bộ lọc."
   },
   "editor": {
     "preview": "Xem trước",
@@ -112,7 +157,24 @@
     "working": "Đang làm video của bạn",
     "noVideo": "Video sẽ xuất hiện ở đây khi hoàn thành.",
     "byYou": "Bạn sửa",
-    "byAi": "Tạo tự động"
+    "byAi": "Tạo tự động",
+    "rename": "Đổi tên dự án",
+    "renameLabel": "Tên dự án",
+    "renameSave": "Lưu",
+    "renameCancel": "Hủy",
+    "renamed": "Đã đổi tên.",
+    "tabs": {
+      "preview": "Xem trước",
+      "scenes": "Cảnh",
+      "chat": "Chat"
+    },
+    "videoError": "Chưa phát được video.",
+    "retry": "Thử lại",
+    "loadingVideo": "Đang tải video…",
+    "more": "Thêm",
+    "history": "Lịch sử và tải về",
+    "panes": "Bố cục chỉnh sửa",
+    "deleted": "Dự án này không còn tồn tại."
   },
   "review": {
     "scriptTitle": "Duyệt kịch bản",
@@ -218,7 +280,9 @@
     "sampleTitle": "Tiêu đề mẫu tiếng Việt",
     "sampleBody": "Nội dung mẫu với đầy đủ dấu: ạ ặ ẩ ỗ ữ ỹ ₫",
     "sampleCta": "Theo dõi ngay",
-    "contrast": "Chữ khó đọc với cặp màu: {pairs}. Hãy chọn màu tương phản hơn."
+    "contrast": "Chữ khó đọc với cặp màu: {pairs}. Hãy chọn màu tương phản hơn.",
+    "logoPosition": "Vị trí logo",
+    "uploadFont": "Tải font lên"
   },
   "assets": {
     "title": "Thư viện tài nguyên",
@@ -315,7 +379,9 @@
     "revoke": "Huỷ lời mời",
     "remove": "Xoá khỏi nhóm",
     "leave": "Rời nhóm",
-    "switch": "Chuyển không gian"
+    "switch": "Chuyển không gian",
+    "invited": "Đã tạo lời mời.",
+    "roleLabel": "Vai trò"
   },
   "invite": {
     "title": "Lời mời tham gia",
@@ -350,7 +416,9 @@
     "features": "{videos} video · {minutes} phút · video tối đa {max}s",
     "batch": "Tạo hàng loạt",
     "api": "API",
-    "mediagen": "Ảnh AI"
+    "mediagen": "Ảnh AI",
+    "nearLimit": "Bạn đã dùng {pct}% số video của gói này. Nâng cấp để không bị gián đoạn.",
+    "currentBadge": "Gói hiện tại"
   },
   "api": {
     "title": "API & webhook",
@@ -368,7 +436,10 @@
     "webhooks": "Webhook",
     "webhooksHelp": "Chúng tôi gửi thông báo có chữ ký khi video xong, video lỗi và lô hoàn thành.",
     "addWebhook": "Thêm webhook",
-    "remove": "Xoá"
+    "remove": "Xoá",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép.",
+    "webhookUrl": "Địa chỉ webhook"
   },
   "admin": {
     "title": "Quản trị nền tảng",
@@ -392,6 +463,443 @@
     "saved": "Đã lưu",
     "grant": "Cấp gói",
     "granted": "Đã cấp gói",
-    "users": "Người dùng ({n})"
+    "users": "Người dùng ({n})",
+    "polarProduct": "Mã sản phẩm Polar",
+    "watermark": "Gắn dấu MakVid Studio",
+    "limits": "Giới hạn (JSON)",
+    "workspaceId": "Mã workspace",
+    "days": "Số ngày",
+    "admin": "Quản trị nền tảng"
+  },
+  "common": {
+    "theme": {
+      "label": "Giao diện",
+      "light": "Sáng",
+      "dark": "Tối",
+      "system": "Theo hệ thống"
+    },
+    "language": {
+      "label": "Ngôn ngữ",
+      "vi": "Tiếng Việt",
+      "en": "English"
+    },
+    "skipToContent": "Bỏ qua tới nội dung",
+    "retry": "Thử lại",
+    "loading": "Đang tải…",
+    "comingSoon": "Sắp ra mắt",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "unlimited": "Không giới hạn",
+    "upgrade": {
+      "title": "{feature} cần gói cao hơn",
+      "action": "Nâng cấp"
+    },
+    "color": {
+      "invalid": "Mã màu dạng #RRGGBB"
+    },
+    "dropzone": {
+      "hint": "Kéo thả tệp vào đây",
+      "type": "Loại tệp này không được hỗ trợ",
+      "size": "Tệp lớn hơn {mb} MB"
+    },
+    "planLock": {
+      "api": "API và webhook",
+      "batch": "Tạo video hàng loạt",
+      "apiBody": "Dùng API để tạo video từ hệ thống của bạn.",
+      "batchBody": "Tạo nhiều video từ một mẫu và một bảng dữ liệu."
+    }
+  },
+  "marketing": {
+    "nav": {
+      "features": "Tính năng",
+      "styles": "Phong cách",
+      "pricing": "Bảng giá",
+      "docs": "Tài liệu API",
+      "signIn": "Đăng nhập",
+      "startFree": "Dùng thử miễn phí",
+      "openApp": "Vào ứng dụng",
+      "menu": "Mở menu",
+      "home": "Về trang chủ"
+    },
+    "hero": {
+      "badge": "Video dọc 9:16 cho TikTok, Reels, Shorts",
+      "title": "Biến ý tưởng thành video ngắn có giọng đọc, phụ đề và nhạc nền",
+      "subtitle": "Gõ một câu, dán một liên kết hoặc tải tệp lên. MakVid Studio viết kịch bản, chọn phong cách, tạo giọng đọc và dựng video hoàn chỉnh cho bạn.",
+      "cta": "Dùng thử miễn phí",
+      "ctaSecondary": "Xem bảng giá",
+      "demoLabel": "Video mẫu do MakVid Studio tạo",
+      "demoPlaceholder": "Video mẫu",
+      "note": "Không cần thẻ. Gói miễn phí có dấu MakVid Studio."
+    },
+    "steps": {
+      "title": "Từ ý tưởng đến video trong ba bước",
+      "s1": {
+        "title": "Nhập ý tưởng",
+        "body": "Viết vài dòng, dán liên kết, tải bảng dữ liệu hoặc ghi âm. Chọn giọng đọc và phong cách."
+      },
+      "s2": {
+        "title": "Duyệt kịch bản và cảnh",
+        "body": "Xem lại lời đọc và từng cảnh. Sửa trực tiếp hoặc nhờ trợ lý chat chỉnh giúp."
+      },
+      "s3": {
+        "title": "Tải video về",
+        "body": "Video có phụ đề khớp từng từ, sẵn sàng đăng. Tải MP4 và tệp phụ đề SRT."
+      }
+    },
+    "styles": {
+      "title": "Mười ba phong cách, đổi bằng một cú nhấp",
+      "subtitle": "Mỗi phong cách có bố cục, màu sắc và chuyển động riêng. Thương hiệu của bạn áp dụng được cho tất cả."
+    },
+    "features": {
+      "title": "Mọi thứ để làm video nhanh, đúng giọng thương hiệu",
+      "f1": {
+        "title": "Giọng đọc tiếng Việt tự nhiên",
+        "body": "Nhiều giọng nam, nữ, vùng miền. Nghe thử trước khi chọn."
+      },
+      "f2": {
+        "title": "Phụ đề khớp từng từ",
+        "body": "Phụ đề được căn theo giọng đọc, hiển thị đúng dấu tiếng Việt."
+      },
+      "f3": {
+        "title": "Chỉnh sửa bằng chat",
+        "body": "Nói điều bạn muốn đổi. Hoàn tác và làm lại bất cứ lúc nào."
+      },
+      "f4": {
+        "title": "Bộ nhận diện thương hiệu",
+        "body": "Màu sắc, phông chữ và logo của bạn được áp dụng cho mọi video."
+      },
+      "f5": {
+        "title": "Tạo hàng loạt và API",
+        "body": "Sinh nhiều video từ một bảng dữ liệu hoặc gọi qua API và webhook."
+      },
+      "f6": {
+        "title": "Làm việc theo nhóm",
+        "body": "Mời thành viên, phân quyền xem, biên tập, quản trị."
+      }
+    },
+    "useCases": {
+      "title": "Dành cho ai",
+      "u1": {
+        "title": "Người bán hàng",
+        "body": "Giới thiệu sản phẩm, khuyến mãi hằng tuần."
+      },
+      "u2": {
+        "title": "Người làm nội dung",
+        "body": "Biến bài viết và kịch bản thành video ngắn."
+      },
+      "u3": {
+        "title": "Giáo viên và đào tạo",
+        "body": "Tóm tắt bài học thành video dễ nhớ."
+      },
+      "u4": {
+        "title": "Doanh nghiệp",
+        "body": "Video thương hiệu nhất quán cho cả đội."
+      }
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "q1": {
+        "q": "Tôi có cần biết dựng video không?",
+        "a": "Không. Bạn chỉ cần nhập ý tưởng, phần còn lại do MakVid Studio làm và bạn có thể chỉnh bằng chat."
+      },
+      "q2": {
+        "q": "Gói miễn phí có gì?",
+        "a": "Bạn tạo được một số video mỗi tháng, có dấu MakVid Studio. Nâng cấp để bỏ dấu và có thêm hạn mức."
+      },
+      "q3": {
+        "q": "Video dài tối đa bao lâu?",
+        "a": "Tùy gói. Xem chi tiết ở trang Bảng giá."
+      },
+      "q4": {
+        "q": "Tôi có thể dùng thương hiệu của mình không?",
+        "a": "Có. Đặt màu, phông chữ và logo một lần, mọi video đều áp dụng."
+      },
+      "q5": {
+        "q": "Dữ liệu của tôi có an toàn không?",
+        "a": "Mỗi workspace tách biệt. Bạn có thể xóa vĩnh viễn dự án bất cứ lúc nào."
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng tạo video đầu tiên?",
+      "body": "Đăng ký trong vài giây và làm thử miễn phí.",
+      "button": "Bắt đầu miễn phí"
+    },
+    "footer": {
+      "tagline": "Biến ý tưởng thành video ngắn.",
+      "product": "Sản phẩm",
+      "resources": "Tài nguyên",
+      "legal": "Pháp lý",
+      "social": "Mạng xã hội",
+      "terms": "Điều khoản sử dụng",
+      "privacy": "Chính sách bảo mật",
+      "youtube": "YouTube",
+      "facebook": "Facebook",
+      "tiktok": "TikTok",
+      "language": "Ngôn ngữ",
+      "copyright": "© {year} MakVid Studio"
+    },
+    "pricing": {
+      "title": "Bảng giá đơn giản",
+      "subtitle": "Bắt đầu miễn phí, nâng cấp khi cần thêm video và thời lượng.",
+      "monthly": "Theo tháng",
+      "yearly": "Theo năm",
+      "billing": "Chu kỳ thanh toán",
+      "free": "Miễn phí",
+      "perMonth": "/tháng",
+      "videos": "{n} video mỗi tháng",
+      "videosUnlimited": "Video không giới hạn",
+      "minutes": "{n} phút video",
+      "minutesUnlimited": "Phút video không giới hạn",
+      "maxLength": "Video tối đa {n} giây",
+      "batch": "Tạo hàng loạt",
+      "api": "API và webhook",
+      "mediagen": "Ảnh AI",
+      "noWatermark": "Không có dấu MakVid Studio",
+      "watermark": "Có dấu MakVid Studio",
+      "choose": "Chọn gói này",
+      "startFree": "Bắt đầu miễn phí",
+      "empty": "Chưa có gói nào để hiển thị."
+    },
+    "notFound": {
+      "title": "Không tìm thấy trang",
+      "body": "Đường dẫn có thể đã đổi hoặc không còn tồn tại.",
+      "home": "Về trang chủ"
+    },
+    "error": {
+      "title": "Có lỗi xảy ra",
+      "body": "Đã có sự cố khi mở trang này. Bạn thử lại nhé."
+    }
+  },
+  "shell": {
+    "groups": {
+      "create": "Sáng tạo",
+      "workspace": "Workspace",
+      "account": "Tài khoản",
+      "admin": "Quản trị"
+    },
+    "profile": "Hồ sơ",
+    "toggleSidebar": "Thu gọn hoặc mở rộng thanh bên",
+    "mainNav": "Điều hướng chính",
+    "breadcrumb": "Đường dẫn",
+    "crumbs": {
+      "workspace": "Workspace",
+      "new": "Tạo mới",
+      "detail": "Chi tiết",
+      "account": "Hồ sơ"
+    },
+    "quota": {
+      "label": "Video tháng này",
+      "nearLimit": "Sắp hết hạn mức",
+      "unlimited": "Không giới hạn"
+    },
+    "workspaceSwitcher": {
+      "label": "Chuyển workspace",
+      "current": "Hiện tại"
+    },
+    "search": {
+      "button": "Tìm kiếm",
+      "placeholder": "Tìm trang, dự án, hành động…",
+      "empty": "Không có kết quả.",
+      "pages": "Trang",
+      "projects": "Dự án",
+      "actions": "Hành động",
+      "newVideo": "Tạo video mới",
+      "switchTheme": "Đổi giao diện sáng/tối",
+      "switchLanguage": "Đổi ngôn ngữ",
+      "title": "Tìm kiếm nhanh"
+    },
+    "notifications": {
+      "title": "Thông báo",
+      "button": "Thông báo",
+      "empty": "Chưa có thông báo mới.",
+      "ready": "Video đã sẵn sàng",
+      "needs_attention": "Cần bạn xem lại",
+      "failed": "Chưa hoàn thành",
+      "markSeen": "Đánh dấu đã xem",
+      "unread": "{n} thông báo chưa xem"
+    },
+    "userMenu": {
+      "label": "Menu tài khoản"
+    },
+    "newVideoShort": "Tạo video",
+    "loadError": "Không tải được dữ liệu."
+  },
+  "projectsList": {
+    "title": "Dự án của bạn",
+    "subtitle": "Tìm, lọc và quản lý mọi video trong workspace.",
+    "empty": {
+      "title": "Chưa có video nào",
+      "body": "Bắt đầu bằng một ý tưởng, mình sẽ làm phần còn lại.",
+      "cta": "Tạo video đầu tiên"
+    },
+    "noResults": {
+      "title": "Không có dự án nào khớp",
+      "body": "Thử bỏ bớt bộ lọc hoặc đổi từ khóa.",
+      "clear": "Xóa bộ lọc"
+    },
+    "stats": {
+      "all": "Tất cả",
+      "processing": "Đang làm",
+      "ready": "Sẵn sàng",
+      "attention": "Cần xem lại",
+      "failed": "Chưa xong"
+    },
+    "search": {
+      "label": "Tìm theo tên dự án",
+      "placeholder": "Tìm theo tên (không cần gõ dấu)…"
+    },
+    "filters": {
+      "button": "Bộ lọc",
+      "count": "{n} bộ lọc",
+      "clear": "Xóa bộ lọc",
+      "status": "Trạng thái",
+      "aspect": "Tỷ lệ khung hình",
+      "source": "Nguồn",
+      "mode": "Chế độ",
+      "created": "Ngày tạo",
+      "updated": "Cập nhật lần cuối",
+      "any": "Bất kỳ",
+      "today": "Hôm nay",
+      "d7": "7 ngày qua",
+      "d30": "30 ngày qua",
+      "custom": "Chọn khoảng ngày",
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "group": {
+        "processing": "Đang làm",
+        "review": "Chờ duyệt",
+        "ready": "Sẵn sàng",
+        "attention": "Cần xem lại",
+        "failed": "Chưa xong",
+        "draft": "Nháp"
+      },
+      "sourceOpt": {
+        "prompt": "Ý tưởng",
+        "script": "Kịch bản",
+        "url": "Liên kết",
+        "github": "GitHub",
+        "table": "Bảng dữ liệu",
+        "media": "Tệp âm thanh/video"
+      },
+      "modeOpt": {
+        "auto": "Tự động",
+        "review": "Duyệt từng bước"
+      }
+    },
+    "sort": {
+      "label": "Sắp xếp",
+      "updated_desc": "Cập nhật mới nhất",
+      "updated_asc": "Cập nhật cũ nhất",
+      "created_desc": "Tạo mới nhất",
+      "created_asc": "Tạo cũ nhất",
+      "title_asc": "Tên A → Z",
+      "title_desc": "Tên Z → A"
+    },
+    "view": {
+      "label": "Kiểu hiển thị",
+      "grid": "Lưới",
+      "table": "Bảng"
+    },
+    "columns": {
+      "title": "Tên",
+      "status": "Trạng thái",
+      "aspect": "Tỷ lệ",
+      "creator": "Người tạo",
+      "updated": "Cập nhật"
+    },
+    "actions": {
+      "label": "Thao tác với {title}",
+      "open": "Mở",
+      "rename": "Đổi tên",
+      "delete": "Xóa vĩnh viễn"
+    },
+    "select": {
+      "one": "Chọn {title}",
+      "page": "Chọn tất cả trên trang này",
+      "count": "Đã chọn {n} dự án",
+      "clear": "Bỏ chọn",
+      "all": "Chọn cả {n} dự án khớp bộ lọc",
+      "deleteSelected": "Xóa đã chọn"
+    },
+    "rename": {
+      "title": "Đổi tên dự án",
+      "label": "Tên dự án",
+      "save": "Lưu tên",
+      "saved": "Đã đổi tên.",
+      "empty": "Tên không được để trống.",
+      "tooLong": "Tên tối đa 200 ký tự."
+    },
+    "delete": {
+      "oneTitle": "Xóa vĩnh viễn dự án này?",
+      "oneBody": "“{title}” cùng video, kịch bản và mọi tệp liên quan sẽ bị xóa và không thể khôi phục.",
+      "manyTitle": "Xóa vĩnh viễn {n} dự án?",
+      "manyBody": "Các dự án đã chọn và mọi tệp liên quan sẽ bị xóa, không thể khôi phục.",
+      "allTitle": "Xóa vĩnh viễn tất cả {n} dự án khớp bộ lọc?",
+      "allBody": "Hành động này xóa mọi dự án đang khớp bộ lọc, kể cả những dự án ở trang khác. Không thể khôi phục.",
+      "typeToConfirm": "Gõ {phrase} để xác nhận",
+      "phrase": "XOA",
+      "confirm": "Xóa vĩnh viễn",
+      "cancel": "Hủy",
+      "deleted": "Đã xóa {n} dự án.",
+      "partial": "Đã xóa {n} dự án, {f} dự án không xóa được (có thể đã bị xóa trước đó).",
+      "failed": "Chưa xóa được. Bạn thử lại nhé.",
+      "alreadyGone": "Dự án này đã được xóa trước đó."
+    },
+    "pager": {
+      "info": "{from}–{to} trên {total}",
+      "prev": "Trang trước",
+      "next": "Trang sau",
+      "size": "Số dự án mỗi trang",
+      "total": "{n} dự án"
+    },
+    "progress": {
+      "label": "Tiến độ"
+    },
+    "by": "Bởi {name}",
+    "loadFailed": "Chưa tải được danh sách dự án."
+  },
+  "account": {
+    "title": "Hồ sơ của bạn",
+    "subtitle": "Tên, ảnh đại diện, mật khẩu và tùy chọn hiển thị.",
+    "profile": {
+      "title": "Thông tin cá nhân",
+      "name": "Tên hiển thị",
+      "email": "Email",
+      "save": "Lưu thay đổi",
+      "saved": "Đã lưu hồ sơ.",
+      "nameRequired": "Bạn nhập tên giúp mình nhé.",
+      "nameTooLong": "Tên tối đa 80 ký tự.",
+      "failed": "Chưa lưu được. Bạn thử lại nhé."
+    },
+    "avatar": {
+      "title": "Ảnh đại diện",
+      "choose": "Chọn ảnh",
+      "remove": "Xóa ảnh",
+      "hint": "PNG, JPEG hoặc WebP. Ảnh được cắt vuông 256 × 256.",
+      "saved": "Đã cập nhật ảnh đại diện.",
+      "removed": "Đã xóa ảnh đại diện.",
+      "unreadable": "Không đọc được ảnh này."
+    },
+    "password": {
+      "title": "Đổi mật khẩu",
+      "current": "Mật khẩu hiện tại",
+      "next": "Mật khẩu mới",
+      "confirm": "Nhập lại mật khẩu mới",
+      "signOutOthers": "Đăng xuất khỏi các thiết bị khác",
+      "save": "Đổi mật khẩu",
+      "saved": "Đã đổi mật khẩu.",
+      "wrong": "Mật khẩu hiện tại chưa đúng.",
+      "short": "Mật khẩu mới cần ít nhất 8 ký tự.",
+      "mismatch": "Hai mật khẩu mới chưa khớp.",
+      "currentRequired": "Bạn nhập mật khẩu hiện tại nhé.",
+      "failed": "Chưa đổi được mật khẩu. Bạn thử lại nhé.",
+      "socialOnly": "Tài khoản này đăng nhập bằng Google nên không có mật khẩu để đổi."
+    },
+    "preferences": {
+      "title": "Giao diện và ngôn ngữ",
+      "theme": "Giao diện",
+      "language": "Ngôn ngữ"
+    }
   }
 }

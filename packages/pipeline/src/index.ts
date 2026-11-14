@@ -19,3 +19,4 @@ export * from "./webhooks";
 export * from "./distributed";
 export * from "./retention";
 export * from "./qa-fix";
+export * from "./projects-admin";

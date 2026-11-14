@@ -4,9 +4,11 @@ import { createReadStream, statSync } from "node:fs";
 import {
   CreateBucketCommand,
   DeleteObjectCommand,
+  DeleteObjectsCommand,
   GetObjectCommand,
   HeadBucketCommand,
   HeadObjectCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -37,6 +39,8 @@ export interface ObjectStore {
   getStream(key: string): Promise<NodeJS.ReadableStream>;
   exists(key: string): Promise<boolean>;
   delete(key: string): Promise<void>;
+  /** Delete every object under `prefix` (must end with "/"). Returns how many were removed. */
+  deletePrefix(prefix: string): Promise<number>;
   /** Time-limited download URL (default 15 min). */
   signedGetUrl(key: string, expiresInSec?: number): Promise<string>;
   /** Time-limited upload URL for direct browser uploads. */
@@ -148,6 +152,25 @@ export function createObjectStore(cfg: ObjectStoreConfig): ObjectStore {
     async delete(key) {
       assertKey(key);
       await client.send(new DeleteObjectCommand({ Bucket, Key: key }));
+    },
+    async deletePrefix(prefix) {
+      assertKey(prefix);
+      if (!prefix.endsWith("/")) throw new Error("deletePrefix needs a prefix ending with /");
+      let removed = 0;
+      let token: string | undefined;
+      do {
+        const page = await client.send(
+          new ListObjectsV2Command({ Bucket, Prefix: prefix, MaxKeys: 1000, ContinuationToken: token }),
+        );
+        const keys = (page.Contents ?? []).flatMap((o) => (o.Key ? [{ Key: o.Key }] : []));
+        if (keys.length) {
+          const r = await client.send(new DeleteObjectsCommand({ Bucket, Delete: { Objects: keys, Quiet: true } }));
+          if (r.Errors?.length) throw new Error(`delete failed for ${r.Errors.length} objects under ${prefix}`);
+          removed += keys.length;
+        }
+        token = page.IsTruncated ? page.NextContinuationToken : undefined;
+      } while (token);
+      return removed;
     },
     signedGetUrl(key, expiresInSec = 900) {
       assertKey(key);

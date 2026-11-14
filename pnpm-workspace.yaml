@@ -20,3 +20,4 @@ minimumReleaseAgeExclude:
   - "@hyperframes/studio-server@0.9.34"
   - "@hyperframes/engine@0.9.34"
   - "@hyperframes/producer@0.9.34"
+  - react-resizable-panels@4.22.1

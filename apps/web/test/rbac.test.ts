@@ -77,6 +77,10 @@ const PUBLIC = [
 const SELF_CHECKED = new Set([
   "POST /api/invitations/accept",
   "POST /api/workspace/switch",
+  "PATCH /api/me",
+  "POST /api/me/avatar",
+  "DELETE /api/me/avatar",
+  "GET /api/avatars/[userId]",
   "DELETE /api/workspace/members/[userId]",
   "GET /api/billing/mock-checkout",
   "POST /api/billing/mock-checkout",
