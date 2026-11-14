@@ -2,7 +2,7 @@
 
 Date: 2026-11-14. Spec: [specs/002-saas-ui-revamp](../../specs/002-saas-ui-revamp/). Status: **ready for owner review**.
 Screenshots: [docs/reports/ui/ui-g4/](ui/ui-g4/) (home, create, billing, brand, members, assets, API, batches, profile
-× light/dark × vi/en × 1280/360). Earlier gates: [UI-G1](UI-G1.md), [UI-G2](UI-G2.md), [UI-G3](UI-G3.md).
+A representative WebP set per page (see [docs/reports/ui/README.md](ui/README.md)). Earlier gates: [UI-G1](UI-G1.md), [UI-G2](UI-G2.md), [UI-G3](UI-G3.md).
 
 ## What changed in this gate
 

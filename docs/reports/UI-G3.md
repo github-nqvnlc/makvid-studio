@@ -2,7 +2,7 @@
 
 Date: 2026-11-14. Spec: [specs/002-saas-ui-revamp](../../specs/002-saas-ui-revamp/). Status: **ready for owner review**, with
 the "Not done" list below. Screenshots: [docs/reports/ui/ui-g3/](ui/ui-g3/) (home, create, billing, profile, API,
-batches × light/dark × vi/en × 1280/360).
+batches), as a representative WebP set (see [docs/reports/ui/README.md](ui/README.md)).
 
 ## What is in
 

@@ -57,7 +57,6 @@ kept in the font packages): Plus Jakarta Sans, Be Vietnam Pro, Space Mono (Vietn
 | tw-animate-css, class-variance-authority, clsx, tailwind-merge | latest pinned            | MIT        |                                                                                                   |
 | next-themes 0.4.6, sonner 2.0.8, cmdk 1.1.1                    | as listed                | MIT        |                                                                                                   |
 | react-resizable-panels, react-hook-form, @hookform/resolvers   | 4.22.1 / 7.92.0 / 7.0.6  | MIT        |                                                                                                   |
-| react-day-picker 10.0.2, date-fns 4.4.0                        | as listed                | MIT        |                                                                                                   |
 | @axe-core/playwright 4.14.0 (dev)                              | 4.14.0                   | MPL-2.0    | dev/test only, unmodified                                                                         |
 | lucide-react                                                   | existing                 | ISC        |                                                                                                   |
 

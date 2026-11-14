@@ -32,7 +32,7 @@ Date: 2026-11-14. Spec: [specs/002-saas-ui-revamp](../../specs/002-saas-ui-revam
 | `pnpm license:check` | OK (OFL fonts reported as REVIEW warnings, dev only) |
 | `pnpm --filter @makvid/web build` | pass |
 | E2E new (`theme-locale`, `fonts`) | 6/6 pass: switch keeps path and query and sets `NEXT_LOCALE`; theme persists across reload with no hydration warning; first paint dark when the OS is dark; Vietnamese glyphs in all three families |
-| E2E screens | 16 screenshots, sign-in and sign-up × light/dark × vi/en × 1280/360, in [docs/reports/ui/ui-g1/](ui/ui-g1/) |
+| E2E screens | representative screenshots of sign-in and sign-up (full set is regenerated, see [README](ui/README.md)) in [docs/reports/ui/ui-g1/](ui/ui-g1/) |
 | E2E existing specs (SC-001) | all 5 existing specs pass (brand, create-and-edit, no-tech-leak, sources, m5): 8 of 9 tests passed in the full run, and the remaining one (`m5`) passed when re-run alone (3.0 min). Its first two failures were my test setup, not the code: it needs `MAKVID_PAYMENTS=mock` and `APP_URL` pointing at the test port. |
 
 ## Known, expected differences
