@@ -212,3 +212,38 @@
 
 - Product owner approved M6. All milestones M0–M6 approved.
 - Open: T170 (Webflow GSAP confirmation file into docs/legal/), plan prices, Polar/PayOS accounts, CSP, shared auth rate limit, external pentest, multi-host scaling test, style-mixing toggle in the web UI.
+
+## 2026-11-14 — UI revamp 002: spec, plan, tasks, start of UI-G1 (Claude Code)
+
+- Spec `specs/002-saas-ui-revamp/` clarified (5 questions), plan + research + contracts + 78 tasks written. `docs/UI_PLAN.md` is the owner summary. Owner asked to continue overnight without approval; approval is pending for the morning.
+- Done in `apps/web` (tasks T002–T004, T006, T008–T011, T016, T018–T022): Tailwind 4 + shadcn components, poppy-1 tokens (token-only contrast fixes), fonts with Vietnamese subset (Be Vietnam Pro replaces DM Sans), next-themes toggle, locale switcher (+ `PATCH /api/me`, profile locale after sign-in), `legacy.css` keeps old pages working. Build, typecheck, lint, token-contrast and messages tests pass.
+- **Blocked on a license decision (T005)**: `pnpm license:check` fails on `lightningcss` (MPL-2.0, pulled in by `@tailwindcss/postcss`). Needs the owner to approve an allowlist entry (MPL-2.0 is file-level copyleft; unmodified use is generally fine for closed-source SaaS). Not allowlisted by the agent.
+- Not verified yet: no browser run (stack not started), e2e not run. Next: T012–T015, T017, T023–T026, then UI-G1 report.
+
+## 2026-11-14 — UI-G1 done, waiting for owner approval (Claude Code)
+
+- Owner allowed `lightningcss` (MPL-2.0); `pnpm license:check` is green (T005, T007).
+- Shared components, prefs/project-query helpers, ESLint rules (colors everywhere, literal text in new folders), new e2e (theme-locale, fonts, screens). `PATCH /api/me` now uses `guarded` (RBAC test caught it).
+- typecheck, lint, 78 unit tests, build and all e2e pass. Report: docs/reports/UI-G1.md, screenshots in docs/reports/ui/ui-g1/.
+- Next: UI-G2 (landing, pricing, auth layout, 404). Hero demo scripts need owner approval before rendering. Nothing committed.
+
+## 2026-11-14 — UI-G2 done except Lighthouse and hero render (Claude Code)
+
+- Route groups (marketing/auth/app), public header/footer, 9-block landing, pricing from DB, themed 404/error, new auth forms (RHF+zod), invite page restyled. Fixed shadcn files importing the wrong `cn` npm package.
+- typecheck, lint, 78 unit tests, build, landing/theme/fonts e2e pass; 13 of 14 e2e pass. `m5.spec.ts` fails at the batch ZIP step under heavy disk pressure (see docs/reports/UI-G2.md); not proven environmental.
+- Not done: Lighthouse (npx download blocked), hero video render (scripts in docs/reports/assets/hero-scripts.md).
+- Next: UI-G3 (app shell, project management API + UI, create wizard, editor, billing, profile). Nothing committed.
+
+## 2026-11-14 — UI-G3 done except restyling of four pages and `m5` e2e (Claude Code)
+
+- New app shell (sidebar, topbar, command palette, notifications, workspace switcher), project management from API to UI (search without accents, filters in the URL, rename, permanent delete of one/many/all with a purge job, migration 0007, `deletePrefix`), create wizard, editor with three resizable panes, billing meters, API/batch plan locks, profile page with avatar and password change.
+- 99 unit tests pass; new infra test for project CRUD passes on real Postgres; e2e: all pass except `m5` (batch of 3 ends with failed rows; passed earlier in the session; see docs/reports/UI-G3.md).
+- Not restyled yet: brand kit, assets, members, admin, batch progress (still old look inside the new shell). Moved legacy CSS into a cascade layer below Tailwind utilities.
+- Machine issue found: `wslrelay.exe` hides Docker's Postgres/Valkey/SeaweedFS on `localhost` (IPv6) → flaky tests; use 127.0.0.1 and the LAN address.
+- Next: UI-G4 (restyle the remaining pages, remove old CSS, axe, Lighthouse, full screenshots). Nothing committed.
+
+## 2026-11-14 — UI-G4 done; two e2e specs still red on this machine (Claude Code)
+
+- All remaining pages restyled (brand, members, admin, assets, batches, API, templates, review, API docs); old CSS (`legacy.css`, `.shell`) removed; literal UI text is now a lint error everywhere; axe: 0 serious/critical on the main pages in both themes; `no-tech-leak` extended; AGENTS.md updated.
+- E2E: 18 of 20 pass in the final runs, including `m5`. `create-and-edit` and `sources` fail at the quality-check stage under memory pressure (1.6 GB free of 16 GB); they passed earlier today. Rerun on a quiet machine. Report: docs/reports/UI-G4.md.
+- Not done: Lighthouse (blocked), hero video render, editor download menu/history sheet, e2e for a broken video URL and 360 px editor tabs. Nothing committed.
