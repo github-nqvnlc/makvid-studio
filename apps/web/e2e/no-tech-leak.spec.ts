@@ -54,4 +54,12 @@ test("user pages never show technical information", async ({ page }) => {
   await expectClean(page, "missing project");
   await page.goto("/en");
   await expectClean(page, "projects (en)");
+
+  // Every other page of the new UI, in both languages (UI-G4).
+  for (const path of ["/pricing", "/account", "/workspace/billing", "/workspace/members", "/workspace/brand", "/workspace/assets", "/workspace/api", "/batches", "/khong-co-trang"]) {
+    for (const prefix of ["/vi", "/en"]) {
+      await page.goto(`${prefix}${path}`);
+      await expectClean(page, `${prefix}${path}`);
+    }
+  }
 });

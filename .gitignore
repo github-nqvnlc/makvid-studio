@@ -43,3 +43,11 @@ apps/web/playwright-report/
 
 # Database backups (docker/compose.yml "backup" service)
 backups/
+
+# Large milestone media (listed in docs/reports/MEDIA.md)
+docs/reports/**/*.mp4
+docs/reports/**/*.mov
+docs/reports/**/*.webm
+docs/reports/**/*.wav
+docs/reports/**/*.mp3
+docs/reports/ui/**/*.png

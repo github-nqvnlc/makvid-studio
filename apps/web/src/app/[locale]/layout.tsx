@@ -1,15 +1,31 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { Be_Vietnam_Pro, Plus_Jakarta_Sans, Space_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { viewer } from "@/server/session";
-import { SignOutButton } from "@/components/SignOutButton";
+import { ThemeProvider } from "@/components/common/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "../globals.css";
 
 export const metadata: Metadata = { title: "MakVid Studio" };
+
+// Vietnamese subset on every family (DM Sans from the theme has none, so Be Vietnam Pro fills the serif slot).
+const sans = Plus_Jakarta_Sans({ subsets: ["latin", "vietnamese"], variable: "--font-jakarta", display: "swap" });
+const serif = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-be-vietnam",
+  display: "swap",
+});
+const mono = Space_Mono({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+  display: "swap",
+});
 
 export default async function LocaleLayout({
   children,
@@ -21,45 +37,24 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const t = await getTranslations("nav");
-  const v = await viewer();
-  const other = locale === "vi" ? "en" : "vi";
+  const tc = await getTranslations("common");
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
       <body>
-        <NextIntlClientProvider>
-          <div className="shell">
-            <header className="topbar">
-              <Link href="/" className="brand">
-                MakVid Studio
-              </Link>
-              {v ? (
-                <>
-                  <Link href="/">{t("projects")}</Link>
-                  <Link href="/projects/new">{t("newProject")}</Link>
-                  <Link href="/workspace/brand">{t("brand")}</Link>
-                  <Link href="/workspace/assets">{t("assets")}</Link>
-                  <Link href="/batches">{t("batches")}</Link>
-                  <Link href="/workspace/members">{t("members")}</Link>
-                  <Link href="/workspace/billing">{t("billing")}</Link>
-                  <Link href="/workspace/api">{t("api")}</Link>
-                  {v.isPlatformAdmin && <Link href="/admin">Admin</Link>}
-                  <span className="muted small">{v.name || v.email}</span>
-                  <SignOutButton label={t("signOut")} />
-                </>
-              ) : (
-                <>
-                  <Link href="/sign-in">{t("signIn")}</Link>
-                  <Link href="/sign-up">{t("signUp")}</Link>
-                </>
-              )}
-              <Link href="/" locale={other} className="small">
-                {t("language")}
-              </Link>
-            </header>
-            <main>{children}</main>
-          </div>
-        </NextIntlClientProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <NextIntlClientProvider>
+            <TooltipProvider>
+              <a
+                href="#main"
+                className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:ring-2 focus:ring-ring"
+              >
+                {tc("skipToContent")}
+              </a>
+              {children}
+            </TooltipProvider>
+            <Toaster />
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -18,7 +18,7 @@ test("sign up, create a video, edit it three times by chat, download it", async 
   for (const [i, text] of edits.entries()) {
     await page.locator('textarea[name="message"]').fill(text);
     await page.getByRole("button", { name: "Gửi" }).click();
-    await expect(page.getByTestId("chat-log").locator(".bubble.assistant")).toHaveCount(i + 1);
+    await expect(page.getByTestId("chat-log").locator("[data-role=assistant]")).toHaveCount(i + 1);
     await waitReady(page);
     await shot(page, `edit-${i + 1}`);
   }

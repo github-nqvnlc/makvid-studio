@@ -31,7 +31,11 @@ function createAuth() {
       schema: { users, authSessions, authAccounts, authVerifications },
     }),
     advanced: { database: { generateId: "uuid" } },
-    user: { modelName: "users" },
+    user: {
+      modelName: "users",
+      // Language kept in the profile (users.locale); written by PATCH /api/me and read after sign-in.
+      additionalFields: { locale: { type: "string", required: false, defaultValue: "vi", input: true } },
+    },
     session: { modelName: "authSessions" },
     account: { modelName: "authAccounts" },
     verification: { modelName: "authVerifications" },

@@ -1,7 +1,10 @@
 "use client";
-// Version history (T105): newest first; restore puts an older version on top (history is kept).
+// Version history: newest first; restore puts an older version on top (history is kept).
 import { useFormatter, useTranslations } from "next-intl";
 import type { ProjectView } from "@makvid/pipeline";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function VersionHistory({
   versions,
@@ -18,28 +21,32 @@ export function VersionHistory({
   const format = useFormatter();
   if (!versions.length) return null;
   return (
-    <div className="card stack" data-testid="versions">
-      <h2>{t("versions")}</h2>
-      <ul className="list">
-        {[...versions].reverse().map((v) => (
-          <li key={v.id}>
-            <div>
-              <strong>{t("version", { n: v.seq })}</strong>
-              <div className="muted small">
-                {v.author === "user" ? t("byYou") : t("byAi")} ·{" "}
-                {format.dateTime(new Date(v.createdAt), { dateStyle: "short", timeStyle: "short" })}
+    <Card data-testid="versions">
+      <CardHeader>
+        <CardTitle className="text-base">{t("versions")}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul className="flex flex-col gap-3">
+          {[...versions].reverse().map((v) => (
+            <li key={v.id} className="flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <div className="font-medium">{t("version", { n: v.seq })}</div>
+                <div className="text-muted-foreground text-xs">
+                  {v.author === "user" ? t("byYou") : t("byAi")} ·{" "}
+                  {format.dateTime(new Date(v.createdAt), { dateStyle: "short", timeStyle: "short" })}
+                </div>
               </div>
-            </div>
-            {v.id === head ? (
-              <span className="badge ok">{t("current")}</span>
-            ) : (
-              <button className="btn small" disabled={disabled} onClick={() => onRestore(v.id)}>
-                {t("restore")}
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+              {v.id === head ? (
+                <Badge>{t("current")}</Badge>
+              ) : (
+                <Button variant="outline" size="sm" disabled={disabled} onClick={() => onRestore(v.id)}>
+                  {t("restore")}
+                </Button>
+              )}
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }

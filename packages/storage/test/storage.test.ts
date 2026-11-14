@@ -34,4 +34,18 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("ObjectStore on SeaweedFS
     await store.delete(key);
     expect(await store.exists(key)).toBe(false);
   });
+
+  it("deletePrefix removes every object under a prefix (more than one page) and nothing else", async () => {
+    await store.ensureBucket();
+    const dir = workspaceKey("ws_prefix", "projects", "p1");
+    const keep = workspaceKey("ws_prefix", "projects", "p10", "keep.txt");
+    await store.put(keep, "x");
+    for (let i = 0; i < 1005; i++) await store.put(`${dir}/v/f${i}.txt`, "x");
+    expect(await store.deletePrefix(`${dir}/`)).toBe(1005);
+    expect(await store.exists(`${dir}/v/f0.txt`)).toBe(false);
+    expect(await store.exists(keep)).toBe(true);
+    expect(await store.deletePrefix(`${dir}/`)).toBe(0);
+    await expect(store.deletePrefix(dir)).rejects.toThrow();
+    await store.delete(keep);
+  }, 120_000);
 });

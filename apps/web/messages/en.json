@@ -16,7 +16,8 @@
     "members": "Members",
     "billing": "Plan & usage",
     "workspace": "Workspace",
-    "api": "API"
+    "api": "API",
+    "admin": "Admin"
   },
   "auth": {
     "signInTitle": "Sign in",
@@ -30,7 +31,18 @@
     "toSignUp": "No account yet? Sign up",
     "toSignIn": "Already have an account? Sign in",
     "failed": "Wrong email or password.",
-    "signUpFailed": "Could not create the account. Check your email and password and try again."
+    "signUpFailed": "Could not create the account. Check your email and password and try again.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "nameRequired": "Please enter your name.",
+    "emailInvalid": "That email does not look right.",
+    "passwordShort": "Password needs at least 8 characters.",
+    "passwordLabel": "Password",
+    "passwordHint": "At least 8 characters",
+    "panelTitle": "A finished short video from one idea",
+    "panelBody": "Script, voice-over, captions and music are done for you. You just review and post.",
+    "pending": "Working…",
+    "or": "or"
   },
   "projects": {
     "title": "Your projects",
@@ -74,7 +86,30 @@
     "submit": "Create video",
     "submitting": "Sending…",
     "tooShort": "Please describe your idea a little more.",
-    "useBrand": "Use the brand kit (colours, fonts, logo)"
+    "useBrand": "Use the brand kit (colours, fonts, logo)",
+    "sections": {
+      "source": "1. Content",
+      "format": "2. Format and length",
+      "voice": "3. Voice",
+      "options": "4. How to make it"
+    },
+    "summary": {
+      "title": "Summary",
+      "videosLeft": "Videos left this month",
+      "unlimited": "Unlimited",
+      "duration": "Length",
+      "aspect": "Format",
+      "mode": "Mode",
+      "voice": "Voice",
+      "seconds": "{n} seconds",
+      "overLimit": "You have used all videos of this plan.",
+      "overDuration": "This plan allows videos up to {n} seconds.",
+      "upgrade": "Upgrade plan",
+      "loadFailed": "Could not check your limits.",
+      "maxLength": "Up to {n} seconds"
+    },
+    "durationHint": "Between 30 and 180 seconds.",
+    "durationSlider": "Drag to choose the length"
   },
   "voices": {
     "standard": "Standard",
@@ -87,7 +122,17 @@
     "south": "Southern",
     "other": "Neutral",
     "listen": "Listen",
-    "default": "Default"
+    "default": "Default",
+    "tierHint": {
+      "standard": "Standard voices, fine for most videos.",
+      "pro": "Clearer and more expressive.",
+      "ultra": "The most natural, close to a real person."
+    },
+    "gender": "Gender",
+    "region": "Region",
+    "all": "All",
+    "stop": "Stop",
+    "empty": "No voice matches the filters."
   },
   "editor": {
     "preview": "Preview",
@@ -112,7 +157,24 @@
     "working": "Making your video",
     "noVideo": "Your video will appear here when it is ready.",
     "byYou": "Your edit",
-    "byAi": "Generated"
+    "byAi": "Generated",
+    "rename": "Rename project",
+    "renameLabel": "Project name",
+    "renameSave": "Save",
+    "renameCancel": "Cancel",
+    "renamed": "Renamed.",
+    "tabs": {
+      "preview": "Preview",
+      "scenes": "Scenes",
+      "chat": "Chat"
+    },
+    "videoError": "The video could not be played.",
+    "retry": "Try again",
+    "loadingVideo": "Loading video…",
+    "more": "More",
+    "history": "History and downloads",
+    "panes": "Editor layout",
+    "deleted": "This project no longer exists."
   },
   "review": {
     "scriptTitle": "Review the script",
@@ -218,7 +280,9 @@
     "sampleTitle": "Sample heading",
     "sampleBody": "Sample text with Vietnamese marks: ạ ặ ẩ ỗ ữ ỹ ₫",
     "sampleCta": "Follow now",
-    "contrast": "Text would be hard to read for: {pairs}. Please choose colours with more contrast."
+    "contrast": "Text would be hard to read for: {pairs}. Please choose colours with more contrast.",
+    "logoPosition": "Logo position",
+    "uploadFont": "Upload a font"
   },
   "assets": {
     "title": "Asset library",
@@ -315,7 +379,9 @@
     "revoke": "Revoke",
     "remove": "Remove",
     "leave": "Leave workspace",
-    "switch": "Switch workspace"
+    "switch": "Switch workspace",
+    "invited": "Invitation created.",
+    "roleLabel": "Role"
   },
   "invite": {
     "title": "Invitation",
@@ -350,7 +416,9 @@
     "features": "{videos} videos · {minutes} min · up to {max}s per video",
     "batch": "Batch",
     "api": "API",
-    "mediagen": "AI images"
+    "mediagen": "AI images",
+    "nearLimit": "You have used {pct}% of this plan's videos. Upgrade to avoid interruptions.",
+    "currentBadge": "Current plan"
   },
   "api": {
     "title": "API & webhooks",
@@ -368,7 +436,10 @@
     "webhooks": "Webhooks",
     "webhooksHelp": "We send signed notifications when a video is done, a video fails and a batch completes.",
     "addWebhook": "Add webhook",
-    "remove": "Remove"
+    "remove": "Remove",
+    "copy": "Copy",
+    "copied": "Copied.",
+    "webhookUrl": "Webhook URL"
   },
   "admin": {
     "title": "Platform admin",
@@ -392,6 +463,443 @@
     "saved": "Saved",
     "grant": "Grant plan",
     "granted": "Plan granted",
-    "users": "Users ({n})"
+    "users": "Users ({n})",
+    "polarProduct": "Polar product id",
+    "watermark": "Add MakVid Studio mark",
+    "limits": "Limits (JSON)",
+    "workspaceId": "Workspace id",
+    "days": "Days",
+    "admin": "Platform admin"
+  },
+  "common": {
+    "theme": {
+      "label": "Appearance",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "label": "Language",
+      "vi": "Tiếng Việt",
+      "en": "English"
+    },
+    "skipToContent": "Skip to content",
+    "retry": "Try again",
+    "loading": "Loading…",
+    "comingSoon": "Coming soon",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "unlimited": "Unlimited",
+    "upgrade": {
+      "title": "{feature} needs a higher plan",
+      "action": "Upgrade"
+    },
+    "color": {
+      "invalid": "Use the #RRGGBB format"
+    },
+    "dropzone": {
+      "hint": "Drag and drop a file here",
+      "type": "This file type is not supported",
+      "size": "File is larger than {mb} MB"
+    },
+    "planLock": {
+      "api": "API and webhooks",
+      "batch": "Batch video creation",
+      "apiBody": "Use the API to create videos from your own systems.",
+      "batchBody": "Create many videos from one template and a data table."
+    }
+  },
+  "marketing": {
+    "nav": {
+      "features": "Features",
+      "styles": "Styles",
+      "pricing": "Pricing",
+      "docs": "API docs",
+      "signIn": "Sign in",
+      "startFree": "Try it free",
+      "openApp": "Open the app",
+      "menu": "Open menu",
+      "home": "Back to home"
+    },
+    "hero": {
+      "badge": "Vertical 9:16 video for TikTok, Reels, Shorts",
+      "title": "Turn an idea into a short video with voice-over, captions and music",
+      "subtitle": "Type one sentence, paste a link or upload a file. MakVid Studio writes the script, picks a style, records the voice and builds the finished video for you.",
+      "cta": "Try it free",
+      "ctaSecondary": "See pricing",
+      "demoLabel": "Sample video made with MakVid Studio",
+      "demoPlaceholder": "Sample video",
+      "note": "No card needed. The free plan adds a MakVid Studio mark."
+    },
+    "steps": {
+      "title": "From idea to video in three steps",
+      "s1": {
+        "title": "Enter your idea",
+        "body": "Write a few lines, paste a link, upload a table or record audio. Pick a voice and a style."
+      },
+      "s2": {
+        "title": "Review script and scenes",
+        "body": "Check the voice-over and every scene. Edit directly or ask the chat assistant."
+      },
+      "s3": {
+        "title": "Download the video",
+        "body": "Captions follow every word, ready to post. Download the MP4 and an SRT file."
+      }
+    },
+    "styles": {
+      "title": "Thirteen styles, one click apart",
+      "subtitle": "Each style has its own layout, colors and motion. Your brand applies to all of them."
+    },
+    "features": {
+      "title": "Everything you need to make on-brand video fast",
+      "f1": {
+        "title": "Natural Vietnamese voices",
+        "body": "Many male, female and regional voices. Listen before you choose."
+      },
+      "f2": {
+        "title": "Word-accurate captions",
+        "body": "Captions follow the voice and keep Vietnamese diacritics intact."
+      },
+      "f3": {
+        "title": "Edit by chat",
+        "body": "Say what to change. Undo and redo at any time."
+      },
+      "f4": {
+        "title": "Brand kit",
+        "body": "Your colors, fonts and logo apply to every video."
+      },
+      "f5": {
+        "title": "Batch and API",
+        "body": "Generate many videos from a table, or call the API and webhooks."
+      },
+      "f6": {
+        "title": "Team work",
+        "body": "Invite members with view, edit or admin roles."
+      }
+    },
+    "useCases": {
+      "title": "Who it is for",
+      "u1": {
+        "title": "Sellers",
+        "body": "Product intros and weekly promotions."
+      },
+      "u2": {
+        "title": "Creators",
+        "body": "Turn posts and scripts into short videos."
+      },
+      "u3": {
+        "title": "Teachers and trainers",
+        "body": "Summarize lessons into memorable clips."
+      },
+      "u4": {
+        "title": "Businesses",
+        "body": "Consistent brand video for the whole team."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": {
+        "q": "Do I need video editing skills?",
+        "a": "No. Enter your idea and MakVid Studio does the rest. You can adjust it by chat."
+      },
+      "q2": {
+        "q": "What does the free plan include?",
+        "a": "A few videos each month with a MakVid Studio mark. Upgrade to remove the mark and get more."
+      },
+      "q3": {
+        "q": "How long can a video be?",
+        "a": "It depends on the plan. See the Pricing page."
+      },
+      "q4": {
+        "q": "Can I use my own brand?",
+        "a": "Yes. Set colors, fonts and logo once and every video follows them."
+      },
+      "q5": {
+        "q": "Is my data safe?",
+        "a": "Each workspace is separate. You can permanently delete a project at any time."
+      }
+    },
+    "cta": {
+      "title": "Ready to make your first video?",
+      "body": "Sign up in seconds and try it free.",
+      "button": "Start for free"
+    },
+    "footer": {
+      "tagline": "Turn ideas into short videos.",
+      "product": "Product",
+      "resources": "Resources",
+      "legal": "Legal",
+      "social": "Social",
+      "terms": "Terms of use",
+      "privacy": "Privacy policy",
+      "youtube": "YouTube",
+      "facebook": "Facebook",
+      "tiktok": "TikTok",
+      "language": "Language",
+      "copyright": "© {year} MakVid Studio"
+    },
+    "pricing": {
+      "title": "Simple pricing",
+      "subtitle": "Start free, upgrade when you need more videos and length.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "billing": "Billing period",
+      "free": "Free",
+      "perMonth": "/month",
+      "videos": "{n} videos per month",
+      "videosUnlimited": "Unlimited videos",
+      "minutes": "{n} video minutes",
+      "minutesUnlimited": "Unlimited video minutes",
+      "maxLength": "Videos up to {n} seconds",
+      "batch": "Batch creation",
+      "api": "API and webhooks",
+      "mediagen": "AI images",
+      "noWatermark": "No MakVid Studio mark",
+      "watermark": "MakVid Studio mark",
+      "choose": "Choose this plan",
+      "startFree": "Start for free",
+      "empty": "No plans to show yet."
+    },
+    "notFound": {
+      "title": "Page not found",
+      "body": "The link may have changed or no longer exists.",
+      "home": "Back to home"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "body": "There was a problem opening this page. Please try again."
+    }
+  },
+  "shell": {
+    "groups": {
+      "create": "Create",
+      "workspace": "Workspace",
+      "account": "Account",
+      "admin": "Administration"
+    },
+    "profile": "Profile",
+    "toggleSidebar": "Collapse or expand the sidebar",
+    "mainNav": "Main navigation",
+    "breadcrumb": "Breadcrumb",
+    "crumbs": {
+      "workspace": "Workspace",
+      "new": "New",
+      "detail": "Details",
+      "account": "Profile"
+    },
+    "quota": {
+      "label": "Videos this month",
+      "nearLimit": "Close to your limit",
+      "unlimited": "Unlimited"
+    },
+    "workspaceSwitcher": {
+      "label": "Switch workspace",
+      "current": "Current"
+    },
+    "search": {
+      "button": "Search",
+      "placeholder": "Search pages, projects, actions…",
+      "empty": "No results.",
+      "pages": "Pages",
+      "projects": "Projects",
+      "actions": "Actions",
+      "newVideo": "New video",
+      "switchTheme": "Switch light/dark theme",
+      "switchLanguage": "Switch language",
+      "title": "Quick search"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "button": "Notifications",
+      "empty": "No new notifications.",
+      "ready": "Video is ready",
+      "needs_attention": "Needs your review",
+      "failed": "Not finished",
+      "markSeen": "Mark as seen",
+      "unread": "{n} unseen notifications"
+    },
+    "userMenu": {
+      "label": "Account menu"
+    },
+    "newVideoShort": "New video",
+    "loadError": "Could not load data."
+  },
+  "projectsList": {
+    "title": "Your projects",
+    "subtitle": "Search, filter and manage every video in the workspace.",
+    "empty": {
+      "title": "No videos yet",
+      "body": "Start with an idea and we will do the rest.",
+      "cta": "Create your first video"
+    },
+    "noResults": {
+      "title": "No projects match",
+      "body": "Try removing a filter or changing the search.",
+      "clear": "Clear filters"
+    },
+    "stats": {
+      "all": "All",
+      "processing": "In progress",
+      "ready": "Ready",
+      "attention": "Needs review",
+      "failed": "Not finished"
+    },
+    "search": {
+      "label": "Search by project name",
+      "placeholder": "Search by name (accents optional)…"
+    },
+    "filters": {
+      "button": "Filters",
+      "count": "{n} filters",
+      "clear": "Clear filters",
+      "status": "Status",
+      "aspect": "Aspect ratio",
+      "source": "Source",
+      "mode": "Mode",
+      "created": "Created",
+      "updated": "Last updated",
+      "any": "Any time",
+      "today": "Today",
+      "d7": "Last 7 days",
+      "d30": "Last 30 days",
+      "custom": "Pick dates",
+      "from": "From",
+      "to": "To",
+      "group": {
+        "processing": "In progress",
+        "review": "Waiting for review",
+        "ready": "Ready",
+        "attention": "Needs review",
+        "failed": "Not finished",
+        "draft": "Draft"
+      },
+      "sourceOpt": {
+        "prompt": "Idea",
+        "script": "Script",
+        "url": "Link",
+        "github": "GitHub",
+        "table": "Data table",
+        "media": "Audio/video file"
+      },
+      "modeOpt": {
+        "auto": "Automatic",
+        "review": "Step-by-step review"
+      }
+    },
+    "sort": {
+      "label": "Sort by",
+      "updated_desc": "Recently updated",
+      "updated_asc": "Least recently updated",
+      "created_desc": "Newest",
+      "created_asc": "Oldest",
+      "title_asc": "Name A → Z",
+      "title_desc": "Name Z → A"
+    },
+    "view": {
+      "label": "View",
+      "grid": "Grid",
+      "table": "Table"
+    },
+    "columns": {
+      "title": "Name",
+      "status": "Status",
+      "aspect": "Ratio",
+      "creator": "Created by",
+      "updated": "Updated"
+    },
+    "actions": {
+      "label": "Actions for {title}",
+      "open": "Open",
+      "rename": "Rename",
+      "delete": "Delete permanently"
+    },
+    "select": {
+      "one": "Select {title}",
+      "page": "Select all on this page",
+      "count": "{n} selected",
+      "clear": "Clear selection",
+      "all": "Select all {n} matching projects",
+      "deleteSelected": "Delete selected"
+    },
+    "rename": {
+      "title": "Rename project",
+      "label": "Project name",
+      "save": "Save name",
+      "saved": "Renamed.",
+      "empty": "The name cannot be empty.",
+      "tooLong": "The name can be at most 200 characters."
+    },
+    "delete": {
+      "oneTitle": "Delete this project permanently?",
+      "oneBody": "“{title}” with its video, script and every related file will be deleted and cannot be recovered.",
+      "manyTitle": "Delete {n} projects permanently?",
+      "manyBody": "The selected projects and all their files will be deleted and cannot be recovered.",
+      "allTitle": "Delete all {n} matching projects permanently?",
+      "allBody": "This deletes every project that matches the filters, including those on other pages. It cannot be undone.",
+      "typeToConfirm": "Type {phrase} to confirm",
+      "phrase": "DELETE",
+      "confirm": "Delete permanently",
+      "cancel": "Cancel",
+      "deleted": "Deleted {n} projects.",
+      "partial": "Deleted {n} projects; {f} could not be deleted (they may already be gone).",
+      "failed": "Could not delete. Please try again.",
+      "alreadyGone": "This project was already deleted."
+    },
+    "pager": {
+      "info": "{from}–{to} of {total}",
+      "prev": "Previous page",
+      "next": "Next page",
+      "size": "Projects per page",
+      "total": "{n} projects"
+    },
+    "progress": {
+      "label": "Progress"
+    },
+    "by": "By {name}",
+    "loadFailed": "Could not load the project list."
+  },
+  "account": {
+    "title": "Your profile",
+    "subtitle": "Name, picture, password and display preferences.",
+    "profile": {
+      "title": "Personal details",
+      "name": "Display name",
+      "email": "Email",
+      "save": "Save changes",
+      "saved": "Profile saved.",
+      "nameRequired": "Please enter your name.",
+      "nameTooLong": "The name can be at most 80 characters.",
+      "failed": "Could not save. Please try again."
+    },
+    "avatar": {
+      "title": "Profile picture",
+      "choose": "Choose a picture",
+      "remove": "Remove picture",
+      "hint": "PNG, JPEG or WebP. It is cropped to a 256 × 256 square.",
+      "saved": "Profile picture updated.",
+      "removed": "Profile picture removed.",
+      "unreadable": "This picture could not be read."
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "next": "New password",
+      "confirm": "Repeat the new password",
+      "signOutOthers": "Sign out of other devices",
+      "save": "Change password",
+      "saved": "Password changed.",
+      "wrong": "The current password is not right.",
+      "short": "The new password needs at least 8 characters.",
+      "mismatch": "The two new passwords do not match.",
+      "currentRequired": "Please enter your current password.",
+      "failed": "Could not change the password. Please try again.",
+      "socialOnly": "This account signs in with Google, so it has no password to change."
+    },
+    "preferences": {
+      "title": "Appearance and language",
+      "theme": "Appearance",
+      "language": "Language"
+    }
   }
 }

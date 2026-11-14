@@ -1,10 +1,18 @@
 "use client";
-// Batch progress (US5, T133): status per row (polled), retry failed rows, cancel/resume, ZIP download.
+// Batch progress: status per row (polled), retry failed rows, cancel/resume, ZIP download.
 import { useCallback, useEffect, useState } from "react";
+import { Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { BatchView } from "@makvid/pipeline";
+import { PageHeader } from "@/components/common/PageHeader";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link } from "@/i18n/navigation";
 import { apiError } from "@/lib/api-client";
+import { cn } from "@/lib/utils";
 
 const FINAL = new Set(["completed", "completed_with_errors", "cancelled"]);
 
@@ -40,75 +48,84 @@ export function BatchProgress({ initial, canRun }: { initial: BatchView; canRun:
   const c = view.batch.counts;
   const done = c.succeeded + c.failed + c.cancelled;
   return (
-    <div className="stack" data-testid="batch-progress">
-      <div className="row">
-        <h1>{view.batch.name}</h1>
-        <span className="badge" data-testid="batch-status">
-          {t(`status.${view.batch.status}` as "status.running")}
-        </span>
-      </div>
-      <div className="progress" aria-label={t("progress", { done, total: view.batch.total })}>
-        <div style={{ width: `${Math.round((done / Math.max(1, view.batch.total)) * 100)}%` }} />
-      </div>
-      <p className="small muted">
+    <div className="mx-auto flex max-w-4xl flex-col gap-4" data-testid="batch-progress">
+      <PageHeader
+        title={view.batch.name}
+        actions={
+          <Badge variant="secondary" data-testid="batch-status">
+            {t(`status.${view.batch.status}` as "status.running")}
+          </Badge>
+        }
+      />
+      <Progress value={Math.round((done / Math.max(1, view.batch.total)) * 100)} aria-label={t("progress", { done, total: view.batch.total })} />
+      <p className="text-muted-foreground text-sm">
         {t("progress", { done: c.succeeded, total: view.batch.total })}
         {c.failed > 0 && ` · ${t("item.failed")}: ${c.failed}`}
       </p>
-      <div className="row">
+      <div className="flex flex-wrap items-center gap-2">
         {view.batch.zip && (
-          <a className="btn primary" href={view.batch.zip} download data-testid="batch-zip">
+          <a className={cn(buttonVariants(), "gap-1.5")} href={view.batch.zip} download data-testid="batch-zip">
+            <Download className="size-4" aria-hidden />
             {t("zip")}
           </a>
         )}
-        {zipPending && <span className="small muted">{t("zipPending")}</span>}
+        {zipPending && <span className="text-muted-foreground text-sm">{t("zipPending")}</span>}
         {canRun && c.failed > 0 && FINAL.has(view.batch.status) && view.batch.status !== "cancelled" && (
-          <button className="btn" disabled={busy} onClick={() => void act("retry")} data-testid="batch-retry">
+          <Button variant="outline" disabled={busy} onClick={() => void act("retry")} data-testid="batch-retry">
             {t("retry", { n: c.failed })}
-          </button>
+          </Button>
         )}
         {canRun && view.batch.status === "paused_quota" && (
-          <button className="btn" disabled={busy} onClick={() => void act("resume")}>
+          <Button variant="outline" disabled={busy} onClick={() => void act("resume")}>
             {t("resume")}
-          </button>
+          </Button>
         )}
         {canRun && !final && (
-          <button className="btn" disabled={busy} onClick={() => void act("cancel")}>
+          <Button variant="outline" disabled={busy} onClick={() => void act("cancel")}>
             {t("cancel")}
-          </button>
+          </Button>
         )}
       </div>
       {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
-      <table className="card" data-testid="batch-rows">
-        <thead>
-          <tr>
-            <th>{t("row")}</th>
-            <th>{t("values")}</th>
-            <th>{t("state")}</th>
-            <th>{t("video")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {view.items.map((i) => (
-            <tr key={i.row} data-status={i.status}>
-              <td>{i.row}</td>
-              <td className="small">{Object.values(i.variables).join(" · ")}</td>
-              <td>{t(`item.${i.status}` as "item.running")}</td>
-              <td className="row">
-                {i.video && (
-                  <a href={i.video} download>
-                    MP4
-                  </a>
-                )}
-                {i.projectId && <Link href={`/projects/${i.projectId}`}>{t("open")}</Link>}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="rounded-lg border">
+        <Table data-testid="batch-rows">
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t("row")}</TableHead>
+              <TableHead>{t("values")}</TableHead>
+              <TableHead>{t("state")}</TableHead>
+              <TableHead>{t("video")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {view.items.map((i) => (
+              <TableRow key={i.row} data-status={i.status}>
+                <TableCell>{i.row}</TableCell>
+                <TableCell className="text-sm">{Object.values(i.variables).join(" · ")}</TableCell>
+                <TableCell>{t(`item.${i.status}` as "item.running")}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    {i.video && (
+                      <a href={i.video} download className="underline underline-offset-4">
+                        {"MP4"}
+                      </a>
+                    )}
+                    {i.projectId && (
+                      <Link href={`/projects/${i.projectId}`} className="underline underline-offset-4">
+                        {t("open")}
+                      </Link>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

@@ -42,7 +42,7 @@ test("create videos from a written script, a data file and an audio recording", 
     buffer: Buffer.from([0x4d, 0x5a, 0x90, 0x00, 0x03]), // an executable renamed to .csv
   });
   await page.locator('button[type="submit"]').click();
-  await expect(page.locator("p.error[role=alert]")).toHaveText(/Loại file này chưa được hỗ trợ/);
+  await expect(page.getByTestId("create-error")).toHaveText(/Loại file này chưa được hỗ trợ/);
 
   // Audio recording, keeping the original voice.
   const dir = mkdtempSync(join(tmpdir(), "e2e-audio-"));

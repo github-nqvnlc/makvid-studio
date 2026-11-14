@@ -32,7 +32,10 @@ export function assignableRoles(actor: Role): Role[] {
 /** Permission needed by each route handler ("METHOD path"). */
 export const ROUTES = {
   "GET /api/projects": "view",
+  "GET /api/workspace/list": "view",
   "POST /api/projects": "create",
+  "PATCH /api/projects/[id]": "create",
+  "POST /api/projects/delete": "create",
   "GET /api/projects/[id]": "view",
   "DELETE /api/projects/[id]": "create",
   "POST /api/projects/[id]/actions": "create",

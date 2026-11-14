@@ -55,6 +55,16 @@
       "name": "@hyperframes/studio-server",
       "version": "0.9.34",
       "reason": "package.json has no license field; bundled LICENSE file is Apache License 2.0 (verified 2026-11-12, M0 T011)"
+    },
+    {
+      "name": "lightningcss",
+      "version": "*",
+      "reason": "MPL-2.0 (file-level copyleft); used unmodified as build-time CSS transform of Tailwind v4; owner approved 2026-11-14"
+    },
+    {
+      "name": "lightningcss-win32-x64-msvc",
+      "version": "*",
+      "reason": "MPL-2.0 (file-level copyleft); used unmodified as build-time CSS transform of Tailwind v4; owner approved 2026-11-14"
     }
   ]
 }

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 export function AcceptInvite({ token, email }: { token: string; email: string }) {
   const t = useTranslations("invite");
@@ -23,14 +25,14 @@ export function AcceptInvite({ token, email }: { token: string; email: string })
     setError(b?.error === "email_mismatch" ? t("email_mismatch", { email }) : t("invalid"));
   }
   return (
-    <div className="stack">
-      <button className="btn primary" onClick={() => void accept()} data-testid="accept-invite">
+    <div className="flex flex-col gap-3">
+      <Button onClick={() => void accept()} data-testid="accept-invite">
         {t("accept")}
-      </button>
+      </Button>
       {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
     </div>
   );

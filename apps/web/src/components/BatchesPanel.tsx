@@ -1,7 +1,17 @@
 "use client";
-// Batch creation (US5, T133): pick a template, upload a CSV, see problems before running, then start.
+// Batch creation: pick a template, upload a CSV, see problems before running, then start.
 import { useState } from "react";
+import { Layers, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { EmptyState } from "@/components/common/EmptyState";
+import { NativeSelect } from "@/components/common/NativeSelect";
+import { PageHeader } from "@/components/common/PageHeader";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Link, useRouter } from "@/i18n/navigation";
 import { apiError, type ErrorKey } from "@/lib/api-client";
 
@@ -98,114 +108,133 @@ export function BatchesPanel({
     router.push(`/batches/${id}`);
   }
 
-  const valid =
-    check && !check.missingColumns.length && !check.issues.length && !check.tooManyRows && check.rows > 0;
+  const valid = check && !check.missingColumns.length && !check.issues.length && !check.tooManyRows && check.rows > 0;
   return (
-    <div className="stack">
-      <h1>{t("title")}</h1>
-      <p className="muted">{t("intro")}</p>
-      <section className="card stack" data-testid="batch-form">
-        <h2>{t("new")}</h2>
-        {!templates.length ? (
-          <p className="muted">{t("noTemplates")}</p>
-        ) : (
-          <>
-            <label className="stack">
-              {t("template")}
-              <select value={templateId} onChange={(e) => (setTemplateId(e.target.value), setCheck(null))}>
-                {templates.map((x) => (
-                  <option key={x.id} value={x.id}>
-                    {x.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {tpl && (
-              <p className="small muted">
-                {t("variables", { vars: tpl.variables.map((v) => v.name).join(", ") })}
-              </p>
-            )}
-            <label className="stack">
-              {t("file")}
-              <input
-                type="file"
-                accept=".csv,text/csv"
-                data-testid="batch-file"
-                onChange={(e) => (setFile(e.target.files?.[0] ?? null), setCheck(null))}
-              />
-            </label>
-            <label className="stack">
-              {t("name")}
-              <input value={name} maxLength={120} onChange={(e) => setName(e.target.value)} />
-            </label>
-            <label className="stack">
-              {t("concurrency")}
-              <input
-                type="number"
-                min={1}
-                max={maxConcurrency}
-                value={concurrency}
-                onChange={(e) =>
-                  setConcurrency(Math.max(1, Math.min(maxConcurrency, Number(e.target.value) || 1)))
-                }
-              />
-            </label>
-            <div className="row">
-              <button className="btn" disabled={!file || busy} onClick={() => void runCheck()}>
-                {t("check")}
-              </button>
-              {valid && (
-                <button
-                  className="btn primary"
-                  disabled={busy}
-                  onClick={() => void start()}
-                  data-testid="batch-start"
+    <div className="mx-auto flex max-w-4xl flex-col gap-6">
+      <PageHeader title={t("title")} description={t("intro")} />
+      <Card data-testid="batch-form">
+        <CardHeader>
+          <CardTitle>{t("new")}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {!templates.length ? (
+            <EmptyState icon={Layers} title={t("noTemplates")} />
+          ) : (
+            <>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="batch-template">{t("template")}</Label>
+                <NativeSelect
+                  id="batch-template"
+                  value={templateId}
+                  onChange={(e) => {
+                    setTemplateId(e.target.value);
+                    setCheck(null);
+                  }}
                 >
-                  {t("start", { n: check.rows })}
-                </button>
-              )}
-            </div>
-            {check && (
-              <div className="stack" data-testid="batch-check">
-                {check.missingColumns.length > 0 && (
-                  <p className="error">{t("missing", { cols: check.missingColumns.join(", ") })}</p>
-                )}
-                {check.tooManyRows && <p className="error">{t("tooMany")}</p>}
-                {check.issues.slice(0, 20).map((i) => (
-                  <p key={`${i.row}-${i.column}`} className="error small">
-                    {t(`issue_${i.code}`, { row: i.row, column: i.column, max: i.maxLength ?? 0 })}
-                  </p>
-                ))}
-                {valid && <p>{t("rowsOk", { n: check.rows })}</p>}
-                {check.extraColumns.length > 0 && (
-                  <p className="small muted">{t("extra", { cols: check.extraColumns.join(", ") })}</p>
+                  {templates.map((x) => (
+                    <option key={x.id} value={x.id}>
+                      {x.name}
+                    </option>
+                  ))}
+                </NativeSelect>
+                {tpl && (
+                  <p className="text-muted-foreground text-sm">{t("variables", { vars: tpl.variables.map((v) => v.name).join(", ") })}</p>
                 )}
               </div>
-            )}
-          </>
-        )}
-        {error && (
-          <p className="error" role="alert">
-            {error}
-          </p>
-        )}
-      </section>
-      <section className="card stack">
-        <h2>{t("list")}</h2>
-        {!batches.length ? (
-          <p className="muted">{t("empty")}</p>
-        ) : (
-          <ul className="list">
-            {batches.map((b) => (
-              <li key={b.id} className="row">
-                <Link href={`/batches/${b.id}`}>{b.name}</Link>
-                <span className="badge">{t(`status.${b.status}` as "status.running")}</span>
-                <span className="small muted">{t("progress", { done: b.succeeded, total: b.total })}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="batch-file">{t("file")}</Label>
+                <Input
+                  id="batch-file"
+                  type="file"
+                  accept=".csv,text/csv"
+                  data-testid="batch-file"
+                  onChange={(e) => {
+                    setFile(e.target.files?.[0] ?? null);
+                    setCheck(null);
+                  }}
+                />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="batch-name">{t("name")}</Label>
+                  <Input id="batch-name" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="batch-concurrency">{t("concurrency")}</Label>
+                  <Input
+                    id="batch-concurrency"
+                    type="number"
+                    min={1}
+                    max={maxConcurrency}
+                    value={concurrency}
+                    onChange={(e) => setConcurrency(Math.max(1, Math.min(maxConcurrency, Number(e.target.value) || 1)))}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" disabled={!file || busy} onClick={() => void runCheck()}>
+                  {busy && <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden />}
+                  {t("check")}
+                </Button>
+                {valid && (
+                  <Button disabled={busy} onClick={() => void start()} data-testid="batch-start">
+                    {t("start", { n: check.rows })}
+                  </Button>
+                )}
+              </div>
+              {check && (
+                <div className="flex flex-col gap-2 text-sm" data-testid="batch-check">
+                  {check.missingColumns.length > 0 && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{t("missing", { cols: check.missingColumns.join(", ") })}</AlertDescription>
+                    </Alert>
+                  )}
+                  {check.tooManyRows && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{t("tooMany")}</AlertDescription>
+                    </Alert>
+                  )}
+                  {check.issues.slice(0, 20).map((i) => (
+                    <p key={`${i.row}-${i.column}`} className="text-destructive">
+                      {t(`issue_${i.code}`, { row: i.row, column: i.column, max: i.maxLength ?? 0 })}
+                    </p>
+                  ))}
+                  {valid && <p>{t("rowsOk", { n: check.rows })}</p>}
+                  {check.extraColumns.length > 0 && <p className="text-muted-foreground">{t("extra", { cols: check.extraColumns.join(", ") })}</p>}
+                </div>
+              )}
+            </>
+          )}
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("list")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {!batches.length ? (
+            <p className="text-muted-foreground text-sm">{t("empty")}</p>
+          ) : (
+            <ul className="divide-y">
+              {batches.map((b) => (
+                <li key={b.id} className="flex flex-wrap items-center gap-3 py-2">
+                  <Link href={`/batches/${b.id}`} className="min-w-0 flex-1 truncate font-medium hover:underline">
+                    {b.name}
+                  </Link>
+                  <Badge variant="secondary">{t(`status.${b.status}` as "status.running")}</Badge>
+                  <span className="text-muted-foreground text-sm">{t("progress", { done: b.succeeded, total: b.total })}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
