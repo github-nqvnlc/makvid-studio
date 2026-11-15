@@ -101,9 +101,9 @@ export function mediaGenFromEnv(env: NodeJS.ProcessEnv = process.env): MediaGenP
   return createMediaGen({
     mode: env.MAKVID_MOCK_PROVIDERS === "1" && mode && mode !== "off" ? "mock" : mode,
     geminiApiKey: env.GEMINI_API_KEY,
-    googleModel: env.MAKVID_MEDIAGEN_MODEL,
+    googleModel: env.MAKVID_MEDIAGEN_MODEL || undefined,
     shopAiKey: env.SHOPAIKEY_API_KEY,
-    shopAiKeyModel: env.SHOPAIKEY_IMAGE_MODEL,
+    shopAiKeyModel: env.SHOPAIKEY_IMAGE_MODEL || undefined,
     ...(env.SHOPAIKEY_IMAGE_COST_USD && Number.isFinite(cost) ? { shopAiKeyCostUsd: cost } : {}),
   });
 }

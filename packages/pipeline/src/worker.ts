@@ -91,7 +91,7 @@ export function contextFromEnv(
     renderer,
     stylesRoot,
     workDir,
-    voiceId: process.env.FPT_TTS_VOICE_ID ?? "vits:banmai",
+    voiceId: process.env.FPT_TTS_VOICE_ID || "vits:banmai",
     music,
     ...hooks,
   });

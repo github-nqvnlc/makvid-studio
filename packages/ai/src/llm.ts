@@ -44,7 +44,7 @@ export function configFromEnv(env: NodeJS.ProcessEnv = process.env): Omit<LlmCon
   if (env.FPT_AI_API_KEY)
     adapters.fpt = openAiCompatibleAdapter(
       "fpt",
-      env.FPT_LLM_BASE_URL ?? "https://mkp-api.fptcloud.com/v1",
+      env.FPT_LLM_BASE_URL || "https://mkp-api.fptcloud.com/v1",
       env.FPT_AI_API_KEY,
     );
   if (env.OPENAI_API_KEY)
@@ -62,14 +62,14 @@ export function configFromEnv(env: NodeJS.ProcessEnv = process.env): Omit<LlmCon
     const provider = env[`LLM_${key}_PROVIDER`];
     const model = env[`LLM_${key}_MODEL`];
     if (provider || model)
-      steps[s] = { provider: provider ?? steps[s].provider, model: model ?? steps[s].model };
+      steps[s] = { provider: provider || steps[s].provider, model: model || steps[s].model };
   }
   const fallback =
     env.LLM_FALLBACK_MODEL === "none"
       ? undefined
       : {
-          provider: env.LLM_FALLBACK_PROVIDER ?? DEFAULT_FALLBACK.provider,
-          model: env.LLM_FALLBACK_MODEL ?? DEFAULT_FALLBACK.model,
+          provider: env.LLM_FALLBACK_PROVIDER || DEFAULT_FALLBACK.provider,
+          model: env.LLM_FALLBACK_MODEL || DEFAULT_FALLBACK.model,
         };
   return { adapters, steps, ...(fallback ? { fallback } : {}) };
 }
@@ -176,7 +176,9 @@ export function createLlm(cfg: LlmConfig): LlmProvider {
           ];
         }
       }
-      throw new LlmOutputError(`step "${req.step}" produced no valid output`, lastProblems, lastText);
+      // The reasons go into the message so the worker log says why (they are never shown to users).
+      const why = lastProblems.join("; ").slice(0, 300);
+      throw new LlmOutputError(`step "${req.step}" produced no valid output${why ? `: ${why}` : ""}`, lastProblems, lastText);
     },
   };
 }

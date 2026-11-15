@@ -168,6 +168,59 @@ describe("LlmProvider contract", () => {
   });
 });
 
+describe("configFromEnv with empty variables", () => {
+  it("treats empty strings (as docker compose passes unset variables) as not set", async () => {
+    const { configFromEnv, DEFAULT_FALLBACK } = await import("../src");
+    const c = configFromEnv({
+      FPT_AI_API_KEY: "k",
+      LLM_FALLBACK_PROVIDER: "",
+      LLM_FALLBACK_MODEL: "",
+      LLM_SCRIPT_PROVIDER: "",
+      LLM_SCRIPT_MODEL: "",
+    } as NodeJS.ProcessEnv);
+    expect(c.fallback).toEqual(DEFAULT_FALLBACK);
+    expect(c.steps.script).toEqual(DEFAULT_STEPS.script);
+    expect(Object.keys(c.adapters)).toEqual(["fpt"]);
+  });
+
+  it("an empty FPT_LLM_BASE_URL keeps the FPT endpoint instead of calling the OpenAI default", async () => {
+    const seenUrls: string[] = [];
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = (async (input: RequestInfo | URL) => {
+      seenUrls.push(String(input));
+      return new Response(JSON.stringify({ choices: [{ message: { content: "ok" } }], usage: {} }), {
+        headers: { "content-type": "application/json" },
+      });
+    }) as typeof fetch;
+    try {
+      const { configFromEnv } = await import("../src");
+      const c = configFromEnv({ FPT_AI_API_KEY: "k", FPT_LLM_BASE_URL: "" } as NodeJS.ProcessEnv);
+      await createLlm(c).complete({ step: "script", messages: [{ role: "user", content: "x" }] }).catch(() => undefined);
+      expect(seenUrls[0]).toContain("mkp-api.fptcloud.com");
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+
+  it("explicit values still win, and 'none' removes the fallback", async () => {
+    const { configFromEnv } = await import("../src");
+    const c = configFromEnv({ FPT_AI_API_KEY: "k", LLM_FALLBACK_PROVIDER: "openai", LLM_FALLBACK_MODEL: "m1" } as NodeJS.ProcessEnv);
+    expect(c.fallback).toEqual({ provider: "openai", model: "m1" });
+    expect(configFromEnv({ LLM_FALLBACK_MODEL: "none" } as NodeJS.ProcessEnv).fallback).toBeUndefined();
+  });
+
+  it("the final error says why the output was refused", async () => {
+    handler = () => "không phải json";
+    const llm = createLlm({
+      adapters: { fpt: openAiCompatibleAdapter("fpt", baseURL, "k") },
+      steps: DEFAULT_STEPS,
+    });
+    await expect(
+      llm.complete({ step: "script", messages: [{ role: "user", content: "x" }], schema: Story }),
+    ).rejects.toThrow(/produced no valid output: /);
+  });
+});
+
 // Live smoke test against FPT (opt-in, costs < $0.001): MAKVID_LIVE_LLM=1
 describe.runIf(process.env.MAKVID_LIVE_LLM === "1")("live FPT", () => {
   it("default script model answers in Vietnamese", async () => {
