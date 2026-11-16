@@ -11,7 +11,6 @@ import { ErrorState } from "@/components/common/ErrorState";
 import { Downloads } from "@/components/Downloads";
 import { SaveTemplate } from "@/components/SaveTemplate";
 import { VersionHistory } from "@/components/VersionHistory";
-import { Progress } from "@/components/ui/progress";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,6 +21,7 @@ import { useRouter } from "@/i18n/navigation";
 import { apiError, postJson, type ErrorKey } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { ChatPanel } from "./ChatPanel";
+import { ProgressPanel } from "@/components/progress/ProgressPanel";
 import { EditorToolbar } from "./EditorToolbar";
 import { PreviewPlayer } from "./PreviewPlayer";
 
@@ -208,15 +208,9 @@ export function EditorLayout({ projectId, styles }: { projectId: string; styles:
         onAction={(a) => void act({ action: a })}
       />
 
-      {!settled && !status.startsWith("awaiting") && (
-        <div
-          className="bg-card flex flex-col gap-2 rounded-lg border p-4"
-          data-testid="progress"
-          aria-live="polite"
-        >
-          <strong className="text-sm">{live?.text ?? t("editor.working")}</strong>
-          <Progress value={Math.round((live?.fraction ?? 0) * 100)} aria-label={t("editor.working")} />
-        </div>
+      {/* Progress and the live log stay visible while producing, waiting for the user and after a failure. */}
+      {status !== "ready" && (
+        <ProgressPanel projectId={projectId} status={status} text={live?.text ?? null} fraction={live?.fraction ?? 0} />
       )}
 
       {status === "awaiting_script_review" && view.review && (

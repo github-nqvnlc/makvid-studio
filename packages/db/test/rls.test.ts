@@ -22,6 +22,7 @@ import {
   withWorkspace,
   workspaces,
   type Db,
+  projectEvents,
 } from "../src";
 
 const admin = process.env.DATABASE_ADMIN_URL ?? "postgres://makvid:makvid-dev@localhost:5432/postgres";
@@ -57,6 +58,7 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
       "0005_brand_assets.sql",
       "0006_batch_billing_api.sql",
       "0007_project_search.sql",
+      "0008_project_events.sql",
     ]);
     expect(await migrate(url)).toEqual([]); // idempotent
     ({ db, close } = connect(url, 4));
@@ -124,6 +126,28 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
         ),
       ),
     ).toMatch(/memberships_workspace_user_uq|duplicate key/);
+  });
+
+  it("project_events are isolated per workspace and writes are idempotent", async () => {
+    const [p] = await withWorkspace(db, ids.w1, (tx) =>
+      tx.insert(projects).values({ workspaceId: ids.w1, title: "Log" }).returning(),
+    );
+    const row = {
+      workspaceId: ids.w1,
+      projectId: p!.id,
+      runId: "33333333-3333-4333-8333-333333333333",
+      stage: "script",
+      kind: "approval_needed",
+      key: "log.approval.needed.script",
+      localSeq: 1,
+    };
+    await withWorkspace(db, ids.w1, (tx) => tx.insert(projectEvents).values(row).onConflictDoNothing());
+    await withWorkspace(db, ids.w1, (tx) => tx.insert(projectEvents).values(row).onConflictDoNothing());
+    expect(await withWorkspace(db, ids.w1, (tx) => tx.select().from(projectEvents))).toHaveLength(1);
+    expect(await withWorkspace(db, ids.w2, (tx) => tx.select().from(projectEvents))).toEqual([]);
+    expect(
+      await pgError(withWorkspace(db, ids.w2, (tx) => tx.insert(projectEvents).values(row))),
+    ).toMatch(/row-level security/);
   });
 
   it("rejects malformed workspace ids", async () => {

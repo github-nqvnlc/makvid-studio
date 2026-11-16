@@ -247,3 +247,12 @@
 - All remaining pages restyled (brand, members, admin, assets, batches, API, templates, review, API docs); old CSS (`legacy.css`, `.shell`) removed; literal UI text is now a lint error everywhere; axe: 0 serious/critical on the main pages in both themes; `no-tech-leak` extended; AGENTS.md updated.
 - E2E: 18 of 20 pass in the final runs, including `m5`. `create-and-edit` and `sources` fail at the quality-check stage under memory pressure (1.6 GB free of 16 GB); they passed earlier today. Rerun on a quiet machine. Report: docs/reports/UI-G4.md.
 - Not done: Lighthouse (blocked), hero video render, editor download menu/history sheet, e2e for a broken video URL and 360 px editor tabs. Nothing committed.
+
+## 2026-11-16 — Spec 003 chat-style create + live activity log (Claude Code)
+
+- `specs/003-chat-style-create/` (spec, plan, research, data model, contracts, quickstart, 51 tasks) written, analysed (F1–F8 fixed) and implemented on branch `003-chat-style-create`. ADR 0014.
+- Create screen is now one composer: content-type popover (6), aspect popover (4), length 30–180 s with inline validation, voice dialog with preview, step-by-step switch, live summary, "Bắt đầu tạo video". Same `POST /api/projects` body. Old `CreateForm`, `DurationField`, `AspectCards` removed.
+- Production log: migration 0008 `project_events` (RLS like other tenant tables), written from the worker hooks in `dbSink`; `GET /api/projects/[id]/log`; SSE sends `log` / `stages` events (resume by `Last-Event-ID`); `ProgressPanel` (stages + live log) sits above the editor for every status except `ready`; approvals link to the existing review cards.
+- Tests: db RLS + idempotency, pipeline events unit, composer validation unit, new e2e `composer.spec.ts` (8) and `progress.spec.ts` (3), axe case for popovers/dialog/progress. typecheck, lint, license check, unit and infra tests pass. Details and gaps in `docs/reports/003-chat-style-create.md`.
+- Not verified here: full video render e2e (this machine has no FFmpeg/chrome-headless-shell, runs fail at audio/qa — which exercised the failure log), the old signed-in axe sweep (crashed on memory), Lighthouse. Nothing committed.
+

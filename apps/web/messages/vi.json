@@ -106,10 +106,30 @@
       "overDuration": "Gói này cho video tối đa {n} giây.",
       "upgrade": "Nâng cấp gói",
       "loadFailed": "Chưa kiểm tra được hạn mức.",
-      "maxLength": "Tối đa {n} giây"
+      "maxLength": "Tối đa {n} giây",
+      "content": "Nội dung",
+      "empty": "Chưa có nội dung",
+      "brand": "Bộ nhận diện",
+      "brandOn": "Có áp dụng",
+      "brandOff": "Không áp dụng"
     },
     "durationHint": "Từ 30 đến 180 giây.",
-    "durationSlider": "Kéo để chọn độ dài"
+    "durationSlider": "Kéo để chọn độ dài",
+    "composer": {
+      "typeLabel": "Kiểu nội dung",
+      "secondsShort": "giây",
+      "stepByStep": "Duyệt từng bước",
+      "linkInvalid": "Hãy dán một liên kết đầy đủ, bắt đầu bằng http:// hoặc https://.",
+      "fileKind": "Loại tệp này không phù hợp với kiểu nội dung đã chọn.",
+      "noVoice": "Chưa có giọng",
+      "attach": "Đính kèm tệp",
+      "removeFile": "Bỏ tệp",
+      "voiceTitle": "Chọn giọng đọc",
+      "voiceHint": "Nghe thử giọng trước khi chọn.",
+      "cancel": "Hủy",
+      "useVoice": "Dùng giọng này",
+      "start": "Bắt đầu tạo video"
+    }
   },
   "voices": {
     "standard": "Tiêu chuẩn",
@@ -132,7 +152,8 @@
     "region": "Vùng miền",
     "all": "Tất cả",
     "stop": "Dừng",
-    "empty": "Không có giọng nào khớp bộ lọc."
+    "empty": "Không có giọng nào khớp bộ lọc.",
+    "previewFailed": "Không phát được đoạn nghe thử. Bạn vẫn có thể chọn giọng này."
   },
   "editor": {
     "preview": "Xem trước",
@@ -901,5 +922,39 @@
       "theme": "Giao diện",
       "language": "Ngôn ngữ"
     }
+  },
+  "progress": {
+    "title": "Tiến trình",
+    "working": "Đang tạo video của bạn",
+    "live": "Trực tiếp",
+    "reconnecting": "Đang kết nối lại…",
+    "stagesLabel": "Các bước",
+    "stages": {
+      "script": "Lời đọc",
+      "style": "Phong cách",
+      "storyboard": "Phân cảnh",
+      "audio": "Giọng đọc và âm thanh",
+      "qa": "Kiểm tra chất lượng",
+      "render": "Dựng video"
+    },
+    "states": {
+      "waiting": "Đang chờ",
+      "running": "Đang làm",
+      "needs_approval": "Chờ bạn duyệt",
+      "done": "Xong",
+      "failed": "Cần xử lý"
+    },
+    "logTitle": "Đang diễn ra",
+    "all": "Xem tất cả các bước",
+    "empty": "Đang chờ cập nhật đầu tiên…",
+    "jumpLatest": "Xuống mới nhất",
+    "loadEarlier": "Xem các dòng trước đó",
+    "waitingTitle": "Đang chờ bạn",
+    "waitingHelp": "Hãy xem bước bên dưới rồi duyệt để tiếp tục.",
+    "failedTitle": "Chưa tạo xong video",
+    "attentionTitle": "Video cần bạn xem lại",
+    "failedHelp": "Có trục trặc xảy ra. Bạn có thể thử lại.",
+    "startAgain": "Tạo lại",
+    "announce": "Đang thực hiện: {stage}"
   }
 }

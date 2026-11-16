@@ -18,10 +18,23 @@ export async function createVideo(page: Page, idea: string, mode: "auto" | "revi
   await page.goto("/vi/projects/new");
   await page.locator('textarea[name="prompt"]').fill(idea);
   await page.locator('input[name="duration"]').fill("30");
-  await page.getByTestId(`mode-${mode}`).click();
+  await setMode(page, mode);
   await shot(page, "create");
   await page.locator('button[type="submit"]').click();
   await page.waitForURL(/\/projects\/[0-9a-f-]{36}$/);
+}
+
+/** Pick a content type in the composer's popover (idea, script, url, github, table, media). */
+export async function pickType(page: Page, kind: string) {
+  await page.getByTestId("type-trigger").click();
+  await page.getByTestId(`source-${kind}`).click();
+}
+
+/** Automatic is the default; step-by-step is the switch turned on. */
+export async function setMode(page: Page, mode: "auto" | "review") {
+  const toggle = page.getByTestId("mode-toggle");
+  if ((await toggle.getAttribute("aria-checked")) === String(mode === "review")) return;
+  await toggle.click();
 }
 
 export async function waitReady(page: Page) {

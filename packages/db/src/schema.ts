@@ -338,3 +338,4 @@ export const mediaGenCache = pgTable("media_gen_cache", {
 export * from "./schema/batch";
 export * from "./schema/billing";
 export * from "./schema/api";
+export * from "./schema/events";

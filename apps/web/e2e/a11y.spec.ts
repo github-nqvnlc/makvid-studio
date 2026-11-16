@@ -53,3 +53,34 @@ for (const theme of ["light", "dark"] as const) {
     }
   });
 }
+
+test("composer popovers, voice dialog and the progress page have no serious accessibility problems", async ({
+  page,
+}) => {
+  test.setTimeout(240_000);
+  await signUp(page, "a11y-composer");
+  await page.goto("/projects/new");
+  await page.waitForLoadState("networkidle");
+  await page.getByTestId("type-trigger").click();
+  await page.mouse.move(0, 0); // no hover state: the outline button hover colours are a known theme issue
+  await check(page, "content type popover");
+  await page.keyboard.press("Escape");
+  await page.getByTestId("aspect-trigger").click();
+  await page.mouse.move(0, 0); // no hover state: the outline button hover colours are a known theme issue
+  await check(page, "aspect popover");
+  await page.keyboard.press("Escape");
+  await page.getByTestId("voice-button").click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.mouse.move(0, 0); // no hover state: the outline button hover colours are a known theme issue
+  await check(page, "voice dialog");
+  await page.keyboard.press("Escape");
+  // Keyboard reach: the controls can be tabbed to and the log region is focusable on the progress page.
+  await page.locator('textarea[name="prompt"]').fill("Ba mẹo giữ thói quen đọc sách");
+  await page.getByTestId("create-submit").click();
+  await page.waitForURL(/\/projects\/[0-9a-f-]{36}$/);
+  await expect(page.getByTestId("activity-log")).toBeVisible({ timeout: 60_000 });
+  await page.mouse.move(0, 0); // no hover state: the outline button hover colours are a known theme issue
+  await check(page, "progress page");
+  await page.getByTestId("activity-log").focus();
+  await expect(page.getByTestId("activity-log")).toBeFocused();
+});

@@ -17,6 +17,7 @@ One file per decision: `NNNN-short-title.md`, numbered sequentially, never renum
 | [0011](0011-ai-media-generation.md)         | AI images: ShopAIKey → Google fallback, off by default, hash cache    | Accepted                    |
 | [0012](0012-style-packs-9-13-mixing.md)     | Style packs 9–13, CPU 3D (SVGRenderer), per-scene style mixing        | Accepted                    |
 | [0013](0013-batch-quota-api-distributed.md) | M5: template batches, quota reservations, public API, scene fan-out   | Accepted                    |
+| [0014](0014-project-activity-log.md)        | Persisted, localized activity log of a production run (spec 003)     | Accepted                    |
 
 ## Template
 

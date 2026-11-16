@@ -5,7 +5,7 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { expect, test } from "@playwright/test";
-import { signUp, waitReady } from "./helpers";
+import { pickType, setMode, signUp, waitReady } from "./helpers";
 
 const fixtures = resolve(import.meta.dirname, "../../../fixtures/sources");
 
@@ -14,10 +14,10 @@ test("create videos from a written script, a data file and an audio recording", 
 
   // Written script: the narration on the review screen is exactly the user's text.
   await page.goto("/vi/projects/new");
-  await page.getByTestId("source-script").click();
+  await pickType(page, "script");
   const script = readFileSync(join(fixtures, "script-vi.txt"), "utf8");
   await page.locator('textarea[name="script"]').fill(script);
-  await page.getByTestId("mode-review").click();
+  await setMode(page, "review");
   await page.locator('button[type="submit"]').click();
   await page.waitForURL(/\/projects\/[0-9a-f-]{36}$/);
   await expect(page.getByTestId("script-review")).toBeVisible({ timeout: 120_000 });
@@ -26,7 +26,7 @@ test("create videos from a written script, a data file and an audio recording", 
 
   // Data file.
   await page.goto("/vi/projects/new");
-  await page.getByTestId("source-table").click();
+  await pickType(page, "table");
   await page.locator('input[name="file"]').setInputFiles(join(fixtures, "gia-vang.csv"));
   await page.locator('input[name="duration"]').fill("30");
   await page.locator('button[type="submit"]').click();
@@ -35,7 +35,7 @@ test("create videos from a written script, a data file and an audio recording", 
 
   // A wrong file for "data" gets a friendly message, not an error dump.
   await page.goto("/vi/projects/new");
-  await page.getByTestId("source-table").click();
+  await pickType(page, "table");
   await page.locator('input[name="file"]').setInputFiles({
     name: "data.csv",
     mimeType: "text/csv",
@@ -58,7 +58,7 @@ test("create videos from a written script, a data file and an audio recording", 
     wav,
   ]);
   await page.goto("/vi/projects/new");
-  await page.getByTestId("source-media").click();
+  await pickType(page, "media");
   await page.locator('input[name="file"]').setInputFiles(wav);
   await page.locator('input[name="duration"]').fill("30");
   await page.locator('button[type="submit"]').click();
