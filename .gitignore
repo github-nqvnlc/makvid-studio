@@ -51,3 +51,4 @@ docs/reports/**/*.webm
 docs/reports/**/*.wav
 docs/reports/**/*.mp3
 docs/reports/ui/**/*.png
+.site-update.lock
