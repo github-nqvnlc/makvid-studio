@@ -41,6 +41,7 @@ export const ROUTES = {
   "POST /api/projects/[id]/actions": "create",
   "POST /api/projects/[id]/chat": "create",
   "GET /api/projects/[id]/events": "view",
+  "GET /api/projects/[id]/log": "view",
   "POST /api/projects/[id]/review": "create",
   "GET /api/projects/[id]/previews/[sceneId]": "view",
   "GET /api/assets": "view",

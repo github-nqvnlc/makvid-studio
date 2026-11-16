@@ -27,6 +27,7 @@ export function VoicePicker({
   const t = useTranslations("voices");
   const audio = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
+  const [previewFailed, setPreviewFailed] = useState(false);
   const selected = voices.find((v) => v.id === value);
   const [tier, setTier] = useState<(typeof TIERS)[number]>(selected?.tier ?? "standard");
   const [gender, setGender] = useState<string>(ALL);
@@ -52,6 +53,7 @@ export function VoicePicker({
 
   function listen(id: string) {
     audio.current?.pause();
+    setPreviewFailed(false);
     if (playing === id) {
       setPlaying(null);
       return;
@@ -59,8 +61,13 @@ export function VoicePicker({
     const a = new Audio(`/api/voices/${encodeURIComponent(id)}/preview`);
     audio.current = a;
     setPlaying(id);
+    const failed = () => {
+      setPlaying(null);
+      setPreviewFailed(true);
+    };
     a.onended = () => setPlaying(null);
-    void a.play().catch(() => setPlaying(null));
+    a.onerror = failed;
+    void a.play().catch(failed);
   }
 
   return (
@@ -78,6 +85,11 @@ export function VoicePicker({
         ))}
       </TabsList>
       <p className="text-muted-foreground text-sm">{t(`tierHint.${tier}`)}</p>
+      {previewFailed && (
+        <p role="alert" className="text-foreground text-sm font-medium" data-testid="voice-preview-error">
+          {t("previewFailed")}
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-3">
         <ToggleGroup
           type="single"
@@ -116,6 +128,7 @@ export function VoicePicker({
                 {shown.map((v) => (
                   <li
                     key={v.id}
+                    data-testid={`voice-${v.id}`}
                     className={cn(
                       "flex items-center gap-2 rounded-lg border p-2",
                       value === v.id && "border-primary ring-primary ring-1",
@@ -147,6 +160,7 @@ export function VoicePicker({
                       size="sm"
                       onClick={() => listen(v.id)}
                       className="gap-1"
+                      data-testid={`voice-listen-${v.id}`}
                     >
                       {playing === v.id ? (
                         <Pause className="size-3.5" aria-hidden />

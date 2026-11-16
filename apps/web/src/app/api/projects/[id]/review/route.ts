@@ -1,6 +1,6 @@
 // POST: accept / edit at a review point (US3) and continue production.
 import { z } from "zod";
-import { resumeProject } from "@makvid/pipeline";
+import { recordApproval, resumeProject } from "@makvid/pipeline";
 import { fail, guarded, projectId } from "@/server/api";
 import { server } from "@/server/deps";
 
@@ -26,6 +26,8 @@ export function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
     const b = Body.safeParse(await req.json().catch(() => null));
     if (!b.success) return fail("invalid");
     await resumeProject(server().deps, v.workspaceId, id, b.data);
+    // The log is a courtesy: never fail the approval because a line could not be written.
+    await recordApproval(server().db, v.workspaceId, id, b.data.point).catch(() => undefined);
     return Response.json({ ok: true });
   });
 }

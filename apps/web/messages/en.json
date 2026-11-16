@@ -106,10 +106,30 @@
       "overDuration": "This plan allows videos up to {n} seconds.",
       "upgrade": "Upgrade plan",
       "loadFailed": "Could not check your limits.",
-      "maxLength": "Up to {n} seconds"
+      "maxLength": "Up to {n} seconds",
+      "content": "Content",
+      "empty": "Nothing yet",
+      "brand": "Brand kit",
+      "brandOn": "Applied",
+      "brandOff": "Not applied"
     },
     "durationHint": "Between 30 and 180 seconds.",
-    "durationSlider": "Drag to choose the length"
+    "durationSlider": "Drag to choose the length",
+    "composer": {
+      "typeLabel": "Content type",
+      "secondsShort": "s",
+      "stepByStep": "Approve each step",
+      "linkInvalid": "Please paste a full link that starts with http:// or https://.",
+      "fileKind": "This file type is not accepted for the chosen content type.",
+      "noVoice": "No voice",
+      "attach": "Attach a file",
+      "removeFile": "Remove the file",
+      "voiceTitle": "Choose a voice",
+      "voiceHint": "Listen to a voice before you choose it.",
+      "cancel": "Cancel",
+      "useVoice": "Use this voice",
+      "start": "Start creating video"
+    }
   },
   "voices": {
     "standard": "Standard",
@@ -132,7 +152,8 @@
     "region": "Region",
     "all": "All",
     "stop": "Stop",
-    "empty": "No voice matches the filters."
+    "empty": "No voice matches the filters.",
+    "previewFailed": "The sample could not be played. You can still choose this voice."
   },
   "editor": {
     "preview": "Preview",
@@ -901,5 +922,39 @@
       "theme": "Appearance",
       "language": "Language"
     }
+  },
+  "progress": {
+    "title": "Progress",
+    "working": "Making your video",
+    "live": "Live",
+    "reconnecting": "Reconnecting…",
+    "stagesLabel": "Steps",
+    "stages": {
+      "script": "Voice-over",
+      "style": "Style",
+      "storyboard": "Scenes",
+      "audio": "Voice and sound",
+      "qa": "Quality check",
+      "render": "Rendering"
+    },
+    "states": {
+      "waiting": "Waiting",
+      "running": "In progress",
+      "needs_approval": "Waiting for you",
+      "done": "Done",
+      "failed": "Needs attention"
+    },
+    "logTitle": "What is happening",
+    "all": "Show all steps",
+    "empty": "Waiting for the first update…",
+    "jumpLatest": "Jump to latest",
+    "loadEarlier": "Show earlier lines",
+    "waitingTitle": "Waiting for you",
+    "waitingHelp": "Check the step below, then approve it to continue.",
+    "failedTitle": "The video could not be finished",
+    "attentionTitle": "The video needs your attention",
+    "failedHelp": "Something went wrong. You can try again.",
+    "startAgain": "Start again",
+    "announce": "Now working on: {stage}"
   }
 }

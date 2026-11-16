@@ -15,6 +15,7 @@ import { activePlan } from "@makvid/billing";
 import type { ProduceJobData } from "@makvid/queue";
 import { aspectSlug, ASPECT_SIZES, SPEC_VERSION } from "@makvid/spec";
 import { workspaceKey, type ObjectStore } from "@makvid/storage";
+import { LOCAL_SEQ, recordEvent, type NewEvent } from "./events";
 import type { ProduceInput, ProduceState, Stage } from "./produce";
 import type { StageHooks } from "./worker";
 
@@ -53,15 +54,25 @@ async function upload(store: ObjectStore, d: Data, file: string, name: string, c
 export function dbSink(db: Db, store: ObjectStore): StageHooks {
   const lastProgress = new Map<string, { at: number; key: string }>();
   const ws = <T>(d: Data, fn: Parameters<typeof withWorkspace<T>>[2]) => withWorkspace(db, d.workspaceId, fn);
+  // Per running job: its row id, attempt and the next progress line number (log entries are idempotent on these).
+  const runs = new Map<string, { jobId: string; attempt: number; seq: number }>();
+  /** The log never breaks production: a failed write is ignored (the stage state still comes from jobs). */
+  const log = async (d: Data, e: Omit<NewEvent, "workspaceId" | "projectId" | "runId">) => {
+    try {
+      await recordEvent(db, { workspaceId: d.workspaceId, projectId: d.projectId, runId: d.versionId, ...e });
+    } catch {
+      // ignored on purpose
+    }
+  };
 
   return {
     async onStageStart(d, stage) {
-      await ws(d, async (tx) => {
+      const [row] = await ws(d, async (tx) => {
         await tx
           .update(projects)
           .set({ status: RUNNING[stage], updatedAt: new Date() })
           .where(eq(projects.id, d.projectId));
-        await tx
+        return tx
           .insert(jobs)
           .values({
             workspaceId: d.workspaceId,
@@ -76,8 +87,21 @@ export function dbSink(db: Db, store: ObjectStore): StageHooks {
           .onConflictDoUpdate({
             target: [jobs.versionId, jobs.step, jobs.inputHash],
             set: { status: "running", startedAt: new Date(), attempt: sql`${jobs.attempt} + 1` },
-          });
+          })
+          .returning({ id: jobs.id, attempt: jobs.attempt });
       });
+      if (row) {
+        runs.set(jobKey(d, stage), { jobId: row.id, attempt: row.attempt, seq: 1 });
+        await log(d, {
+          jobId: row.id,
+          attempt: row.attempt,
+          localSeq: 0,
+          stage,
+          kind: row.attempt > 0 ? "retry" : "stage_start",
+          key: row.attempt > 0 ? "log.retry" : `log.start.${stage === "preview" ? "storyboard" : stage}`,
+          params: row.attempt > 0 ? { attempt: row.attempt + 1 } : {},
+        });
+      }
     },
 
     async onProgress(d, stage, p) {
@@ -93,6 +117,18 @@ export function dbSink(db: Db, store: ObjectStore): StageHooks {
           .set({ progress: p.fraction, userMessageKey: p.key, output: { params: p.params ?? {} } })
           .where(and(eq(jobs.projectId, d.projectId), eq(jobs.inputHash, k))),
       );
+      const run = runs.get(k);
+      if (run)
+        await log(d, {
+          jobId: run.jobId,
+          attempt: run.attempt,
+          localSeq: run.seq++,
+          stage,
+          kind: "progress",
+          key: p.key,
+          params: p.params ?? {},
+          fraction: p.fraction,
+        });
     },
 
     async onUsage(d, u) {
@@ -114,6 +150,15 @@ export function dbSink(db: Db, store: ObjectStore): StageHooks {
     },
 
     async onStageFailed(d, stage) {
+      const run = runs.get(jobKey(d, stage));
+      await log(d, {
+        jobId: run?.jobId ?? null,
+        attempt: run?.attempt ?? 0,
+        localSeq: LOCAL_SEQ.error,
+        stage,
+        kind: "error",
+        key: "log.error.generic",
+      });
       await ws(d, async (tx) => {
         await tx
           .update(jobs)
@@ -206,6 +251,28 @@ export function dbSink(db: Db, store: ObjectStore): StageHooks {
         }
         await tx.update(projects).set(set).where(eq(projects.id, d.projectId));
       });
+      const run = runs.get(jobKey(d, stage));
+      await log(d, {
+        jobId: run?.jobId ?? null,
+        attempt: run?.attempt ?? 0,
+        localSeq: LOCAL_SEQ.stage_done,
+        stage,
+        kind: "stage_done",
+        key: `log.done.${stage === "preview" ? "storyboard" : stage}`,
+        fraction: stage === "render" ? 1 : null,
+      });
+      if (state.awaiting) {
+        const point = state.awaiting === "script_review" ? "script" : "storyboard";
+        await log(d, {
+          localSeq: LOCAL_SEQ.approval_needed,
+          stage: point,
+          kind: "approval_needed",
+          key: `log.approval.needed.${point}`,
+        });
+      }
+      if (stage === "render" && state.qa?.passed)
+        await log(d, { localSeq: LOCAL_SEQ.done, stage: "render", kind: "done", key: "log.done", fraction: 1 });
+      runs.delete(jobKey(d, stage));
     },
   };
 }
