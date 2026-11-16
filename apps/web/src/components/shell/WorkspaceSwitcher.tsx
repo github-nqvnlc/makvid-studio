@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 export interface WorkspaceChoice {
   id: string;
@@ -18,7 +19,7 @@ export interface WorkspaceChoice {
   current: boolean;
 }
 
-export function WorkspaceSwitcher({ workspaces }: { workspaces: WorkspaceChoice[] }) {
+export function WorkspaceSwitcher({ workspaces, className }: { workspaces: WorkspaceChoice[]; className?: string }) {
   const t = useTranslations("shell.workspaceSwitcher");
   const router = useRouter();
   const current = workspaces.find((w) => w.current) ?? workspaces[0];
@@ -37,30 +38,32 @@ export function WorkspaceSwitcher({ workspaces }: { workspaces: WorkspaceChoice[
   }
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton aria-label={t("label")} data-testid="workspace-switcher" className="border">
-              <Building2 className="size-5" aria-hidden />
-              <span className="truncate">{current?.name}</span>
-              {workspaces.length > 1 && <ChevronsUpDown className="ml-auto size-4" aria-hidden />}
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          {workspaces.length > 1 && (
-            <DropdownMenuContent align="start" className="w-64">
-              <DropdownMenuLabel>{t("label")}</DropdownMenuLabel>
-              <DropdownMenuRadioGroup value={current?.id} onValueChange={(v) => void pick(v)}>
-                {workspaces.map((w) => (
-                  <DropdownMenuRadioItem key={w.id} value={w.id}>
-                    {w.name}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          )}
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+    <div className={cn("mt-2 group-data-[collapsible=icon]:hidden", className)}>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton aria-label={t("label")} data-testid="workspace-switcher" className="border">
+                <Building2 className="size-5" aria-hidden />
+                <span className="truncate">{current?.name}</span>
+                {workspaces.length > 1 && <ChevronsUpDown className="ml-auto size-4" aria-hidden />}
+              </SidebarMenuButton>
+            </DropdownMenuTrigger>
+            {workspaces.length > 1 && (
+              <DropdownMenuContent align="start" className="w-64">
+                <DropdownMenuLabel>{t("label")}</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={current?.id} onValueChange={(v) => void pick(v)}>
+                  {workspaces.map((w) => (
+                    <DropdownMenuRadioItem key={w.id} value={w.id}>
+                      {w.name}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            )}
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </div>
   );
 }

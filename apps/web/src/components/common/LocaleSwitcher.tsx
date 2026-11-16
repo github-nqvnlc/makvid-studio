@@ -43,7 +43,6 @@ function Inner({ signedIn }: { signedIn: boolean }) {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          size="sm"
           aria-label={t("label")}
           data-testid="locale-switcher"
           className="gap-1.5"
