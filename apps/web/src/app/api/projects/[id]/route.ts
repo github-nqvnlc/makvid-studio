@@ -9,7 +9,12 @@ import { server } from "@/server/deps";
 
 export const dynamic = "force-dynamic";
 
-const Rename = z.object({ title: z.string().transform((s) => s.normalize("NFC").trim()).pipe(z.string().min(1).max(200)) });
+const Rename = z.object({
+  title: z
+    .string()
+    .transform((s) => s.normalize("NFC").trim())
+    .pipe(z.string().min(1).max(200)),
+});
 
 export function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   return guarded("GET /api/projects/[id]", async (v) => {

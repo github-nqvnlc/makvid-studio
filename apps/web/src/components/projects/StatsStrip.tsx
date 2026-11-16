@@ -12,7 +12,9 @@ export function StatsStrip({ stats }: { stats: Stats | null }) {
       {keys.map((k) => (
         <div key={k} className="bg-card rounded-lg border p-3">
           <dt className="text-muted-foreground text-xs">{t(k)}</dt>
-          <dd className="text-2xl font-semibold">{stats ? stats[k] : <Skeleton className="mt-1 h-7 w-10" />}</dd>
+          <dd className="text-2xl font-semibold">
+            {stats ? stats[k] : <Skeleton className="mt-1 h-7 w-10" />}
+          </dd>
         </div>
       ))}
     </dl>

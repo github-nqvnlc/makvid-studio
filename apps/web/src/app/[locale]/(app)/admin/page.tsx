@@ -57,7 +57,9 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
                 <TableRow key={q.name}>
                   <TableCell>{q.name}</TableCell>
                   <TableCell>{q.workers}</TableCell>
-                  <TableCell>{(q.counts.waiting ?? 0) + (q.counts.prioritized ?? 0) + (q.counts.delayed ?? 0)}</TableCell>
+                  <TableCell>
+                    {(q.counts.waiting ?? 0) + (q.counts.prioritized ?? 0) + (q.counts.delayed ?? 0)}
+                  </TableCell>
                   <TableCell>{q.counts.active ?? 0}</TableCell>
                   <TableCell>{q.counts.failed ?? 0}</TableCell>
                 </TableRow>
@@ -71,7 +73,11 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
         <CardHeader>
           <CardTitle>{t("costRevenue")}</CardTitle>
           <p className="text-sm" data-testid="admin-totals">
-            {t("totals", { cost: usd(totals.cost), usd: usd(totals.usd), vnd: totals.vnd.toLocaleString("vi-VN") })}
+            {t("totals", {
+              cost: usd(totals.cost),
+              usd: usd(totals.usd),
+              vnd: totals.vnd.toLocaleString("vi-VN"),
+            })}
           </p>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">

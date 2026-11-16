@@ -15,7 +15,10 @@ export interface WorkspaceItem {
 export async function listWorkspaces(v: Viewer): Promise<WorkspaceItem[]> {
   const ids = v.workspaces.map((w) => w.id);
   const rows = await withUser(server().db, v.userId, (tx) =>
-    tx.select({ id: workspaces.id, name: workspaces.name }).from(workspaces).where(inArray(workspaces.id, ids)),
+    tx
+      .select({ id: workspaces.id, name: workspaces.name })
+      .from(workspaces)
+      .where(inArray(workspaces.id, ids)),
   );
   return v.workspaces.map((w) => ({
     id: w.id,

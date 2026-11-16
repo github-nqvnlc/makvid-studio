@@ -22,6 +22,9 @@ export function GET(_req: Request, ctx: { params: Promise<{ userId: string }> })
     const version = u?.image ? new URL(u.image, "http://x").searchParams.get("v") : null;
     if (!version || !/^[0-9a-f]{8}\.(png|jpg|webp)$/.test(version)) return fail("not_found");
     const url = await deps.store.signedGetUrl(avatarKey(userId, version), 300);
-    return new Response(null, { status: 302, headers: { location: url, "cache-control": "private, max-age=300" } });
+    return new Response(null, {
+      status: 302,
+      headers: { location: url, "cache-control": "private, max-age=300" },
+    });
   });
 }

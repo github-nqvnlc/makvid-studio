@@ -39,7 +39,7 @@ export async function produce(o: ProduceOptions): Promise<ProduceResult> {
         renderer,
         stylesRoot: stylesRoot(),
         workDir,
-        voiceId: o.voiceId ?? process.env.FPT_TTS_VOICE_ID || "vits:banmai",
+        voiceId: (o.voiceId ?? process.env.FPT_TTS_VOICE_ID) || "vits:banmai",
         onUsage: (u) => emit("usage", { ...u }),
         onProgress: (p) =>
           emit("progress", { ...p }, `[${Math.round(p.fraction * 100)}%] ${progressText(p.key, p.params)}`),

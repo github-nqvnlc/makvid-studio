@@ -20,25 +20,25 @@ shell for signed-in users. The (app) layout cannot wrap `/` through the folder t
 
 ## Route map
 
-| URL | Layout | Status | Spec |
-| --- | --- | --- | --- |
-| `/` (guest) | marketing | **new content** | US7, FR-013 |
-| `/` (signed in) | app | redesigned + CRUD | US5, FR-026–028, FR-053–060 |
-| `/pricing` | marketing | **new** | FR-015 |
-| `/docs/api` | marketing | moved | FR-014 |
-| `/sign-in`, `/sign-up` | auth | redesigned | FR-018–020 |
-| `/invite/[token]` | auth | restyled | FR-001 |
-| `/projects/new` | app | redesigned (4 sections + summary) | US4, FR-029–032 |
-| `/projects/[id]` | app (full-bleed) | redesigned (3 resizable panes / tabs) | US3, FR-033–037 |
-| `/batches`, `/batches/[id]` | app | restyled, plan-locked when batch is disabled | FR-040 |
-| `/workspace/brand` | app | redesigned inputs | FR-041–042 |
-| `/workspace/assets` | app | restyled + empty state + drop zone | US8 |
-| `/workspace/members` | app | restyled + avatars | US8, FR-052 |
-| `/workspace/billing` | app | progress bars, plan cards | US6, FR-038–039 |
-| `/workspace/api` | app | locked card when API is disabled | FR-040 |
-| `/account` | app | **new** (profile) | US9, FR-050–052 |
-| `/admin` | app | restyled, platform admins only (404 otherwise) | FR-021 |
-| anything else | — | themed 404 | FR-017 |
+| URL                         | Layout           | Status                                         | Spec                        |
+| --------------------------- | ---------------- | ---------------------------------------------- | --------------------------- |
+| `/` (guest)                 | marketing        | **new content**                                | US7, FR-013                 |
+| `/` (signed in)             | app              | redesigned + CRUD                              | US5, FR-026–028, FR-053–060 |
+| `/pricing`                  | marketing        | **new**                                        | FR-015                      |
+| `/docs/api`                 | marketing        | moved                                          | FR-014                      |
+| `/sign-in`, `/sign-up`      | auth             | redesigned                                     | FR-018–020                  |
+| `/invite/[token]`           | auth             | restyled                                       | FR-001                      |
+| `/projects/new`             | app              | redesigned (4 sections + summary)              | US4, FR-029–032             |
+| `/projects/[id]`            | app (full-bleed) | redesigned (3 resizable panes / tabs)          | US3, FR-033–037             |
+| `/batches`, `/batches/[id]` | app              | restyled, plan-locked when batch is disabled   | FR-040                      |
+| `/workspace/brand`          | app              | redesigned inputs                              | FR-041–042                  |
+| `/workspace/assets`         | app              | restyled + empty state + drop zone             | US8                         |
+| `/workspace/members`        | app              | restyled + avatars                             | US8, FR-052                 |
+| `/workspace/billing`        | app              | progress bars, plan cards                      | US6, FR-038–039             |
+| `/workspace/api`            | app              | locked card when API is disabled               | FR-040                      |
+| `/account`                  | app              | **new** (profile)                              | US9, FR-050–052             |
+| `/admin`                    | app              | restyled, platform admins only (404 otherwise) | FR-021                      |
+| anything else               | —                | themed 404                                     | FR-017                      |
 
 Legal links in the footer (Terms, Privacy) and social links are shown with a "Coming soon" badge, without a link
 (FR-016), until real pages exist.

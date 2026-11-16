@@ -16,9 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export type DeleteTarget =
-  | { kind: "one"; id: string; title: string }
-  | { kind: "many"; n: number }
-  | { kind: "all"; n: number };
+  { kind: "one"; id: string; title: string } | { kind: "many"; n: number } | { kind: "all"; n: number };
 
 /** One dialog for the three deletes. Many and all need the typed phrase (spec FR-055); all of them say "cannot be undone". */
 export function DeleteDialog({
@@ -42,9 +40,17 @@ export function DeleteDialog({
   const phrase = t("phrase");
   const ok = !needsPhrase || typed.trim().toUpperCase() === phrase;
   const title =
-    target.kind === "one" ? t("oneTitle") : target.kind === "many" ? t("manyTitle", { n: target.n }) : t("allTitle", { n: target.n });
+    target.kind === "one"
+      ? t("oneTitle")
+      : target.kind === "many"
+        ? t("manyTitle", { n: target.n })
+        : t("allTitle", { n: target.n });
   const body =
-    target.kind === "one" ? t("oneBody", { title: target.title }) : target.kind === "many" ? t("manyBody") : t("allBody");
+    target.kind === "one"
+      ? t("oneBody", { title: target.title })
+      : target.kind === "many"
+        ? t("manyBody")
+        : t("allBody");
 
   return (
     <AlertDialog open onOpenChange={(o) => !o && !busy && onClose()}>
@@ -56,7 +62,13 @@ export function DeleteDialog({
         {needsPhrase && (
           <div className="flex flex-col gap-2">
             <Label htmlFor="delete-phrase">{t("typeToConfirm", { phrase })}</Label>
-            <Input id="delete-phrase" value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" data-testid="delete-phrase" />
+            <Input
+              id="delete-phrase"
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              autoComplete="off"
+              data-testid="delete-phrase"
+            />
           </div>
         )}
         <AlertDialogFooter>

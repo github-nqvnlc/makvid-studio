@@ -178,7 +178,11 @@ export function createLlm(cfg: LlmConfig): LlmProvider {
       }
       // The reasons go into the message so the worker log says why (they are never shown to users).
       const why = lastProblems.join("; ").slice(0, 300);
-      throw new LlmOutputError(`step "${req.step}" produced no valid output${why ? `: ${why}` : ""}`, lastProblems, lastText);
+      throw new LlmOutputError(
+        `step "${req.step}" produced no valid output${why ? `: ${why}` : ""}`,
+        lastProblems,
+        lastText,
+      );
     },
   };
 }

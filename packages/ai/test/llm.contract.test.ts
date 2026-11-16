@@ -195,7 +195,9 @@ describe("configFromEnv with empty variables", () => {
     try {
       const { configFromEnv } = await import("../src");
       const c = configFromEnv({ FPT_AI_API_KEY: "k", FPT_LLM_BASE_URL: "" } as NodeJS.ProcessEnv);
-      await createLlm(c).complete({ step: "script", messages: [{ role: "user", content: "x" }] }).catch(() => undefined);
+      await createLlm(c)
+        .complete({ step: "script", messages: [{ role: "user", content: "x" }] })
+        .catch(() => undefined);
       expect(seenUrls[0]).toContain("mkp-api.fptcloud.com");
     } finally {
       globalThis.fetch = realFetch;
@@ -204,7 +206,11 @@ describe("configFromEnv with empty variables", () => {
 
   it("explicit values still win, and 'none' removes the fallback", async () => {
     const { configFromEnv } = await import("../src");
-    const c = configFromEnv({ FPT_AI_API_KEY: "k", LLM_FALLBACK_PROVIDER: "openai", LLM_FALLBACK_MODEL: "m1" } as NodeJS.ProcessEnv);
+    const c = configFromEnv({
+      FPT_AI_API_KEY: "k",
+      LLM_FALLBACK_PROVIDER: "openai",
+      LLM_FALLBACK_MODEL: "m1",
+    } as NodeJS.ProcessEnv);
     expect(c.fallback).toEqual({ provider: "openai", model: "m1" });
     expect(configFromEnv({ LLM_FALLBACK_MODEL: "none" } as NodeJS.ProcessEnv).fallback).toBeUndefined();
   });

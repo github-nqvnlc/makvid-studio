@@ -5,10 +5,10 @@ container (see `docker/compose.tunnel.yml`) keeps an outbound connection to Clou
 
 ## Hostnames
 
-| Public hostname | Goes to | Why |
-| --- | --- | --- |
-| `makvid-studio.locnv.id.vn` | `http://web:3000` | the app |
-| `makvid-s3.locnv.id.vn` | `http://seaweedfs:8333` | browsers download videos, subtitles and avatars from signed URLs |
+| Public hostname             | Goes to                 | Why                                                              |
+| --------------------------- | ----------------------- | ---------------------------------------------------------------- |
+| `makvid-studio.locnv.id.vn` | `http://web:3000`       | the app                                                          |
+| `makvid-s3.locnv.id.vn`     | `http://seaweedfs:8333` | browsers download videos, subtitles and avatars from signed URLs |
 
 The object store needs its own public hostname because signed links are bound to the host that signed them. It is a
 **single-level** name on purpose: Cloudflare's free Universal SSL certificate covers `*.locnv.id.vn` but not a second

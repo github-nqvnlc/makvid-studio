@@ -26,7 +26,10 @@ export async function saveAvatar(userId: string, bytes: Uint8Array): Promise<str
   const v = `${sha8}.${f.ext}`;
   const { db, deps } = server();
   const [prev] = await db.select({ image: users.image }).from(users).where(eq(users.id, userId));
-  await deps.store.put(avatarKey(userId, v), bytes, { contentType: MIME[f.ext], cacheControl: "private, max-age=300" });
+  await deps.store.put(avatarKey(userId, v), bytes, {
+    contentType: MIME[f.ext],
+    cacheControl: "private, max-age=300",
+  });
   const image = `/api/avatars/${userId}?v=${v}`;
   await db.update(users).set({ image, updatedAt: new Date() }).where(eq(users.id, userId));
   await removeObject(userId, prev?.image, v);
@@ -43,5 +46,7 @@ export async function clearAvatar(userId: string): Promise<void> {
 async function removeObject(userId: string, image: string | null | undefined, keep: string | null) {
   const v = image ? new URL(image, "http://x").searchParams.get("v") : null;
   if (!v || v === keep || !/^[0-9a-f]{8}\.(png|jpg|webp)$/.test(v)) return;
-  await server().deps.store.delete(avatarKey(userId, v)).catch(() => undefined);
+  await server()
+    .deps.store.delete(avatarKey(userId, v))
+    .catch(() => undefined);
 }

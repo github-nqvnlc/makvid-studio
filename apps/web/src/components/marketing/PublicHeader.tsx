@@ -53,7 +53,13 @@ export function PublicHeader({ signedIn }: { signedIn: boolean }) {
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="md:hidden" aria-label={t("menu")} data-testid="mobile-menu">
+              <Button
+                variant="outline"
+                size="icon"
+                className="md:hidden"
+                aria-label={t("menu")}
+                data-testid="mobile-menu"
+              >
                 <Menu className="size-5" aria-hidden />
               </Button>
             </SheetTrigger>
@@ -63,7 +69,11 @@ export function PublicHeader({ signedIn }: { signedIn: boolean }) {
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-4" onClick={() => setOpen(false)}>
                 {LINKS.map((l) => (
-                  <Link key={l.key} href={l.href} className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}>
+                  <Link
+                    key={l.key}
+                    href={l.href}
+                    className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
+                  >
                     {t(l.key)}
                   </Link>
                 ))}

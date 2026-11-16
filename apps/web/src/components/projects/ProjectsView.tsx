@@ -13,7 +13,13 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiError } from "@/lib/api-client";
-import { PAGE_SIZES, activeFilterCount, fromSearchParams, toSearchParams, type UiFilters } from "@/lib/project-query";
+import {
+  PAGE_SIZES,
+  activeFilterCount,
+  fromSearchParams,
+  toSearchParams,
+  type UiFilters,
+} from "@/lib/project-query";
 import { readPref, writePref } from "@/lib/prefs";
 import { cn } from "@/lib/utils";
 import type { ProjectListResult, ProjectListItem } from "@/server/projects-list";
@@ -184,7 +190,10 @@ export function ProjectsView({ canEdit, canCreate }: { canEdit: boolean; canCrea
         return;
       } else deleted = 1;
     } else {
-      const body = target.kind === "many" ? { ids: [...selected] } : { filter: filterBody(filters), confirm: t("delete.phrase") };
+      const body =
+        target.kind === "many"
+          ? { ids: [...selected] }
+          : { filter: filterBody(filters), confirm: t("delete.phrase") };
       const res = await fetch("/api/projects/delete", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -200,16 +209,25 @@ export function ProjectsView({ canEdit, canCreate }: { canEdit: boolean; canCrea
     setSelected(new Set());
     setAllMatching(false);
     if (deleted || failed)
-      (failed ? toast.warning : toast.success)(failed ? t("delete.partial", { n: deleted, f: failed }) : t("delete.deleted", { n: deleted }));
+      (failed ? toast.warning : toast.success)(
+        failed ? t("delete.partial", { n: deleted, f: failed }) : t("delete.deleted", { n: deleted }),
+      );
     // Back one page when the last page just emptied.
     const left = (data?.total ?? 0) - deleted;
     const pageSize = filters.pageSize ?? 24;
-    if ((filters.page ?? 1) > 1 && left <= ((filters.page ?? 1) - 1) * pageSize) setFilters({ ...filters, page: Math.max(1, Math.ceil(left / pageSize)) });
+    if ((filters.page ?? 1) > 1 && left <= ((filters.page ?? 1) - 1) * pageSize)
+      setFilters({ ...filters, page: Math.max(1, Math.ceil(left / pageSize)) });
     else void load();
     void loadStats();
   }
 
-  const actions = { canEdit, selected, onSelect, onRename: (p: ProjectListItem) => setRenaming({ id: p.id, title: p.title }), onDelete: (p: ProjectListItem) => setDeleting({ kind: "one", id: p.id, title: p.title }) };
+  const actions = {
+    canEdit,
+    selected,
+    onSelect,
+    onRename: (p: ProjectListItem) => setRenaming({ id: p.id, title: p.title }),
+    onDelete: (p: ProjectListItem) => setDeleting({ kind: "one", id: p.id, title: p.title }),
+  };
   const pageSize = data?.pageSize ?? filters.pageSize ?? 24;
   const page = data?.page ?? filters.page ?? 1;
   const total = data?.total ?? 0;
@@ -229,10 +247,20 @@ export function ProjectsView({ canEdit, canCreate }: { canEdit: boolean; canCrea
       <ProjectsToolbar filters={filters} onChange={setFilters} view={view} onView={changeView} />
 
       {canEdit && count_ > 0 && (
-        <div className="bg-accent text-accent-foreground flex flex-wrap items-center gap-3 rounded-lg px-4 py-2 text-sm" role="status" data-testid="selection-bar">
+        <div
+          className="bg-accent text-accent-foreground flex flex-wrap items-center gap-3 rounded-lg px-4 py-2 text-sm"
+          role="status"
+          data-testid="selection-bar"
+        >
           <span className="font-medium">{t("select.count", { n: count_ })}</span>
           {!allMatching && allOnPage && total > items.length && (
-            <Button variant="link" size="sm" className="h-auto p-0" onClick={() => setAllMatching(true)} data-testid="select-all-matching">
+            <Button
+              variant="link"
+              size="sm"
+              className="h-auto p-0"
+              onClick={() => setAllMatching(true)}
+              data-testid="select-all-matching"
+            >
               {t("select.all", { n: total })}
             </Button>
           )}
@@ -244,7 +272,9 @@ export function ProjectsView({ canEdit, canCreate }: { canEdit: boolean; canCrea
             size="sm"
             className="ml-auto gap-1.5"
             data-testid="delete-selected"
-            onClick={() => setDeleting(allMatching ? { kind: "all", n: total } : { kind: "many", n: selected.size })}
+            onClick={() =>
+              setDeleting(allMatching ? { kind: "all", n: total } : { kind: "many", n: selected.size })
+            }
           >
             <Trash2 className="size-4" aria-hidden />
             {t("select.deleteSelected")}
@@ -266,7 +296,11 @@ export function ProjectsView({ canEdit, canCreate }: { canEdit: boolean; canCrea
             icon={SearchX}
             title={t("noResults.title")}
             description={t("noResults.body")}
-            action={<Button variant="outline" onClick={() => setFilters({})}>{t("noResults.clear")}</Button>}
+            action={
+              <Button variant="outline" onClick={() => setFilters({})}>
+                {t("noResults.clear")}
+              </Button>
+            }
           />
         ) : (
           <EmptyState
@@ -289,12 +323,18 @@ export function ProjectsView({ canEdit, canCreate }: { canEdit: boolean; canCrea
       )}
 
       {data && total > 0 && (
-        <nav className="flex flex-wrap items-center justify-between gap-3 text-sm" aria-label={t("pager.info", { from, to, total })}>
+        <nav
+          className="flex flex-wrap items-center justify-between gap-3 text-sm"
+          aria-label={t("pager.info", { from, to, total })}
+        >
           <span className="text-muted-foreground" data-testid="pager-info">
             {t("pager.info", { from, to, total })}
           </span>
           <div className="flex items-center gap-2">
-            <Select value={String(pageSize)} onValueChange={(v) => setFilters({ ...filters, pageSize: Number(v), page: 1 })}>
+            <Select
+              value={String(pageSize)}
+              onValueChange={(v) => setFilters({ ...filters, pageSize: Number(v), page: 1 })}
+            >
               <SelectTrigger aria-label={t("pager.size")} className="w-20">
                 <SelectValue />
               </SelectTrigger>
@@ -306,10 +346,23 @@ export function ProjectsView({ canEdit, canCreate }: { canEdit: boolean; canCrea
                 ))}
               </SelectContent>
             </Select>
-            <Button variant="outline" size="icon" disabled={page <= 1} aria-label={t("pager.prev")} onClick={() => setFilters({ ...filters, page: page - 1 })}>
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={page <= 1}
+              aria-label={t("pager.prev")}
+              onClick={() => setFilters({ ...filters, page: page - 1 })}
+            >
               <ChevronLeft className="size-4" aria-hidden />
             </Button>
-            <Button variant="outline" size="icon" disabled={to >= total} aria-label={t("pager.next")} onClick={() => setFilters({ ...filters, page: page + 1 })} data-testid="pager-next">
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={to >= total}
+              aria-label={t("pager.next")}
+              onClick={() => setFilters({ ...filters, page: page + 1 })}
+              data-testid="pager-next"
+            >
               <ChevronRight className="size-4" aria-hidden />
             </Button>
           </div>

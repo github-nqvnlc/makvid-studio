@@ -41,22 +41,22 @@ $env:PORT=3100; $env:APP_URL="http://localhost:3100"; $env:BETTER_AUTH_URL="http
 
 ## 2. Sửa ở đâu
 
-| Muốn đổi | File |
-| --- | --- |
-| Màu, bo góc, bóng, token theme sáng/tối | `apps/web/src/app/globals.css` (khối `:root` và `.dark`) |
-| Font | `apps/web/src/app/[locale]/layout.tsx` (Plus Jakarta Sans, Be Vietnam Pro, Space Mono) và `@theme inline` trong `globals.css` |
-| Trang chủ khách, bảng giá | `src/components/marketing/*`, `src/app/[locale]/(marketing)/pricing/page.tsx` |
-| Đăng nhập / đăng ký | `src/components/AuthForm.tsx`, `src/app/[locale]/(auth)/layout.tsx` |
-| Sidebar, thanh trên, ⌘K, chuông | `src/components/shell/*` |
-| Danh sách dự án (lọc, lưới/bảng, xóa) | `src/components/projects/*` |
-| Trang tạo video | `src/components/create/*`, `src/components/VoicePicker.tsx` |
-| Trình chỉnh sửa video | `src/components/editor/*` |
-| Hồ sơ | `src/components/account/*`, `src/app/[locale]/(app)/account/page.tsx` |
-| Gói/hạn mức, API, thương hiệu, thành viên, batch, admin | `src/components/{BillingPanel,ApiSettings,BrandKitEditor,MembersPanel,BatchesPanel,BatchProgress,AdminPlans}.tsx` |
-| Thành phần dùng chung (tiêu đề trang, trạng thái rỗng, thẻ nâng cấp, huy hiệu trạng thái…) | `src/components/common/*` |
-| Nút, ô nhập, thẻ, hộp thoại… (shadcn) | `src/components/ui/*` |
-| Chữ hiển thị (tiếng Việt và tiếng Anh) | `apps/web/messages/vi.json` và `en.json` |
-| Đường dẫn trang | `src/app/[locale]/(marketing)`, `(auth)`, `(app)` |
+| Muốn đổi                                                                                   | File                                                                                                                          |
+| ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| Màu, bo góc, bóng, token theme sáng/tối                                                    | `apps/web/src/app/globals.css` (khối `:root` và `.dark`)                                                                      |
+| Font                                                                                       | `apps/web/src/app/[locale]/layout.tsx` (Plus Jakarta Sans, Be Vietnam Pro, Space Mono) và `@theme inline` trong `globals.css` |
+| Trang chủ khách, bảng giá                                                                  | `src/components/marketing/*`, `src/app/[locale]/(marketing)/pricing/page.tsx`                                                 |
+| Đăng nhập / đăng ký                                                                        | `src/components/AuthForm.tsx`, `src/app/[locale]/(auth)/layout.tsx`                                                           |
+| Sidebar, thanh trên, ⌘K, chuông                                                            | `src/components/shell/*`                                                                                                      |
+| Danh sách dự án (lọc, lưới/bảng, xóa)                                                      | `src/components/projects/*`                                                                                                   |
+| Trang tạo video                                                                            | `src/components/create/*`, `src/components/VoicePicker.tsx`                                                                   |
+| Trình chỉnh sửa video                                                                      | `src/components/editor/*`                                                                                                     |
+| Hồ sơ                                                                                      | `src/components/account/*`, `src/app/[locale]/(app)/account/page.tsx`                                                         |
+| Gói/hạn mức, API, thương hiệu, thành viên, batch, admin                                    | `src/components/{BillingPanel,ApiSettings,BrandKitEditor,MembersPanel,BatchesPanel,BatchProgress,AdminPlans}.tsx`             |
+| Thành phần dùng chung (tiêu đề trang, trạng thái rỗng, thẻ nâng cấp, huy hiệu trạng thái…) | `src/components/common/*`                                                                                                     |
+| Nút, ô nhập, thẻ, hộp thoại… (shadcn)                                                      | `src/components/ui/*`                                                                                                         |
+| Chữ hiển thị (tiếng Việt và tiếng Anh)                                                     | `apps/web/messages/vi.json` và `en.json`                                                                                      |
+| Đường dẫn trang                                                                            | `src/app/[locale]/(marketing)`, `(auth)`, `(app)`                                                                             |
 
 Quy ước bắt buộc (ESLint sẽ báo lỗi nếu vi phạm):
 
@@ -131,7 +131,8 @@ pnpm --filter @makvid/web test
 SCREENS_AUTH=1 SCREENS_PHASE=thu SCREENS_PAGES="/,/projects/new,/account" pnpm --filter @makvid/web test:e2e e2e/screens.spec.ts
 ```
 
-  Ảnh nằm ở `docs/reports/ui/thu/` (file PNG bị git bỏ qua).
+Ảnh nằm ở `docs/reports/ui/thu/` (file PNG bị git bỏ qua).
+
 - **Kiểm tra truy cập (axe):** `pnpm --filter @makvid/web test:e2e e2e/a11y.spec.ts` (cần stack đang chạy).
 
 ## 6. Biến môi trường tối thiểu cho `.env`
@@ -151,16 +152,16 @@ Nên dùng `127.0.0.1` thay cho `localhost`, xem mục dưới.
 
 ## 7. Gặp lỗi thì xem
 
-| Triệu chứng | Nguyên nhân và cách xử lý |
-| --- | --- |
+| Triệu chứng                                                            | Nguyên nhân và cách xử lý                                                                                                                                                                                                             |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Đăng ký/đăng nhập báo lỗi 500, log có `CONNECT_TIMEOUT localhost:5432` | Trên Windows, WSL có thể trả lời ở `localhost` (IPv6) thay cho Docker. Dùng `127.0.0.1` trong `DATABASE_URL` và `S3_ENDPOINT`. Kiểm tra: `netstat -ano \| findstr :5432` mà thấy tiến trình `wslrelay.exe` ở `[::1]` là dính lỗi này. |
-| Video tạo mãi không xong, log worker nhắc Redis 6.0 | Cần Redis/Valkey từ 6.2. Dùng Valkey của `compose.dev.yml` (7.x) và trỏ `VALKEY_URL` vào đó; tắt Redis cũ trên máy. |
-| Cổng 3000 đã bị dùng | Dừng stack Docker đầy đủ (`docker compose -f docker/compose.yml down`) hoặc đổi cổng như mục 1. |
-| Đăng nhập xong bị đá về trang đăng nhập | `BETTER_AUTH_URL`/`APP_URL` không khớp địa chỉ bạn đang mở (cổng khác, hoặc `127.0.0.1` thay vì `localhost`). |
-| Trang trắng, console báo `useEffect must not return anything…` | Trong `useEffect`, đừng viết `useEffect(() => setX(1), [])`; viết `useEffect(() => { setX(1); }, [])`. |
-| Giao diện hỏng kỳ lạ sau khi đổi nhiều file | Dừng dev, xóa `apps/web/.next`, chạy lại. |
-| Windows báo không đổi tên/di chuyển được thư mục `src/app/...` | Dừng `dev:mock` trước khi di chuyển thư mục trang. |
-| Video không phát trong trình duyệt tự động hóa | Chrome headless của test không giải mã H.264; trình duyệt thật thì phát bình thường. |
+| Video tạo mãi không xong, log worker nhắc Redis 6.0                    | Cần Redis/Valkey từ 6.2. Dùng Valkey của `compose.dev.yml` (7.x) và trỏ `VALKEY_URL` vào đó; tắt Redis cũ trên máy.                                                                                                                   |
+| Cổng 3000 đã bị dùng                                                   | Dừng stack Docker đầy đủ (`docker compose -f docker/compose.yml down`) hoặc đổi cổng như mục 1.                                                                                                                                       |
+| Đăng nhập xong bị đá về trang đăng nhập                                | `BETTER_AUTH_URL`/`APP_URL` không khớp địa chỉ bạn đang mở (cổng khác, hoặc `127.0.0.1` thay vì `localhost`).                                                                                                                         |
+| Trang trắng, console báo `useEffect must not return anything…`         | Trong `useEffect`, đừng viết `useEffect(() => setX(1), [])`; viết `useEffect(() => { setX(1); }, [])`.                                                                                                                                |
+| Giao diện hỏng kỳ lạ sau khi đổi nhiều file                            | Dừng dev, xóa `apps/web/.next`, chạy lại.                                                                                                                                                                                             |
+| Windows báo không đổi tên/di chuyển được thư mục `src/app/...`         | Dừng `dev:mock` trước khi di chuyển thư mục trang.                                                                                                                                                                                    |
+| Video không phát trong trình duyệt tự động hóa                         | Chrome headless của test không giải mã H.264; trình duyệt thật thì phát bình thường.                                                                                                                                                  |
 
 ## 8. Việc nên biết thêm
 

@@ -4,7 +4,17 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Progress } from "@/components/ui/progress";
 
 /** Label, "used / limit unit", progress bar; warning at >= 80 %, "Unlimited" when limit is null. */
-export function UsageMeter({ label, used, limit, unit }: { label: string; used: number; limit: number | null; unit?: string }) {
+export function UsageMeter({
+  label,
+  used,
+  limit,
+  unit,
+}: {
+  label: string;
+  used: number;
+  limit: number | null;
+  unit?: string;
+}) {
   const t = useTranslations("common");
   const f = useFormatter();
   const pct = limit && limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;

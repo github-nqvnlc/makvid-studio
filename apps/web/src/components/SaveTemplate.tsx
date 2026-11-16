@@ -61,7 +61,13 @@ export function SaveTemplate({ projectId, title }: { projectId: string; title: s
         <form className="flex flex-col gap-4" onSubmit={(e) => void save(e)} data-testid="template-form">
           <div className="flex flex-col gap-2">
             <Label htmlFor="template-name">{t("name")}</Label>
-            <Input id="template-name" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} required />
+            <Input
+              id="template-name"
+              value={name}
+              maxLength={120}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
           {rows.map((r, i) => (
             <div key={i} className="grid gap-2 sm:grid-cols-2">
@@ -82,7 +88,13 @@ export function SaveTemplate({ projectId, title }: { projectId: string; title: s
             </div>
           ))}
           <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="outline" size="sm" className="gap-1.5" onClick={() => setRows([...rows, { find: "", name: "" }])}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-1.5"
+              onClick={() => setRows([...rows, { find: "", name: "" }])}
+            >
               <Plus className="size-4" aria-hidden />
               {t("addRow")}
             </Button>

@@ -72,12 +72,21 @@ export function MembersPanel({
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-medium">
-                    {m.name || m.email} {m.userId === me && <span className="text-muted-foreground font-normal">({t("you")})</span>}
+                    {m.name || m.email}{" "}
+                    {m.userId === me && (
+                      <span className="text-muted-foreground font-normal">({t("you")})</span>
+                    )}
                   </div>
                   <div className="text-muted-foreground truncate text-xs">{m.email}</div>
                 </div>
                 {assignable.includes(m.role) && m.userId !== me ? (
-                  <NativeSelect aria-label={m.email} value={m.role} onChange={(e) => void call(`/api/workspace/members/${m.userId}`, "PATCH", { role: e.target.value })}>
+                  <NativeSelect
+                    aria-label={m.email}
+                    value={m.role}
+                    onChange={(e) =>
+                      void call(`/api/workspace/members/${m.userId}`, "PATCH", { role: e.target.value })
+                    }
+                  >
                     {assignable.map((r) => (
                       <option key={r} value={r}>
                         {t(`role.${r}`)}
@@ -88,7 +97,11 @@ export function MembersPanel({
                   <Badge variant="secondary">{t(`role.${m.role}`)}</Badge>
                 )}
                 {m.role !== "owner" && (m.userId === me || assignable.includes(m.role)) && (
-                  <Button variant="outline" size="sm" onClick={() => void call(`/api/workspace/members/${m.userId}`, "DELETE")}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void call(`/api/workspace/members/${m.userId}`, "DELETE")}
+                  >
                     {m.userId === me ? t("leave") : t("remove")}
                   </Button>
                 )}
@@ -106,8 +119,20 @@ export function MembersPanel({
           <CardContent>
             <form className="flex flex-col gap-3" onSubmit={(e) => void invite(e)} data-testid="invite-form">
               <div className="flex flex-wrap gap-2">
-                <Input type="email" required placeholder={t("email")} aria-label={t("email")} value={email} onChange={(e) => setEmail(e.target.value)} className="min-w-56 flex-1" />
-                <NativeSelect value={role} onChange={(e) => setRole(e.target.value as Role)} aria-label={t("roleLabel")}>
+                <Input
+                  type="email"
+                  required
+                  placeholder={t("email")}
+                  aria-label={t("email")}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="min-w-56 flex-1"
+                />
+                <NativeSelect
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as Role)}
+                  aria-label={t("roleLabel")}
+                >
                   {assignable.map((r) => (
                     <option key={r} value={r}>
                       {t(`role.${r}`)}
@@ -118,7 +143,13 @@ export function MembersPanel({
               </div>
               {link && (
                 <p className="text-sm">
-                  {t("link")} <code className="bg-muted rounded px-1 font-mono text-xs break-all" data-testid="invite-link">{link}</code>
+                  {t("link")}{" "}
+                  <code
+                    className="bg-muted rounded px-1 font-mono text-xs break-all"
+                    data-testid="invite-link"
+                  >
+                    {link}
+                  </code>
                 </p>
               )}
             </form>
@@ -138,7 +169,11 @@ export function MembersPanel({
                   <span className="min-w-0 flex-1 truncate">{i.email}</span>
                   <Badge variant="secondary">{t(`role.${i.role}`)}</Badge>
                   {assignable.length > 0 && (
-                    <Button variant="outline" size="sm" onClick={() => void call(`/api/workspace/invitations/${i.id}`, "DELETE")}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => void call(`/api/workspace/invitations/${i.id}`, "DELETE")}
+                    >
                       {t("revoke")}
                     </Button>
                   )}

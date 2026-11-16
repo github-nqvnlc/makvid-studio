@@ -100,7 +100,12 @@ export function EditorLayout({ projectId, styles }: { projectId: string; styles:
 
   /** A new render was queued: show progress right away (SSE confirms within a second). */
   function working() {
-    setLive((l) => ({ status: "producing_audio", text: null, fraction: 0, headVersionId: l?.headVersionId ?? null }));
+    setLive((l) => ({
+      status: "producing_audio",
+      text: null,
+      fraction: 0,
+      headVersionId: l?.headVersionId ?? null,
+    }));
   }
 
   async function send(e: React.FormEvent) {
@@ -142,7 +147,12 @@ export function EditorLayout({ projectId, styles }: { projectId: string; styles:
 
   const preview = (
     <div className="flex flex-col gap-4">
-      <PreviewPlayer ref={video} src={output?.video ?? null} poster={output?.thumbnail ?? null} aspect={output?.aspect} />
+      <PreviewPlayer
+        ref={video}
+        src={output?.video ?? null}
+        poster={output?.thumbnail ?? null}
+        aspect={output?.aspect}
+      />
       <Downloads outputs={view.outputs} />
       {status === "ready" && view.spec && <SaveTemplate projectId={projectId} title={view.project.title} />}
     </div>
@@ -157,17 +167,33 @@ export function EditorLayout({ projectId, styles }: { projectId: string; styles:
             key={s.id}
             aria-pressed={scene === s.id}
             onClick={() => seek(s.id)}
-            className={cn("rounded-md border px-3 py-2 text-left text-sm", scene === s.id ? "border-primary ring-primary ring-1" : "hover:bg-muted")}
+            className={cn(
+              "rounded-md border px-3 py-2 text-left text-sm",
+              scene === s.id ? "border-primary ring-primary ring-1" : "hover:bg-muted",
+            )}
           >
             {t("editor.scene", { n: i + 1 })}
           </button>
         ))}
       </div>
-      <VersionHistory versions={view.versions} head={view.project.headVersionId} disabled={!settled} onRestore={(id) => void act({ action: "restore", versionId: id })} />
+      <VersionHistory
+        versions={view.versions}
+        head={view.project.headVersionId}
+        disabled={!settled}
+        onRestore={(id) => void act({ action: "restore", versionId: id })}
+      />
     </div>
   );
   const chat = (
-    <ChatPanel chat={view.chat} message={message} onMessage={setMessage} onSend={send} sending={sending} settled={settled} error={error} />
+    <ChatPanel
+      chat={view.chat}
+      message={message}
+      onMessage={setMessage}
+      onSend={send}
+      sending={sending}
+      settled={settled}
+      error={error}
+    />
   );
 
   return (
@@ -183,7 +209,11 @@ export function EditorLayout({ projectId, styles }: { projectId: string; styles:
       />
 
       {!settled && !status.startsWith("awaiting") && (
-        <div className="bg-card flex flex-col gap-2 rounded-lg border p-4" data-testid="progress" aria-live="polite">
+        <div
+          className="bg-card flex flex-col gap-2 rounded-lg border p-4"
+          data-testid="progress"
+          aria-live="polite"
+        >
           <strong className="text-sm">{live?.text ?? t("editor.working")}</strong>
           <Progress value={Math.round((live?.fraction ?? 0) * 100)} aria-label={t("editor.working")} />
         </div>
@@ -211,7 +241,11 @@ export function EditorLayout({ projectId, styles }: { projectId: string; styles:
             </TabsContent>
           </Tabs>
         ) : (
-          <ResizablePanelGroup orientation="horizontal" className="min-h-[32rem] gap-0 rounded-lg border" aria-label={t("editor.panes")}>
+          <ResizablePanelGroup
+            orientation="horizontal"
+            className="min-h-[32rem] gap-0 rounded-lg border"
+            aria-label={t("editor.panes")}
+          >
             <ResizablePanel defaultSize="22%" minSize="15%">
               <div className="h-full overflow-y-auto p-4">{scenes}</div>
             </ResizablePanel>

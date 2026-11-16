@@ -20,6 +20,7 @@ Nền tảng: Tailwind CSS v4 + shadcn/ui (Radix), theme tweakcn "poppy-1", font
 / Space Mono (DM Sans bị thay vì không có bộ chữ tiếng Việt), next-themes, next-intl hiện có.
 
 Hai ngoại lệ phía máy chủ đã được duyệt trong spec:
+
 - **Quản lý dự án đầy đủ**: liệt kê có lọc, tìm không dấu, sắp xếp, phân trang trên máy chủ; đổi tên; xóa
   vĩnh viễn một, nhiều, hoặc tất cả. Xóa chạy 2 bước: đánh dấu xóa ngay, rồi worker dọn dữ liệu.
 - **Trang hồ sơ**: đổi tên, ảnh đại diện, mật khẩu, ngôn ngữ, dùng endpoint có sẵn của Better Auth.
@@ -32,6 +33,7 @@ và index).
 **Language/Version**: TypeScript strict, Node.js ≥ 22.12, React 19.2.9, Next.js 16.4.3 (App Router, Turbopack).
 
 **Primary Dependencies**:
+
 - **Đã có**: next-intl 4.14.9, better-auth 1.7.14, zod 4.6.7, drizzle-orm, bullmq.
 - **Thêm mới**:
   - Giao diện: tailwindcss + @tailwindcss/postcss 4.3.5, shadcn CLI 4.23.0, radix-ui 1.8.1, lucide-react
@@ -47,6 +49,7 @@ và index).
 S3/SeaweedFS (thêm `deletePrefix`), localStorage/cookie cho lựa chọn hiển thị.
 
 **Testing**:
+
 - vitest: unit (truy vấn lọc, kiểm tra hợp lệ, so khớp key vi/en, tương phản token).
 - vitest integration (`MAKVID_INFRA_TESTS=1`): cách ly workspace, purge, hiệu năng 1.000 dự án.
 - Playwright E2E trên `dev:mock`: giữ 100% spec cũ, thêm spec mới, chụp màn hình, axe.
@@ -59,11 +62,13 @@ S3/SeaweedFS (thêm `deletePrefix`), localStorage/cookie cho lựa chọn hiển
 `packages/storage`, `packages/db`, `apps/worker-ai`.
 
 **Performance Goals**:
+
 - Lighthouse trên `/` ≥ 90 ở Performance, Accessibility, Best Practices (SC-010).
 - Mỗi lần lọc hoặc chuyển trang danh sách dự án dưới 1 giây với 1.000 dự án (SC-013).
 - Không nháy sai theme khi tải trang.
 
 **Constraints**:
+
 - Chỉ dùng token theme, không có chữ cứng (cả hai được kiểm bằng lint/test).
 - Giữ mọi `data-testid` mà E2E đang dùng.
 - Dependency phải qua `pnpm license:check`.
@@ -71,6 +76,7 @@ S3/SeaweedFS (thêm `deletePrefix`), localStorage/cookie cho lựa chọn hiển
 - Video hero ≤ 1,5 MB mỗi bản.
 
 **Scale/Scope**:
+
 - 17 URL (14 có sẵn + `/pricing`, `/account`, trang 404/lỗi).
 - 16 component cũ cần viết lại.
 - Khoảng 400 key i18n mỗi ngôn ngữ, sẽ tăng lên khoảng 900.
@@ -80,16 +86,16 @@ S3/SeaweedFS (thêm `deletePrefix`), localStorage/cookie cho lựa chọn hiển
 
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Nguyên tắc | Đánh giá | Ghi chú |
-| --- | --- | --- |
-| I. Plan và milestone có cổng duyệt | ✅ | Plan này chờ duyệt trước khi viết code. 5 giai đoạn UI-G0 → UI-G4, mỗi giai đoạn có báo cáo trong `docs/reports/UI-G<n>.md` và dừng chờ duyệt |
-| II. Xong nghĩa là đã chạy thật | ✅ | Mỗi giai đoạn: typecheck, lint, test, build, E2E (spec cũ + mới), ảnh chụp thật. Luồng tạo video E2E vẫn render MP4 (mock). Video hero được render thật bằng pipeline. Mọi thư viện đã đối chiếu phiên bản và tài liệu (research) |
-| III. VideoSpec là nguồn sự thật, render tất định | ✅ | Không đụng VideoSpec, compiler, renderer. Xóa dự án không ảnh hưởng `render_cache` dùng chung |
-| IV. Tiếng Việt và chất lượng hình ảnh | ✅ | Font được kiểm glyph Ẩ/Ỹ/Ự/ặ/ở/Đ; DM Sans bị thay vì thiếu bộ chữ tiếng Việt. Tên dự án chuẩn hóa NFC. Tìm kiếm không dấu có test |
-| V. Người dùng không thấy thông tin kỹ thuật | ✅ | Mọi lỗi qua `errors.<code>`. Spec E2E `no-tech-leak` vẫn chạy và mở rộng cho trang mới |
-| VI. License thương mại sạch | ✅ | Dependency mới đều MIT/ISC/Apache-2.0. `@axe-core/playwright` (MPL-2.0) chỉ là devDependency, cổng license chỉ cảnh báo. Font OFL ghi vào `THIRD_PARTY_LICENSES.md`. `sharp` bị loại vì libvips là LGPL |
-| VII. Cách ly và bảo mật mặc định | ✅ | Liệt kê, đổi tên, xóa đều chạy trong `withWorkspace` (RLS) và kiểm quyền theo `rbac.ts`, có test chứng minh 0 rò rỉ giữa workspace. Ảnh đại diện kiểm magic bytes và kích thước, không nhận SVG, xem qua signed URL ngắn hạn và chỉ cho người cùng workspace. "Xóa tất cả" phải gõ chữ xác nhận |
-| VIII. Trừu tượng hóa nhà cung cấp, đo chi phí | ✅ | Thêm `deletePrefix` vào interface `ObjectStore`, không gọi S3 trực tiếp từ app. `usage_records` được giữ lại khi xóa dự án để không mất sổ chi phí |
+| Nguyên tắc                                       | Đánh giá | Ghi chú                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| I. Plan và milestone có cổng duyệt               | ✅       | Plan này chờ duyệt trước khi viết code. 5 giai đoạn UI-G0 → UI-G4, mỗi giai đoạn có báo cáo trong `docs/reports/UI-G<n>.md` và dừng chờ duyệt                                                                                                                                                   |
+| II. Xong nghĩa là đã chạy thật                   | ✅       | Mỗi giai đoạn: typecheck, lint, test, build, E2E (spec cũ + mới), ảnh chụp thật. Luồng tạo video E2E vẫn render MP4 (mock). Video hero được render thật bằng pipeline. Mọi thư viện đã đối chiếu phiên bản và tài liệu (research)                                                               |
+| III. VideoSpec là nguồn sự thật, render tất định | ✅       | Không đụng VideoSpec, compiler, renderer. Xóa dự án không ảnh hưởng `render_cache` dùng chung                                                                                                                                                                                                   |
+| IV. Tiếng Việt và chất lượng hình ảnh            | ✅       | Font được kiểm glyph Ẩ/Ỹ/Ự/ặ/ở/Đ; DM Sans bị thay vì thiếu bộ chữ tiếng Việt. Tên dự án chuẩn hóa NFC. Tìm kiếm không dấu có test                                                                                                                                                               |
+| V. Người dùng không thấy thông tin kỹ thuật      | ✅       | Mọi lỗi qua `errors.<code>`. Spec E2E `no-tech-leak` vẫn chạy và mở rộng cho trang mới                                                                                                                                                                                                          |
+| VI. License thương mại sạch                      | ✅       | Dependency mới đều MIT/ISC/Apache-2.0. `@axe-core/playwright` (MPL-2.0) chỉ là devDependency, cổng license chỉ cảnh báo. Font OFL ghi vào `THIRD_PARTY_LICENSES.md`. `sharp` bị loại vì libvips là LGPL                                                                                         |
+| VII. Cách ly và bảo mật mặc định                 | ✅       | Liệt kê, đổi tên, xóa đều chạy trong `withWorkspace` (RLS) và kiểm quyền theo `rbac.ts`, có test chứng minh 0 rò rỉ giữa workspace. Ảnh đại diện kiểm magic bytes và kích thước, không nhận SVG, xem qua signed URL ngắn hạn và chỉ cho người cùng workspace. "Xóa tất cả" phải gõ chữ xác nhận |
+| VIII. Trừu tượng hóa nhà cung cấp, đo chi phí    | ✅       | Thêm `deletePrefix` vào interface `ObjectStore`, không gọi S3 trực tiếp từ app. `usage_records` được giữ lại khi xóa dự án để không mất sổ chi phí                                                                                                                                              |
 
 **Re-check sau Phase 1**: vẫn đạt. Thiết kế không thêm vi phạm mới; hai ngoại lệ phạm vi đã được chủ sản phẩm
 duyệt (xem Complexity Tracking).
@@ -168,13 +174,13 @@ Theo mục 9 của UI_PROMPT.md. Mỗi cổng có báo cáo `docs/reports/UI-G<n
 quả test, ảnh chụp 2 theme × 2 ngôn ngữ × desktop/mobile, tiêu chí đạt/chưa, việc cần chủ sản phẩm quyết. Sau
 đó dừng chờ duyệt.
 
-| Giai đoạn | Nội dung | Thứ tự bên trong | Nghiệm thu |
-| --- | --- | --- | --- |
-| **UI-G0** Khảo sát và plan | spec, clarify, plan này, `docs/UI_PLAN.md` | — | Chủ sản phẩm duyệt plan |
-| **UI-G1** Nền tảng | Tailwind + shadcn init, theme poppy-1, chỉnh token tương phản, font, next-themes, ThemeToggle, LocaleSwitcher (có lưu hồ sơ), component `common/`, test so khớp key i18n, rule lint (chữ cứng, mã màu) | 1) Tailwind chạy song song CSS cũ · 2) token + font · 3) theme provider · 4) locale switcher · 5) đặt 2 nút vào layout hiện tại · 6) test + lint | Đổi theme/ngôn ngữ ở **mọi trang hiện có** không lỗi, không nháy, không cảnh báo hydration; build, lint, E2E cũ đều pass |
-| **UI-G2** Công khai + xác thực | Layout group (marketing)/(auth), landing 9 khối, `/pricing`, 404/lỗi, sign-in/up/invite chia đôi, form RHF+zod, nút Google có điều kiện. Kịch bản video hero gửi duyệt **trước** khi render | 1) layout + header/footer · 2) auth pages · 3) landing · 4) pricing · 5) 404/error · 6) render video hero sau khi kịch bản được duyệt | Ảnh chụp 2×2×2; đăng ký/đăng nhập như cũ; Lighthouse `/` ≥ 90 |
-| **UI-G3** App shell + màn hình chính | (a) Shell: sidebar, topbar, command palette, chuông, workspace switcher, quota · (b) API + UI quản lý dự án · (c) wizard tạo video + voice picker · (d) trình chỉnh sửa · (e) billing, API, batches · (f) brand, assets, members · (g) trang hồ sơ + API avatar · (h) admin | Theo thứ tự a → h; mỗi trang là 1 task kèm checklist `ui-conventions.md`; migration 0007 + `deletePrefix` + purge làm trước (b) | Mọi luồng cũ vẫn chạy (E2E); mọi màn hình có đủ trạng thái tải/rỗng/lỗi; test cách ly + hiệu năng (infra) pass |
-| **UI-G4** Hoàn thiện | Xóa `globals.css` cũ và class cũ, axe trên trang chính, ảnh chụp đầy đủ, Lighthouse, cập nhật `THIRD_PARTY_LICENSES.md`, `AGENTS.md`, `PROGRESS.md` | — | Không còn class cũ, không chữ cứng, mọi test pass, có báo cáo Lighthouse và axe |
+| Giai đoạn                            | Nội dung                                                                                                                                                                                                                                                                    | Thứ tự bên trong                                                                                                                                 | Nghiệm thu                                                                                                               |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| **UI-G0** Khảo sát và plan           | spec, clarify, plan này, `docs/UI_PLAN.md`                                                                                                                                                                                                                                  | —                                                                                                                                                | Chủ sản phẩm duyệt plan                                                                                                  |
+| **UI-G1** Nền tảng                   | Tailwind + shadcn init, theme poppy-1, chỉnh token tương phản, font, next-themes, ThemeToggle, LocaleSwitcher (có lưu hồ sơ), component `common/`, test so khớp key i18n, rule lint (chữ cứng, mã màu)                                                                      | 1) Tailwind chạy song song CSS cũ · 2) token + font · 3) theme provider · 4) locale switcher · 5) đặt 2 nút vào layout hiện tại · 6) test + lint | Đổi theme/ngôn ngữ ở **mọi trang hiện có** không lỗi, không nháy, không cảnh báo hydration; build, lint, E2E cũ đều pass |
+| **UI-G2** Công khai + xác thực       | Layout group (marketing)/(auth), landing 9 khối, `/pricing`, 404/lỗi, sign-in/up/invite chia đôi, form RHF+zod, nút Google có điều kiện. Kịch bản video hero gửi duyệt **trước** khi render                                                                                 | 1) layout + header/footer · 2) auth pages · 3) landing · 4) pricing · 5) 404/error · 6) render video hero sau khi kịch bản được duyệt            | Ảnh chụp 2×2×2; đăng ký/đăng nhập như cũ; Lighthouse `/` ≥ 90                                                            |
+| **UI-G3** App shell + màn hình chính | (a) Shell: sidebar, topbar, command palette, chuông, workspace switcher, quota · (b) API + UI quản lý dự án · (c) wizard tạo video + voice picker · (d) trình chỉnh sửa · (e) billing, API, batches · (f) brand, assets, members · (g) trang hồ sơ + API avatar · (h) admin | Theo thứ tự a → h; mỗi trang là 1 task kèm checklist `ui-conventions.md`; migration 0007 + `deletePrefix` + purge làm trước (b)                  | Mọi luồng cũ vẫn chạy (E2E); mọi màn hình có đủ trạng thái tải/rỗng/lỗi; test cách ly + hiệu năng (infra) pass           |
+| **UI-G4** Hoàn thiện                 | Xóa `globals.css` cũ và class cũ, axe trên trang chính, ảnh chụp đầy đủ, Lighthouse, cập nhật `THIRD_PARTY_LICENSES.md`, `AGENTS.md`, `PROGRESS.md`                                                                                                                         | —                                                                                                                                                | Không còn class cũ, không chữ cứng, mọi test pass, có báo cáo Lighthouse và axe                                          |
 
 **Cách migrate an toàn**: Tailwind được thêm vào **cạnh** CSS cũ ở UI-G1 (preflight của Tailwind có thể đổi style
 mặc định của trang cũ, nên kiểm bằng ảnh chụp). Mỗi trang chuyển hẳn sang component mới trong một task. CSS cũ
@@ -186,18 +192,18 @@ riêng kiểm theo checklist (bước "verifying").
 
 ## Rủi ro
 
-| Rủi ro | Ảnh hưởng | Cách giảm |
-| --- | --- | --- |
-| Preflight của Tailwind làm vỡ trang cũ trong lúc chuyển | Giao diện tạm xấu giữa giai đoạn | Chụp ảnh trước/sau ở UI-G1; nếu vỡ nặng thì đưa CSS cũ vào `@layer` thấp hơn cho tới UI-G4 |
-| E2E phụ thuộc markup cũ (`.bubble.assistant`, `select`, `p.error[role=alert]`) | Spec cũ đỏ | Giữ mọi `data-testid`; sửa selector trong cùng task với trang |
-| Token poppy-1 có viền đen/trắng thuần | Giao diện gắt, không đạt AA | Chỉ chỉnh token (R2), test tương phản tự động |
-| Xóa vĩnh viễn trong lúc worker đang chạy | File mồ côi, lỗi worker | Đánh dấu xóa + `run_id = NULL` trước, dọn sau, chạy lại lần 2 sau 15 phút, test bằng infra |
-| "Xóa tất cả" xóa nhầm | Mất dữ liệu không khôi phục | Gõ chữ xác nhận, hộp thoại ghi rõ số lượng và bộ lọc, chỉ Editor trở lên được xóa |
-| `unaccent` không có trên Postgres production | Tìm không dấu lỗi | Ảnh Postgres 17 alpine có contrib; migration dùng `IF NOT EXISTS` và test chạy trên đúng ảnh này |
-| Lighthouse < 90 vì video hero | Không đạt SC-010 | `preload="none"`, poster WebP, chỉ phát sau khi trang rảnh, ≤ 1,5 MB |
-| Chuỗi tiếng Việt dài làm vỡ layout | Tràn chữ, cuộn ngang | Ảnh chụp 360 px cả 2 ngôn ngữ; `truncate`/`line-clamp`; không đặt độ rộng cố định cho chữ |
-| Mở rộng `GET /api/projects` (thêm phân trang) làm hỏng nơi đang gọi | Màn hình cũ thiếu dự án | Mặc định giữ đúng thứ tự cũ; rà mọi chỗ gọi (`grep`) trong cùng task |
-| Agent khác đang sửa `apps/web` | Xung đột | Kiểm `docs/PROGRESS.md` trước mỗi giai đoạn (AGENTS.md quy tắc 9) |
+| Rủi ro                                                                         | Ảnh hưởng                        | Cách giảm                                                                                        |
+| ------------------------------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Preflight của Tailwind làm vỡ trang cũ trong lúc chuyển                        | Giao diện tạm xấu giữa giai đoạn | Chụp ảnh trước/sau ở UI-G1; nếu vỡ nặng thì đưa CSS cũ vào `@layer` thấp hơn cho tới UI-G4       |
+| E2E phụ thuộc markup cũ (`.bubble.assistant`, `select`, `p.error[role=alert]`) | Spec cũ đỏ                       | Giữ mọi `data-testid`; sửa selector trong cùng task với trang                                    |
+| Token poppy-1 có viền đen/trắng thuần                                          | Giao diện gắt, không đạt AA      | Chỉ chỉnh token (R2), test tương phản tự động                                                    |
+| Xóa vĩnh viễn trong lúc worker đang chạy                                       | File mồ côi, lỗi worker          | Đánh dấu xóa + `run_id = NULL` trước, dọn sau, chạy lại lần 2 sau 15 phút, test bằng infra       |
+| "Xóa tất cả" xóa nhầm                                                          | Mất dữ liệu không khôi phục      | Gõ chữ xác nhận, hộp thoại ghi rõ số lượng và bộ lọc, chỉ Editor trở lên được xóa                |
+| `unaccent` không có trên Postgres production                                   | Tìm không dấu lỗi                | Ảnh Postgres 17 alpine có contrib; migration dùng `IF NOT EXISTS` và test chạy trên đúng ảnh này |
+| Lighthouse < 90 vì video hero                                                  | Không đạt SC-010                 | `preload="none"`, poster WebP, chỉ phát sau khi trang rảnh, ≤ 1,5 MB                             |
+| Chuỗi tiếng Việt dài làm vỡ layout                                             | Tràn chữ, cuộn ngang             | Ảnh chụp 360 px cả 2 ngôn ngữ; `truncate`/`line-clamp`; không đặt độ rộng cố định cho chữ        |
+| Mở rộng `GET /api/projects` (thêm phân trang) làm hỏng nơi đang gọi            | Màn hình cũ thiếu dự án          | Mặc định giữ đúng thứ tự cũ; rà mọi chỗ gọi (`grep`) trong cùng task                             |
+| Agent khác đang sửa `apps/web`                                                 | Xung đột                         | Kiểm `docs/PROGRESS.md` trước mỗi giai đoạn (AGENTS.md quy tắc 9)                                |
 
 ## Đề xuất (chưa làm trong feature này)
 
@@ -209,7 +215,7 @@ riêng kiểm theo checklist (bước "verifying").
 
 ## Complexity Tracking
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-| --- | --- | --- |
-| Feature "chỉ sửa giao diện" có thay đổi phía máy chủ (API dự án, purge, migration 0007, `deletePrefix`, API hồ sơ/avatar) | Chủ sản phẩm duyệt ở clarify (ngoại lệ 1 và 2 trong spec) | Lọc trên trình duyệt chậm khi nhiều dự án; xóa không có API thì không làm được |
-| Dev dependency MPL-2.0 (`@axe-core/playwright`) | Đo truy cập tự động (SC-006) | Kiểm tay không lặp lại được. Gói không đóng vào sản phẩm và cổng license chỉ cảnh báo |
+| Violation                                                                                                                 | Why Needed                                                | Simpler Alternative Rejected Because                                                  |
+| ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Feature "chỉ sửa giao diện" có thay đổi phía máy chủ (API dự án, purge, migration 0007, `deletePrefix`, API hồ sơ/avatar) | Chủ sản phẩm duyệt ở clarify (ngoại lệ 1 và 2 trong spec) | Lọc trên trình duyệt chậm khi nhiều dự án; xóa không có API thì không làm được        |
+| Dev dependency MPL-2.0 (`@axe-core/playwright`)                                                                           | Đo truy cập tự động (SC-006)                              | Kiểm tay không lặp lại được. Gói không đóng vào sản phẩm và cổng license chỉ cảnh báo |

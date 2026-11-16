@@ -14,7 +14,12 @@ const parse = (qs: string) => parseListQuery(new URLSearchParams(qs));
 describe("parseListQuery", () => {
   it("defaults: newest first, page 1, 24 per page, Vietnam time zone", () => {
     const r = parse("");
-    expect(r.success && r.data).toMatchObject({ sort: "updated", page: 1, pageSize: 24, tz: "Asia/Ho_Chi_Minh" });
+    expect(r.success && r.data).toMatchObject({
+      sort: "updated",
+      page: 1,
+      pageSize: 24,
+      tz: "Asia/Ho_Chi_Minh",
+    });
   });
   it("reads csv filters and ranges", () => {
     const r = parse(
@@ -46,7 +51,10 @@ describe("parseListQuery", () => {
 
 describe("status groups", () => {
   it("expands groups and raw statuses", () => {
-    expect(expandStatuses(["review"]).sort()).toEqual(["awaiting_script_review", "awaiting_storyboard_review"]);
+    expect(expandStatuses(["review"]).sort()).toEqual([
+      "awaiting_script_review",
+      "awaiting_storyboard_review",
+    ]);
     expect(expandStatuses(["ready", "qa"]).sort()).toEqual(["qa", "ready"]);
     expect(groupOf("rendering")).toBe("processing");
     expect(groupOf("needs_attention")).toBe("attention");

@@ -136,7 +136,7 @@ installed next-intl / better-auth / next). Nothing below comes from memory alone
 - **Better Auth 1.7.14** endpoints verified in `node_modules/better-auth/dist`: `/update-user`,
   `/change-password` (option `revokeOtherSessions`), `/list-accounts`. The client calls
   `authClient.updateUser({ name, image })` and `authClient.changePassword({ currentPassword, newPassword,
-  revokeOtherSessions })`. The page uses `listAccounts()` to detect whether a `credential` account exists; if not,
+revokeOtherSessions })`. The page uses `listAccounts()` to detect whether a `credential` account exists; if not,
   it shows the explanation instead of the form (FR-051).
 - **Locale field**: declare `user.additionalFields.locale` (`string`, `input: true`, default `"vi"`) so
   `updateUser({ locale })` writes the existing `users.locale` column. No migration is needed.
@@ -160,7 +160,7 @@ installed next-intl / better-auth / next). Nothing below comes from memory alone
 ## R11. Notifications bell
 
 - **Decision**: no new table. The bell queries `GET /api/projects?status=ready,needs_attention,failed&sort=updated
-  &pageSize=10`. "Seen" is the timestamp of the newest item opened, kept in `localStorage["mkv_notif_seen"]`.
+&pageSize=10`. "Seen" is the timestamp of the newest item opened, kept in `localStorage["mkv_notif_seen"]`.
   Live updates: none in the list itself. The query is refreshed on window focus and every 60 s while visible.
 
 ## R12. Testing and evidence
@@ -172,7 +172,7 @@ installed next-intl / better-auth / next). Nothing below comes from memory alone
   rejected by worker step.
 - **E2E (Playwright, existing `dev:mock` stack)**: existing specs keep passing. Keep every current
   `data-testid`; the specs use 56 `getByTestId` calls. Specs whose selectors depend on old markup (`.bubble.
-  assistant`, `select`, `p.error[role=alert]`, `li`) are updated to roles/test ids in the same task as the page.
+assistant`, `select`, `p.error[role=alert]`, `li`) are updated to roles/test ids in the same task as the page.
   New specs: shell navigation (keyboard), theme × locale switch keeps URL, project CRUD, profile, landing, 404.
 - **Screenshots**: `e2e/screens.spec.ts` captures every main page × {light, dark} × {vi, en} × {1280, 360}
   into `docs/reports/ui/<phase>/` for each gate report (SC-011).

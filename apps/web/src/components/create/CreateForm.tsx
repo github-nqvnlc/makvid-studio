@@ -22,14 +22,29 @@ import { DurationField } from "./DurationField";
 const SOURCES = ["prompt", "script", "url", "github", "table", "media"] as const;
 type SourceKind = (typeof SOURCES)[number];
 
-function Choice({ pressed, onClick, testId, title, hint }: { pressed: boolean; onClick: () => void; testId: string; title: string; hint: string }) {
+function Choice({
+  pressed,
+  onClick,
+  testId,
+  title,
+  hint,
+}: {
+  pressed: boolean;
+  onClick: () => void;
+  testId: string;
+  title: string;
+  hint: string;
+}) {
   return (
     <button
       type="button"
       aria-pressed={pressed}
       onClick={onClick}
       data-testid={testId}
-      className={cn("flex flex-col gap-1 rounded-lg border p-3 text-left transition-colors", pressed ? "border-primary ring-primary ring-1" : "hover:bg-muted")}
+      className={cn(
+        "flex flex-col gap-1 rounded-lg border p-3 text-left transition-colors",
+        pressed ? "border-primary ring-primary ring-1" : "hover:bg-muted",
+      )}
     >
       <span className="font-medium">{title}</span>
       <span className="text-muted-foreground text-xs">{hint}</span>
@@ -73,7 +88,8 @@ export function CreateForm({ voices, hasBrand = false }: { voices: VoiceOption[]
       });
     else {
       const fd = new FormData();
-      for (const [k, v] of Object.entries({ kind, aspect, durationSec: String(durationSec), mode, voiceId })) fd.set(k, v);
+      for (const [k, v] of Object.entries({ kind, aspect, durationSec: String(durationSec), mode, voiceId }))
+        fd.set(k, v);
       fd.set("useBrand", String(useBrand));
       if (kind === "script") fd.set("text", script);
       if (kind === "url" || kind === "github") fd.set("url", link.trim());
@@ -120,19 +136,43 @@ export function CreateForm({ voices, hasBrand = false }: { voices: VoiceOption[]
               {kind === "prompt" && (
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="prompt">{t("idea")}</Label>
-                  <Textarea id="prompt" name="prompt" value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder={t("ideaPlaceholder")} maxLength={4000} className="min-h-28" />
+                  <Textarea
+                    id="prompt"
+                    name="prompt"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder={t("ideaPlaceholder")}
+                    maxLength={4000}
+                    className="min-h-28"
+                  />
                 </div>
               )}
               {kind === "script" && (
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="script">{ts("script.label")}</Label>
-                  <Textarea id="script" name="script" value={script} onChange={(e) => setScript(e.target.value)} placeholder={ts("script.placeholder")} maxLength={12000} className="min-h-44" />
+                  <Textarea
+                    id="script"
+                    name="script"
+                    value={script}
+                    onChange={(e) => setScript(e.target.value)}
+                    placeholder={ts("script.placeholder")}
+                    maxLength={12000}
+                    className="min-h-44"
+                  />
                 </div>
               )}
               {(kind === "url" || kind === "github") && (
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="link">{ts(`${kind}.label`)}</Label>
-                  <Input id="link" name="link" type="url" inputMode="url" value={link} onChange={(e) => setLink(e.target.value)} placeholder={ts(`${kind}.placeholder`)} />
+                  <Input
+                    id="link"
+                    name="link"
+                    type="url"
+                    inputMode="url"
+                    value={link}
+                    onChange={(e) => setLink(e.target.value)}
+                    placeholder={ts(`${kind}.placeholder`)}
+                  />
                 </div>
               )}
               {(kind === "table" || kind === "media") && (
@@ -184,13 +224,24 @@ export function CreateForm({ voices, hasBrand = false }: { voices: VoiceOption[]
                 <legend className="sr-only">{t("mode")}</legend>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {(["auto", "review"] as const).map((m) => (
-                    <Choice key={m} pressed={mode === m} testId={`mode-${m}`} title={t(m)} hint={t(m === "auto" ? "autoHint" : "reviewHint")} onClick={() => setMode(m)} />
+                    <Choice
+                      key={m}
+                      pressed={mode === m}
+                      testId={`mode-${m}`}
+                      title={t(m)}
+                      hint={t(m === "auto" ? "autoHint" : "reviewHint")}
+                      onClick={() => setMode(m)}
+                    />
                   ))}
                 </div>
               </fieldset>
               {hasBrand && (
                 <Label className="font-normal">
-                  <Checkbox checked={useBrand} onCheckedChange={(v) => setUseBrand(v === true)} data-testid="use-brand" />
+                  <Checkbox
+                    checked={useBrand}
+                    onCheckedChange={(v) => setUseBrand(v === true)}
+                    data-testid="use-brand"
+                  />
                   {t("useBrand")}
                 </Label>
               )}

@@ -11,7 +11,15 @@ export function DurationField({ value, onChange }: { value: number; onChange: (n
     <div className="flex flex-col gap-2">
       <Label htmlFor="duration">{t("duration")}</Label>
       <div className="flex items-center gap-4">
-        <Slider min={30} max={180} step={5} value={[Math.min(180, Math.max(30, value || 30))]} onValueChange={([v]) => onChange(v ?? 30)} aria-label={t("durationSlider")} className="flex-1" />
+        <Slider
+          min={30}
+          max={180}
+          step={5}
+          value={[Math.min(180, Math.max(30, value || 30))]}
+          onValueChange={([v]) => onChange(v ?? 30)}
+          aria-label={t("durationSlider")}
+          className="flex-1"
+        />
         <Input
           id="duration"
           name="duration"

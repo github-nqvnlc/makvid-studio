@@ -39,11 +39,25 @@ export function EditorToolbar({
     <div className="flex flex-wrap items-center gap-3">
       {editing ? (
         <form onSubmit={save} className="flex min-w-0 flex-1 items-center gap-2">
-          <Input value={value} onChange={(e) => setValue(e.target.value)} aria-label={t("renameLabel")} maxLength={200} autoFocus className="max-w-md" data-testid="title-input" />
+          <Input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            aria-label={t("renameLabel")}
+            maxLength={200}
+            autoFocus
+            className="max-w-md"
+            data-testid="title-input"
+          />
           <Button type="submit" size="icon" variant="outline" aria-label={t("renameSave")}>
             <Check className="size-4" aria-hidden />
           </Button>
-          <Button type="button" size="icon" variant="ghost" aria-label={t("renameCancel")} onClick={() => setEditing(false)}>
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            aria-label={t("renameCancel")}
+            onClick={() => setEditing(false)}
+          >
             <X className="size-4" aria-hidden />
           </Button>
         </form>
@@ -70,15 +84,33 @@ export function EditorToolbar({
         <StatusBadge status={status as ProjectStatus} />
       </span>
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" disabled={!settled || !canUndo} onClick={() => onAction("undo")} className="gap-1.5">
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={!settled || !canUndo}
+          onClick={() => onAction("undo")}
+          className="gap-1.5"
+        >
           <Undo2 className="size-4" aria-hidden />
           {t("undo")}
         </Button>
-        <Button variant="outline" size="sm" disabled={!settled || !canRedo} onClick={() => onAction("redo")} className="gap-1.5">
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={!settled || !canRedo}
+          onClick={() => onAction("redo")}
+          className="gap-1.5"
+        >
           <Redo2 className="size-4" aria-hidden />
           {t("redo")}
         </Button>
-        <Button variant="outline" size="sm" disabled={!settled} onClick={() => onAction("duplicate")} className="gap-1.5">
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={!settled}
+          onClick={() => onAction("duplicate")}
+          className="gap-1.5"
+        >
           <Copy className="size-4" aria-hidden />
           {t("duplicate")}
         </Button>

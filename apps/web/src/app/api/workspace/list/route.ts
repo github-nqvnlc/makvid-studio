@@ -5,5 +5,7 @@ import { listWorkspaces } from "@/server/workspaces";
 export const dynamic = "force-dynamic";
 
 export function GET() {
-  return guarded("GET /api/workspace/list", async (v) => Response.json({ workspaces: await listWorkspaces(v) }));
+  return guarded("GET /api/workspace/list", async (v) =>
+    Response.json({ workspaces: await listWorkspaces(v) }),
+  );
 }

@@ -27,7 +27,14 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { id: "projects", href: "/", label: "projects", icon: FolderOpen, group: "create" },
-  { id: "new", href: "/projects/new", label: "newProject", icon: PlusCircle, group: "create", needs: "create" },
+  {
+    id: "new",
+    href: "/projects/new",
+    label: "newProject",
+    icon: PlusCircle,
+    group: "create",
+    needs: "create",
+  },
   { id: "batches", href: "/batches", label: "batches", icon: Layers, group: "create", needs: "batch" },
   { id: "brand", href: "/workspace/brand", label: "brand", icon: Palette, group: "workspace" },
   { id: "assets", href: "/workspace/assets", label: "assets", icon: ImageIcon, group: "workspace" },
@@ -42,7 +49,10 @@ export const NAV_ITEMS: NavItem[] = [
 export function activeItem(pathname: string): string | null {
   let best: { id: string; len: number } | null = null;
   for (const i of NAV_ITEMS) {
-    const hit = i.href === "/" ? pathname === "/" || /^\/projects\/(?!new)[^/]+/.test(pathname) : pathname === i.href || pathname.startsWith(`${i.href}/`);
+    const hit =
+      i.href === "/"
+        ? pathname === "/" || /^\/projects\/(?!new)[^/]+/.test(pathname)
+        : pathname === i.href || pathname.startsWith(`${i.href}/`);
     if (hit && (!best || i.href.length > best.len)) best = { id: i.id, len: i.href.length };
   }
   return best?.id ?? null;

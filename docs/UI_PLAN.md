@@ -5,21 +5,21 @@ Bản tóm tắt cho chủ sản phẩm, theo yêu cầu ở mục 3 của [UI_P
 
 ## 1. Route hiện có và route sẽ thêm
 
-| URL | Bố cục | Thay đổi |
-| --- | --- | --- |
-| `/` khi chưa đăng nhập | Công khai | **Mới**: landing 9 khối, có video mẫu thật ở hero |
-| `/` khi đã đăng nhập | Ứng dụng | Thống kê + lưới/bảng dự án, tìm không dấu, lọc đầy đủ, đổi tên, xóa một/nhiều/tất cả |
-| `/pricing` | Công khai | **Mới** |
-| `/docs/api` | Công khai | Chuyển sang khung mới |
-| `/sign-in`, `/sign-up`, `/invite/[token]` | Xác thực | Chia đôi màn hình, form kiểm lỗi từng ô |
-| `/projects/new` | Ứng dụng | 4 phần + thẻ tóm tắt quota; bộ chọn giọng có tab và bộ lọc |
-| `/projects/[id]` | Ứng dụng | 3 cột co giãn (cảnh / xem trước đúng tỷ lệ / chat), thành tab trên mobile |
-| `/batches`, `/batches/[id]` | Ứng dụng | Khóa kèm thẻ nâng cấp khi gói không có tính năng hàng loạt |
-| `/workspace/brand`, `assets`, `members` | Ứng dụng | Ô màu + mã hex, kéo-thả file, ảnh đại diện |
-| `/workspace/billing`, `/workspace/api` | Ứng dụng | Thanh tiến độ + cảnh báo 80%; khóa API theo gói |
-| `/account` | Ứng dụng | **Mới**: hồ sơ, ảnh đại diện, mật khẩu, giao diện, ngôn ngữ |
-| `/admin` | Ứng dụng | Chỉ quản trị nền tảng thấy mục này |
-| URL sai / lỗi | — | Trang 404 và trang lỗi đúng giao diện |
+| URL                                       | Bố cục    | Thay đổi                                                                             |
+| ----------------------------------------- | --------- | ------------------------------------------------------------------------------------ |
+| `/` khi chưa đăng nhập                    | Công khai | **Mới**: landing 9 khối, có video mẫu thật ở hero                                    |
+| `/` khi đã đăng nhập                      | Ứng dụng  | Thống kê + lưới/bảng dự án, tìm không dấu, lọc đầy đủ, đổi tên, xóa một/nhiều/tất cả |
+| `/pricing`                                | Công khai | **Mới**                                                                              |
+| `/docs/api`                               | Công khai | Chuyển sang khung mới                                                                |
+| `/sign-in`, `/sign-up`, `/invite/[token]` | Xác thực  | Chia đôi màn hình, form kiểm lỗi từng ô                                              |
+| `/projects/new`                           | Ứng dụng  | 4 phần + thẻ tóm tắt quota; bộ chọn giọng có tab và bộ lọc                           |
+| `/projects/[id]`                          | Ứng dụng  | 3 cột co giãn (cảnh / xem trước đúng tỷ lệ / chat), thành tab trên mobile            |
+| `/batches`, `/batches/[id]`               | Ứng dụng  | Khóa kèm thẻ nâng cấp khi gói không có tính năng hàng loạt                           |
+| `/workspace/brand`, `assets`, `members`   | Ứng dụng  | Ô màu + mã hex, kéo-thả file, ảnh đại diện                                           |
+| `/workspace/billing`, `/workspace/api`    | Ứng dụng  | Thanh tiến độ + cảnh báo 80%; khóa API theo gói                                      |
+| `/account`                                | Ứng dụng  | **Mới**: hồ sơ, ảnh đại diện, mật khẩu, giao diện, ngôn ngữ                          |
+| `/admin`                                  | Ứng dụng  | Chỉ quản trị nền tảng thấy mục này                                                   |
+| URL sai / lỗi                             | —         | Trang 404 và trang lỗi đúng giao diện                                                |
 
 ## 2. Sơ đồ bố cục
 
@@ -52,13 +52,13 @@ ColorField, FileDropzone, ThemeToggle, LocaleSwitcher.
 
 ## 4. Thứ tự làm và cổng duyệt
 
-| Cổng | Nội dung |
-| --- | --- |
-| UI-G0 | Spec + clarify + plan (**đang chờ anh/chị duyệt**) |
-| UI-G1 | Tailwind, shadcn, theme poppy-1, font, sáng/tối, nút ngôn ngữ, test thiếu key |
-| UI-G2 | Landing, bảng giá, đăng nhập/đăng ký, 404. Kịch bản video hero gửi anh/chị duyệt trước khi render |
+| Cổng  | Nội dung                                                                                                                  |
+| ----- | ------------------------------------------------------------------------------------------------------------------------- |
+| UI-G0 | Spec + clarify + plan (**đang chờ anh/chị duyệt**)                                                                        |
+| UI-G1 | Tailwind, shadcn, theme poppy-1, font, sáng/tối, nút ngôn ngữ, test thiếu key                                             |
+| UI-G2 | Landing, bảng giá, đăng nhập/đăng ký, 404. Kịch bản video hero gửi anh/chị duyệt trước khi render                         |
 | UI-G3 | Khung ứng dụng, quản lý dự án (API + UI), tạo video, trình chỉnh sửa, gói, API, brand, thư viện, thành viên, hồ sơ, admin |
-| UI-G4 | Xóa CSS cũ, kiểm tra truy cập, ảnh chụp đầy đủ, Lighthouse |
+| UI-G4 | Xóa CSS cũ, kiểm tra truy cập, ảnh chụp đầy đủ, Lighthouse                                                                |
 
 Mỗi cổng kèm ảnh chụp 2 theme × 2 ngôn ngữ × desktop/mobile và kết quả test, rồi dừng chờ duyệt.
 

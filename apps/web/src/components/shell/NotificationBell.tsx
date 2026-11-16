@@ -27,9 +27,13 @@ export function NotificationBell() {
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch("/api/projects?status=ready,needs_attention,failed&sort=updated&dir=desc&pageSize=10");
+      const res = await fetch(
+        "/api/projects?status=ready,needs_attention,failed&sort=updated&dir=desc&pageSize=10",
+      );
       if (!res.ok) return;
-      const body = (await res.json()) as { projects: Array<{ id: string; title: string; status: string; updatedAt: string }> };
+      const body = (await res.json()) as {
+        projects: Array<{ id: string; title: string; status: string; updatedAt: string }>;
+      };
       setItems(body.projects.filter((p) => WATCH.has(p.status)).slice(0, 10) as Item[]);
     } catch {
       /* offline: keep what we have */
@@ -88,7 +92,11 @@ export function NotificationBell() {
           <ul className="max-h-80 overflow-auto">
             {items.map((i) => (
               <li key={i.id}>
-                <Link href={`/projects/${i.id}`} className="hover:bg-accent flex flex-col gap-0.5 px-3 py-2 text-sm" onClick={markSeen}>
+                <Link
+                  href={`/projects/${i.id}`}
+                  className="hover:bg-accent flex flex-col gap-0.5 px-3 py-2 text-sm"
+                  onClick={markSeen}
+                >
                   <span className="truncate font-medium">{i.title}</span>
                   <span className="text-muted-foreground text-xs">
                     {t(i.status)} · {f.relativeTime(new Date(i.updatedAt), new Date())}

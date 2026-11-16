@@ -27,12 +27,20 @@ export function Breadcrumbs() {
     if (seg === "account") return t("crumbs.account");
     if (seg === "projects") return tn("projects");
     if (seg === "batches") return tn("batches");
-    if (seg === "brand" || seg === "assets" || seg === "members" || seg === "billing" || seg === "api" || seg === "admin")
+    if (
+      seg === "brand" ||
+      seg === "assets" ||
+      seg === "members" ||
+      seg === "billing" ||
+      seg === "api" ||
+      seg === "admin"
+    )
       return tn(seg);
     return parts[i] ?? seg;
   };
 
-  const root = parts[0] === "projects" || parts[0] === "batches" ? [] : [{ href: "/", label: tn("projects") }];
+  const root =
+    parts[0] === "projects" || parts[0] === "batches" ? [] : [{ href: "/", label: tn("projects") }];
   const crumbs = root.concat(
     parts.map((seg, i) => ({ href: `/${parts.slice(0, i + 1).join("/")}`, label: name(seg, i) })),
   );

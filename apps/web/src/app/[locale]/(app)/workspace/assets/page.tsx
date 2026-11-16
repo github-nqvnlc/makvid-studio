@@ -34,7 +34,9 @@ export default async function AssetsPage({ params }: { params: Promise<{ locale:
                   ) : (
                     <Badge variant="secondary">{t("font")}</Badge>
                   )}
-                  <span className="min-w-0 flex-1 truncate">{a.family ? `${a.family} · ${a.weight}` : a.name}</span>
+                  <span className="min-w-0 flex-1 truncate">
+                    {a.family ? `${a.family} · ${a.weight}` : a.name}
+                  </span>
                   <span className="text-muted-foreground text-sm">{kb(a.bytes)}</span>
                 </li>
               ))}

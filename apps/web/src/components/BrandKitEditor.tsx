@@ -39,7 +39,13 @@ const DEFAULTS: Record<(typeof COLORS)[number], string> = {
   muted: "#666666",
 };
 
-export function BrandKitEditor({ initial, assets: initialAssets }: { initial: KitValue | null; assets: AssetItem[] }) {
+export function BrandKitEditor({
+  initial,
+  assets: initialAssets,
+}: {
+  initial: KitValue | null;
+  assets: AssetItem[];
+}) {
   const t = useTranslations("brand");
   const te = useTranslations("errors");
   const [kit, setKit] = useState<KitValue>(
@@ -95,7 +101,12 @@ export function BrandKitEditor({ initial, assets: initialAssets }: { initial: Ki
           <Card>
             <CardContent className="flex flex-col gap-2">
               <Label htmlFor="brand-name">{t("name")}</Label>
-              <Input id="brand-name" value={kit.name} maxLength={80} onChange={(e) => setKit({ ...kit, name: e.target.value })} />
+              <Input
+                id="brand-name"
+                value={kit.name}
+                maxLength={80}
+                onChange={(e) => setKit({ ...kit, name: e.target.value })}
+              />
             </CardContent>
           </Card>
 
@@ -139,7 +150,9 @@ export function BrandKitEditor({ initial, assets: initialAssets }: { initial: Ki
                 </NativeSelect>
                 <NativeSelect
                   value={kit.logoPosition}
-                  onChange={(e) => setKit({ ...kit, logoPosition: e.target.value as KitValue["logoPosition"] })}
+                  onChange={(e) =>
+                    setKit({ ...kit, logoPosition: e.target.value as KitValue["logoPosition"] })
+                  }
                   aria-label={t("logoPosition")}
                 >
                   <option value="top-right">{t("topRight")}</option>
@@ -175,7 +188,9 @@ export function BrandKitEditor({ initial, assets: initialAssets }: { initial: Ki
                   <div className="flex flex-wrap gap-2">
                     <NativeSelect
                       value={kit.fonts[role] ?? ""}
-                      onChange={(e) => setKit({ ...kit, fonts: { ...kit.fonts, [role]: e.target.value || null } })}
+                      onChange={(e) =>
+                        setKit({ ...kit, fonts: { ...kit.fonts, [role]: e.target.value || null } })
+                      }
                       aria-label={t(`font.${role}`)}
                       className="min-w-48 flex-1"
                     >
@@ -226,7 +241,12 @@ export function BrandKitEditor({ initial, assets: initialAssets }: { initial: Ki
               <AlertDescription>{msg.text}</AlertDescription>
             </Alert>
           )}
-          <Button className="w-fit" disabled={busy || lowContrast.length > 0} onClick={() => void save()} data-testid="brand-save">
+          <Button
+            className="w-fit"
+            disabled={busy || lowContrast.length > 0}
+            onClick={() => void save()}
+            data-testid="brand-save"
+          >
             {t("save")}
           </Button>
         </div>
@@ -250,7 +270,10 @@ export function BrandKitEditor({ initial, assets: initialAssets }: { initial: Ki
           )}
           <strong className="text-3xl">{t("sampleTitle")}</strong>
           <span style={{ color: color("muted") }}>{t("sampleBody")}</span>
-          <span className="w-fit rounded-md px-4 py-1.5 font-bold" style={{ background: color("accent"), color: color("accentInk") }}>
+          <span
+            className="w-fit rounded-md px-4 py-1.5 font-bold"
+            style={{ background: color("accent"), color: color("accentInk") }}
+          >
             {t("sampleCta")}
           </span>
         </aside>

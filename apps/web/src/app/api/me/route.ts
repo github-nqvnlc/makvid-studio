@@ -14,7 +14,10 @@ export async function PATCH(req: Request) {
   return guarded(async (v) => {
     const b = Body.safeParse(await req.json().catch(() => null));
     if (!b.success) return fail("invalid");
-    await server().db.update(users).set({ locale: b.data.locale, updatedAt: new Date() }).where(eq(users.id, v.userId));
+    await server()
+      .db.update(users)
+      .set({ locale: b.data.locale, updatedAt: new Date() })
+      .where(eq(users.id, v.userId));
     return new Response(null, { status: 204 });
   });
 }

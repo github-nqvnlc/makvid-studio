@@ -81,9 +81,16 @@ export function ScriptReview({
               aria-pressed={styleId === s.styleId}
               onClick={() => setStyle(s.styleId)}
               data-testid={`style-${s.styleId}`}
-              className={cn("flex flex-col gap-2 rounded-lg border p-3 text-left", styleId === s.styleId ? "border-primary ring-primary ring-1" : "hover:bg-muted")}
+              className={cn(
+                "flex flex-col gap-2 rounded-lg border p-3 text-left",
+                styleId === s.styleId ? "border-primary ring-primary ring-1" : "hover:bg-muted",
+              )}
             >
-              <img src={`/api/styles/${s.styleId}/thumbnail`} alt="" className="aspect-video w-full rounded object-cover" />
+              <img
+                src={`/api/styles/${s.styleId}/thumbnail`}
+                alt=""
+                className="aspect-video w-full rounded object-cover"
+              />
               <span className="flex items-center gap-2 font-medium">
                 {byId.get(s.styleId)?.name ?? s.styleId}
                 {styleId === s.styleId && (

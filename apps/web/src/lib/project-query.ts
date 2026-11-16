@@ -2,7 +2,16 @@
 import { z } from "zod";
 
 export const STATUS_GROUPS = {
-  processing: ["ingesting", "scripting", "styling", "storyboarding", "producing_audio", "compiling", "qa", "rendering"],
+  processing: [
+    "ingesting",
+    "scripting",
+    "styling",
+    "storyboarding",
+    "producing_audio",
+    "compiling",
+    "qa",
+    "rendering",
+  ],
   review: ["awaiting_script_review", "awaiting_storyboard_review"],
   ready: ["ready"],
   attention: ["needs_attention"],
@@ -38,13 +47,27 @@ const csv = <T extends readonly [string, ...string[]]>(values: T) =>
   z
     .string()
     .optional()
-    .transform((s) => (s ? s.split(",").map((x) => x.trim()).filter(Boolean) : undefined))
+    .transform((s) =>
+      s
+        ? s
+            .split(",")
+            .map((x) => x.trim())
+            .filter(Boolean)
+        : undefined,
+    )
     .pipe(z.array(z.enum(values)).max(values.length).optional());
 
 const statusCsv = z
   .string()
   .optional()
-  .transform((s) => (s ? s.split(",").map((x) => x.trim()).filter(Boolean) : undefined))
+  .transform((s) =>
+    s
+      ? s
+          .split(",")
+          .map((x) => x.trim())
+          .filter(Boolean)
+      : undefined,
+  )
   .pipe(
     z
       .array(z.string().refine((v) => v in STATUS_GROUPS || ALL_STATUSES.includes(v)))
@@ -119,7 +142,19 @@ export interface UiFilters {
 }
 
 const LISTS = ["status", "aspect", "source"] as const;
-const SCALARS = ["q", "mode", "createdBy", "created", "updated", "createdFrom", "createdTo", "updatedFrom", "updatedTo", "sort", "dir"] as const;
+const SCALARS = [
+  "q",
+  "mode",
+  "createdBy",
+  "created",
+  "updated",
+  "createdFrom",
+  "createdTo",
+  "updatedFrom",
+  "updatedTo",
+  "sort",
+  "dir",
+] as const;
 
 export function toSearchParams(f: UiFilters): URLSearchParams {
   const p = new URLSearchParams();

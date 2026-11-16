@@ -47,7 +47,14 @@ export function RenameDialog({
           </DialogHeader>
           <div className="flex flex-col gap-2">
             <Label htmlFor="rename-input">{t("label")}</Label>
-            <Input id="rename-input" value={value} onChange={(e) => setValue(e.target.value)} autoFocus aria-invalid={!!error} data-testid="rename-input" />
+            <Input
+              id="rename-input"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              autoFocus
+              aria-invalid={!!error}
+              data-testid="rename-input"
+            />
             {error && (
               <p role="alert" className="text-destructive text-sm">
                 {error}

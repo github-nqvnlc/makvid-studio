@@ -45,22 +45,22 @@ Yearly billing, Terms of use, Privacy policy, YouTube/Facebook/TikTok links in t
 
 ## Checks
 
-| Check | Result |
-| --- | --- |
-| typecheck / lint / production build | pass |
-| Unit tests | 99 pass; infra tests (project CRUD on Postgres, storage `deletePrefix`) pass |
-| `pnpm license:check` | OK (`lightningcss` allowlisted with the owner's approval) |
-| E2E | see the result below |
+| Check                               | Result                                                                       |
+| ----------------------------------- | ---------------------------------------------------------------------------- |
+| typecheck / lint / production build | pass                                                                         |
+| Unit tests                          | 99 pass; infra tests (project CRUD on Postgres, storage `deletePrefix`) pass |
+| `pnpm license:check`                | OK (`lightningcss` allowlisted with the owner's approval)                    |
+| E2E                                 | see the result below                                                         |
 
 ## E2E result of this gate
 
 Full run of 20 tests, then a rerun of the four that failed:
 
-| Spec | Result |
-| --- | --- |
-| `a11y` (4), `account`, `brand`, `fonts`, `landing` (5), `m5`, `theme-locale` (3) | pass in the full run. `m5` (batch + ZIP), which failed in UI-G2 and UI-G3, **passed** here. |
-| `no-tech-leak`, `projects-crud` | failed in the full run (the second only because a background deletion was slower than my 60 s wait, now 150 s), **pass on the rerun** |
-| `create-and-edit`, `sources` | **still fail on the rerun**: the video's quality-check step ends as "failed" with no error logged (`create-and-edit`) or stays "checking quality" for minutes (`sources`) |
+| Spec                                                                             | Result                                                                                                                                                                    |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a11y` (4), `account`, `brand`, `fonts`, `landing` (5), `m5`, `theme-locale` (3) | pass in the full run. `m5` (batch + ZIP), which failed in UI-G2 and UI-G3, **passed** here.                                                                               |
+| `no-tech-leak`, `projects-crud`                                                  | failed in the full run (the second only because a background deletion was slower than my 60 s wait, now 150 s), **pass on the rerun**                                     |
+| `create-and-edit`, `sources`                                                     | **still fail on the rerun**: the video's quality-check step ends as "failed" with no error logged (`create-and-edit`) or stays "checking quality" for minutes (`sources`) |
 
 Why I believe the last two are the machine and not the UI: the same two specs passed several times earlier today (the
 last `create-and-edit` pass was after the editor was rewritten), and the same pipeline stage succeeded for other

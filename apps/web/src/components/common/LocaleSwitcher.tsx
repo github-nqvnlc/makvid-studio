@@ -33,13 +33,21 @@ function Inner({ signedIn }: { signedIn: boolean }) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ locale: next }),
       }).catch(() => undefined);
-    router.replace({ pathname, query } as Parameters<typeof router.replace>[0], { locale: next as AppLocale });
+    router.replace({ pathname, query } as Parameters<typeof router.replace>[0], {
+      locale: next as AppLocale,
+    });
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" aria-label={t("label")} data-testid="locale-switcher" className="gap-1.5">
+        <Button
+          variant="outline"
+          size="sm"
+          aria-label={t("label")}
+          data-testid="locale-switcher"
+          className="gap-1.5"
+        >
           <Globe className="size-4" aria-hidden />
           <span>{locale.toUpperCase()}</span>
         </Button>

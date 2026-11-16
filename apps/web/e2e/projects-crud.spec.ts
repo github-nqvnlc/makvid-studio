@@ -13,7 +13,9 @@ try {
 test("manage projects: search, filter, rename, delete selected and delete all matching", async ({ page }) => {
   test.setTimeout(240_000);
   const email = await signUp(page, "projects");
-  const sql = postgres(process.env.DATABASE_URL ?? "postgres://makvid:makvid-dev@localhost:5432/makvid", { max: 1 });
+  const sql = postgres(process.env.DATABASE_URL ?? "postgres://makvid:makvid-dev@localhost:5432/makvid", {
+    max: 1,
+  });
   try {
     const [m] = await sql<{ workspace_id: string; user_id: string }[]>`
       SELECT m.workspace_id, m.user_id FROM memberships m JOIN users u ON u.id = m.user_id WHERE u.email = ${email}`;
@@ -72,9 +74,13 @@ test("manage projects: search, filter, rename, delete selected and delete all ma
 
     // The rows really are gone, not just hidden.
     await expect
-      .poll(async () => (await sql`SELECT count(*)::int AS n FROM projects WHERE workspace_id = ${m!.workspace_id}`)[0]!.n, {
-        timeout: 150_000,
-      })
+      .poll(
+        async () =>
+          (await sql`SELECT count(*)::int AS n FROM projects WHERE workspace_id = ${m!.workspace_id}`)[0]!.n,
+        {
+          timeout: 150_000,
+        },
+      )
       .toBe(3);
   } finally {
     await sql.end();

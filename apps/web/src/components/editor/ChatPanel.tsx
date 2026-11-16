@@ -42,7 +42,11 @@ export function ChatPanel({
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
       <h2 className="text-sm font-semibold">{t("chatTitle")}</h2>
-      <div className="flex min-h-40 flex-1 flex-col gap-2 overflow-y-auto pr-1" data-testid="chat-log" aria-live="polite">
+      <div
+        className="flex min-h-40 flex-1 flex-col gap-2 overflow-y-auto pr-1"
+        data-testid="chat-log"
+        aria-live="polite"
+      >
         {chat.length === 0 && <p className="text-muted-foreground text-sm">{t("chatEmpty")}</p>}
         {chat.map((m) => (
           <div
@@ -75,7 +79,11 @@ export function ChatPanel({
           }}
         />
         <Button type="submit" disabled={sending || !settled} className="gap-2">
-          {sending ? <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden /> : <Send className="size-4" aria-hidden />}
+          {sending ? (
+            <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden />
+          ) : (
+            <Send className="size-4" aria-hidden />
+          )}
           {sending ? t("sending") : t("send")}
         </Button>
       </form>

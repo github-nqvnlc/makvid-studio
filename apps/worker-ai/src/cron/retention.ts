@@ -2,7 +2,13 @@
 // BullMQ job scheduler, so it runs once per hour whichever worker-ai replica picks it up.
 import { Queue, Worker } from "bullmq";
 import { connect } from "@makvid/db";
-import { defaultWorkRoot, purgeExpiredOutputs, purgeProject, PURGE_JOB, type PurgeJobData } from "@makvid/pipeline";
+import {
+  defaultWorkRoot,
+  purgeExpiredOutputs,
+  purgeProject,
+  PURGE_JOB,
+  type PurgeJobData,
+} from "@makvid/pipeline";
 import { connectionFromUrl, createLogger } from "@makvid/queue";
 import { configFromEnv, createObjectStore } from "@makvid/storage";
 
@@ -34,7 +40,9 @@ export async function startRetention(): Promise<() => Promise<void>> {
     },
     { connection, prefix, concurrency: 1 },
   );
-  worker.on("failed", (job, err) => log.error({ job: job?.name, attempt: job?.attemptsMade, err: err.message }, "maintenance job failed"));
+  worker.on("failed", (job, err) =>
+    log.error({ job: job?.name, attempt: job?.attemptsMade, err: err.message }, "maintenance job failed"),
+  );
   return async () => {
     await worker.close();
     await queue.close();

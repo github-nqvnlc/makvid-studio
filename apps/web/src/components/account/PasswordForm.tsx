@@ -26,7 +26,9 @@ export function PasswordForm() {
   useEffect(() => {
     void authClient
       .listAccounts()
-      .then((r) => setHasPassword(Array.isArray(r.data) ? r.data.some((a) => a.providerId === "credential") : true))
+      .then((r) =>
+        setHasPassword(Array.isArray(r.data) ? r.data.some((a) => a.providerId === "credential") : true),
+      )
       .catch(() => setHasPassword(true));
   }, []);
 
@@ -47,10 +49,15 @@ export function PasswordForm() {
   });
 
   async function submit(v: Values) {
-    const r = await authClient.changePassword({ currentPassword: v.current, newPassword: v.next, revokeOtherSessions: revoke });
+    const r = await authClient.changePassword({
+      currentPassword: v.current,
+      newPassword: v.next,
+      revokeOtherSessions: revoke,
+    });
     if (r.error) {
       // A wrong current password belongs under that field; anything else is a general failure.
-      if (r.error.status === 400 || r.error.status === 401 || /invalid/i.test(r.error.message ?? "")) form.setError("current", { message: t("wrong") });
+      if (r.error.status === 400 || r.error.status === 401 || /invalid/i.test(r.error.message ?? ""))
+        form.setError("current", { message: t("wrong") });
       else toast.error(t("failed"));
       return;
     }
@@ -80,7 +87,11 @@ export function PasswordForm() {
                     <FormItem>
                       <FormLabel>{t(k)}</FormLabel>
                       <FormControl>
-                        <Input type="password" autoComplete={k === "current" ? "current-password" : "new-password"} {...field} />
+                        <Input
+                          type="password"
+                          autoComplete={k === "current" ? "current-password" : "new-password"}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -91,8 +102,15 @@ export function PasswordForm() {
                 <Checkbox checked={revoke} onCheckedChange={(v) => setRevoke(v === true)} />
                 {t("signOutOthers")}
               </Label>
-              <Button type="submit" disabled={form.formState.isSubmitting} className="w-fit" data-testid="password-save">
-                {form.formState.isSubmitting && <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden />}
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="w-fit"
+                data-testid="password-save"
+              >
+                {form.formState.isSubmitting && (
+                  <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden />
+                )}
                 {t("save")}
               </Button>
             </form>
