@@ -82,10 +82,12 @@ export function CommandMenu({ allowed }: { allowed: string[] }) {
         onClick={() => setOpen(true)}
         aria-label={t("search.button")}
         data-testid="open-palette"
-        className="gap-2"
+        className="gap-4 flex justify-between items-center group"
       >
-        <Search className="size-4" aria-hidden />
-        <span className="text-muted-foreground hidden lg:inline">{t("search.button")}</span>
+        <div className="flex justify-between items-center gap-1">
+          <Search className="size-4" aria-hidden />
+          <span className="text-muted-foreground group-hover:text-white dark:group-hover:text-accent hidden lg:inline">{t("search.button")}</span>
+        </div>
         <kbd className="bg-muted text-muted-foreground hidden rounded border px-1.5 font-mono text-[10px] lg:inline">
           {"Ctrl K"}
         </kbd>

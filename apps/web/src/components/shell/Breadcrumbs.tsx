@@ -46,7 +46,11 @@ export function Breadcrumbs() {
   );
   // "/" alone: just the first crumb as the page.
   const list = parts.length === 0 ? crumbs.slice(0, 1) : crumbs;
-  const hrefFor = (href: string) => (href === "/workspace" ? "/workspace/brand" : href);
+  const hrefFor = (href: string) => {
+    if (href === "/projects") return "/";
+    if (href === "/workspace") return "/workspace/brand";
+    return href;
+  };
 
   return (
     <Breadcrumb aria-label={t("breadcrumb")}>
