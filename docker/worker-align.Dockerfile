@@ -23,7 +23,7 @@ RUN micromamba install -y -n base -c conda-forge python=3.11 montreal-forced-ali
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
 # The model list comes from the GitHub API (60 requests/hour without a token, which shared CI runners exhaust).
 # Optional build secret: docker build --secret id=github_token,env=GITHUB_TOKEN ...
-RUN --mount=type=secret,id=github_token \
+RUN --mount=type=secret,id=github_token,mode=0444 \
     T=""; [ -s /run/secrets/github_token ] && T="--github_token $(cat /run/secrets/github_token)"; \
     for i in 1 2 3; do \
       mfa model download acoustic vietnamese_mfa $T \
