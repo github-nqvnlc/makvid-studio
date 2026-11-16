@@ -27,7 +27,11 @@ export interface PurgeJobData {
 }
 
 /** Hide the projects and stop their production. Returns the ids that were actually deleted by this call. */
-export async function tombstoneProjects(deps: ServiceDeps, workspaceId: string, ids: string[]): Promise<string[]> {
+export async function tombstoneProjects(
+  deps: ServiceDeps,
+  workspaceId: string,
+  ids: string[],
+): Promise<string[]> {
   if (!ids.length) return [];
   const done = await withWorkspace(deps.db, workspaceId, (tx) =>
     tx
@@ -56,7 +60,12 @@ export async function enqueuePurges(
   try {
     for (const projectId of projectIds) {
       const data: PurgeJobData = { workspaceId, projectId };
-      const opts = { removeOnComplete: true, removeOnFail: 100, attempts: 3, backoff: { type: "exponential" as const, delay: 30_000 } };
+      const opts = {
+        removeOnComplete: true,
+        removeOnFail: 100,
+        attempts: 3,
+        backoff: { type: "exponential" as const, delay: 30_000 },
+      };
       await queue.add(PURGE_JOB, data, { ...opts, jobId: `purge-${projectId}` });
       await queue.add(PURGE_JOB, data, { ...opts, jobId: `purge-retry-${projectId}`, delay: PURGE_RETRY_MS });
     }

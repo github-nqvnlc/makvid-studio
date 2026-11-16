@@ -164,8 +164,11 @@ export function createObjectStore(cfg: ObjectStoreConfig): ObjectStore {
         );
         const keys = (page.Contents ?? []).flatMap((o) => (o.Key ? [{ Key: o.Key }] : []));
         if (keys.length) {
-          const r = await client.send(new DeleteObjectsCommand({ Bucket, Delete: { Objects: keys, Quiet: true } }));
-          if (r.Errors?.length) throw new Error(`delete failed for ${r.Errors.length} objects under ${prefix}`);
+          const r = await client.send(
+            new DeleteObjectsCommand({ Bucket, Delete: { Objects: keys, Quiet: true } }),
+          );
+          if (r.Errors?.length)
+            throw new Error(`delete failed for ${r.Errors.length} objects under ${prefix}`);
           removed += keys.length;
         }
         token = page.IsTruncated ? page.NextContinuationToken : undefined;

@@ -57,21 +57,34 @@ export function BatchProgress({ initial, canRun }: { initial: BatchView; canRun:
           </Badge>
         }
       />
-      <Progress value={Math.round((done / Math.max(1, view.batch.total)) * 100)} aria-label={t("progress", { done, total: view.batch.total })} />
+      <Progress
+        value={Math.round((done / Math.max(1, view.batch.total)) * 100)}
+        aria-label={t("progress", { done, total: view.batch.total })}
+      />
       <p className="text-muted-foreground text-sm">
         {t("progress", { done: c.succeeded, total: view.batch.total })}
         {c.failed > 0 && ` · ${t("item.failed")}: ${c.failed}`}
       </p>
       <div className="flex flex-wrap items-center gap-2">
         {view.batch.zip && (
-          <a className={cn(buttonVariants(), "gap-1.5")} href={view.batch.zip} download data-testid="batch-zip">
+          <a
+            className={cn(buttonVariants(), "gap-1.5")}
+            href={view.batch.zip}
+            download
+            data-testid="batch-zip"
+          >
             <Download className="size-4" aria-hidden />
             {t("zip")}
           </a>
         )}
         {zipPending && <span className="text-muted-foreground text-sm">{t("zipPending")}</span>}
         {canRun && c.failed > 0 && FINAL.has(view.batch.status) && view.batch.status !== "cancelled" && (
-          <Button variant="outline" disabled={busy} onClick={() => void act("retry")} data-testid="batch-retry">
+          <Button
+            variant="outline"
+            disabled={busy}
+            onClick={() => void act("retry")}
+            data-testid="batch-retry"
+          >
             {t("retry", { n: c.failed })}
           </Button>
         )}

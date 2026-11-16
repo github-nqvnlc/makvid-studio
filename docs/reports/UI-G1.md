@@ -16,24 +16,24 @@ Date: 2026-11-14. Spec: [specs/002-saas-ui-revamp](../../specs/002-saas-ui-revam
 
 ## Decisions
 
-| Topic | Decision |
-| --- | --- |
-| Fonts | Plus Jakarta Sans (sans), Space Mono (mono), **Be Vietnam Pro replaces DM Sans**: DM Sans has no Vietnamese subset. All three load the Vietnamese subset; `e2e/fonts.spec.ts` checks "Ẩ Ỹ Ự ặ ở Đ đ". |
+| Topic          | Decision                                                                                                                                                                                                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fonts          | Plus Jakarta Sans (sans), Space Mono (mono), **Be Vietnam Pro replaces DM Sans**: DM Sans has no Vietnamese subset. All three load the Vietnamese subset; `e2e/fonts.spec.ts` checks "Ẩ Ỹ Ự ặ ở Đ đ".                                                                         |
 | Theme contrast | Token-only edits, measured by `test/tokens-contrast.test.ts` (every text pair ≥ 4.5:1, input outline ≥ 3:1, both themes): light `--border` black → neutral divider, dark `--input` white → mid grey, light `--secondary-foreground`/`--destructive-foreground` white → black. |
-| License | `lightningcss` (MPL-2.0, Tailwind v4 build dependency) allowlisted with the owner's approval (2026-11-14); used unmodified at build time. Listed in `THIRD_PARTY_LICENSES.md`. |
-| Avatars | `sharp` rejected (libvips LGPL): crop to 256 px in the browser (UI-G3). |
+| License        | `lightningcss` (MPL-2.0, Tailwind v4 build dependency) allowlisted with the owner's approval (2026-11-14); used unmodified at build time. Listed in `THIRD_PARTY_LICENSES.md`.                                                                                                |
+| Avatars        | `sharp` rejected (libvips LGPL): crop to 256 px in the browser (UI-G3).                                                                                                                                                                                                       |
 
 ## Checks run
 
-| Check | Result |
-| --- | --- |
-| `pnpm typecheck` / `pnpm lint` | pass / pass (0 errors) |
-| `pnpm --filter @makvid/web test` | 78 passed, 9 skipped (infra opt-in). Includes vi/en key parity, token contrast, and the RBAC route-coverage test (it caught `PATCH /api/me` missing `guarded`; fixed). |
-| `pnpm license:check` | OK (OFL fonts reported as REVIEW warnings, dev only) |
-| `pnpm --filter @makvid/web build` | pass |
-| E2E new (`theme-locale`, `fonts`) | 6/6 pass: switch keeps path and query and sets `NEXT_LOCALE`; theme persists across reload with no hydration warning; first paint dark when the OS is dark; Vietnamese glyphs in all three families |
-| E2E screens | representative screenshots of sign-in and sign-up (full set is regenerated, see [README](ui/README.md)) in [docs/reports/ui/ui-g1/](ui/ui-g1/) |
-| E2E existing specs (SC-001) | all 5 existing specs pass (brand, create-and-edit, no-tech-leak, sources, m5): 8 of 9 tests passed in the full run, and the remaining one (`m5`) passed when re-run alone (3.0 min). Its first two failures were my test setup, not the code: it needs `MAKVID_PAYMENTS=mock` and `APP_URL` pointing at the test port. |
+| Check                             | Result                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm typecheck` / `pnpm lint`    | pass / pass (0 errors)                                                                                                                                                                                                                                                                                                 |
+| `pnpm --filter @makvid/web test`  | 78 passed, 9 skipped (infra opt-in). Includes vi/en key parity, token contrast, and the RBAC route-coverage test (it caught `PATCH /api/me` missing `guarded`; fixed).                                                                                                                                                 |
+| `pnpm license:check`              | OK (OFL fonts reported as REVIEW warnings, dev only)                                                                                                                                                                                                                                                                   |
+| `pnpm --filter @makvid/web build` | pass                                                                                                                                                                                                                                                                                                                   |
+| E2E new (`theme-locale`, `fonts`) | 6/6 pass: switch keeps path and query and sets `NEXT_LOCALE`; theme persists across reload with no hydration warning; first paint dark when the OS is dark; Vietnamese glyphs in all three families                                                                                                                    |
+| E2E screens                       | representative screenshots of sign-in and sign-up (full set is regenerated, see [README](ui/README.md)) in [docs/reports/ui/ui-g1/](ui/ui-g1/)                                                                                                                                                                         |
+| E2E existing specs (SC-001)       | all 5 existing specs pass (brand, create-and-edit, no-tech-leak, sources, m5): 8 of 9 tests passed in the full run, and the remaining one (`m5`) passed when re-run alone (3.0 min). Its first two failures were my test setup, not the code: it needs `MAKVID_PAYMENTS=mock` and `APP_URL` pointing at the test port. |
 
 ## Known, expected differences
 

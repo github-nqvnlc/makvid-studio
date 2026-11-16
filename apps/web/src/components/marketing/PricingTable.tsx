@@ -69,7 +69,11 @@ export function PricingTable({ plans, signedIn }: { plans: PricingPlan[]; signed
                       t("free")
                     ) : (
                       <>
-                        {f.number(price, { style: "currency", currency: locale === "en" ? "USD" : "VND", maximumFractionDigits: locale === "en" ? 2 : 0 })}
+                        {f.number(price, {
+                          style: "currency",
+                          currency: locale === "en" ? "USD" : "VND",
+                          maximumFractionDigits: locale === "en" ? 2 : 0,
+                        })}
                         <span className="text-muted-foreground text-sm font-normal">{t("perMonth")}</span>
                       </>
                     )}

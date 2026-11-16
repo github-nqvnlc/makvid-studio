@@ -33,7 +33,11 @@ export const PreviewPlayer = forwardRef<
     <div className="flex flex-col items-center gap-2">
       <div
         className="bg-muted relative w-full overflow-hidden rounded-lg"
-        style={{ aspectRatio: ratio(aspect), maxHeight: "70vh", maxWidth: tall ? "min(100%, 360px)" : "100%" }}
+        style={{
+          aspectRatio: ratio(aspect),
+          maxHeight: "70vh",
+          maxWidth: tall ? "min(100%, 360px)" : "100%",
+        }}
       >
         {state === "loading" && <Skeleton className="absolute inset-0" aria-label={t("loadingVideo")} />}
         <video

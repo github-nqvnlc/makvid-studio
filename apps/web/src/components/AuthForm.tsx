@@ -39,7 +39,11 @@ export function AuthForm({ mode, google }: { mode: "sign-in" | "sign-up"; google
     setError(null);
     const r =
       mode === "sign-up"
-        ? await authClient.signUp.email({ email: values.email, password: values.password, name: values.name ?? "" })
+        ? await authClient.signUp.email({
+            email: values.email,
+            password: values.password,
+            name: values.name ?? "",
+          })
         : await authClient.signIn.email({ email: values.email, password: values.password });
     if (r.error) {
       setError(mode === "sign-up" ? t("signUpFailed") : t("failed"));
@@ -60,7 +64,9 @@ export function AuthForm({ mode, google }: { mode: "sign-in" | "sign-up"; google
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submit)} className="flex flex-col gap-5" noValidate>
-        <h1 className="text-2xl font-bold tracking-tight">{mode === "sign-up" ? t("signUpTitle") : t("signInTitle")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">
+          {mode === "sign-up" ? t("signUpTitle") : t("signInTitle")}
+        </h1>
         {mode === "sign-up" && (
           <FormField
             control={form.control}
@@ -140,7 +146,10 @@ export function AuthForm({ mode, google }: { mode: "sign-in" | "sign-up"; google
             {t("google")}
           </Button>
         )}
-        <Link href={mode === "sign-up" ? "/sign-in" : "/sign-up"} className="text-sm underline underline-offset-4">
+        <Link
+          href={mode === "sign-up" ? "/sign-in" : "/sign-up"}
+          className="text-sm underline underline-offset-4"
+        >
           {mode === "sign-up" ? t("toSignIn") : t("toSignUp")}
         </Link>
       </form>

@@ -29,11 +29,11 @@ export default async function ApiPage({ params }: { params: Promise<{ locale: st
   return (
     <div className="flex flex-col gap-4">
       {!plan.limits.api_enabled && <UpgradeCard feature={tl("api")} description={tl("apiBody")} />}
-    <ApiSettings
-      keys={JSON.parse(JSON.stringify(keys))}
-      hooks={JSON.parse(JSON.stringify(hooks))}
-      apiEnabled={plan.limits.api_enabled}
-    />
+      <ApiSettings
+        keys={JSON.parse(JSON.stringify(keys))}
+        hooks={JSON.parse(JSON.stringify(hooks))}
+        apiEnabled={plan.limits.api_enabled}
+      />
     </div>
   );
 }

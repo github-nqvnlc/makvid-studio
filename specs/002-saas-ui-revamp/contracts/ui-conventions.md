@@ -24,14 +24,14 @@ counted from the old pages. Phase 1 builds the shared pieces, and every later pa
 
 ## States (every data view, FR-043)
 
-| State | Component | Content |
-| --- | --- | --- |
-| Loading | `Skeleton` in the shape of the content, via a route `loading.tsx` or `Suspense` | — |
-| Empty | `<EmptyState icon title description action />` | lucide illustration icon in a tinted circle, one sentence, one primary CTA |
-| Error | `<ErrorState onRetry />` | plain-language message from `errors.<code>`, "Try again" button |
-| Success / failure of an action | `toast.success` / `toast.error` (sonner) | localized message, never raw server text |
-| Plan-locked | `<UpgradeCard feature />` | what the feature does, which plan has it, "Upgrade" (disabled with reason if no payment method) |
-| Coming soon | `<Badge variant="outline">` "Sắp ra mắt / Coming soon" | — |
+| State                          | Component                                                                       | Content                                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Loading                        | `Skeleton` in the shape of the content, via a route `loading.tsx` or `Suspense` | —                                                                                               |
+| Empty                          | `<EmptyState icon title description action />`                                  | lucide illustration icon in a tinted circle, one sentence, one primary CTA                      |
+| Error                          | `<ErrorState onRetry />`                                                        | plain-language message from `errors.<code>`, "Try again" button                                 |
+| Success / failure of an action | `toast.success` / `toast.error` (sonner)                                        | localized message, never raw server text                                                        |
+| Plan-locked                    | `<UpgradeCard feature />`                                                       | what the feature does, which plan has it, "Upgrade" (disabled with reason if no payment method) |
+| Coming soon                    | `<Badge variant="outline">` "Sắp ra mắt / Coming soon"                          | —                                                                                               |
 
 ## Forms
 
@@ -44,14 +44,14 @@ counted from the old pages. Phase 1 builds the shared pieces, and every later pa
 
 ## Inputs
 
-| Need | Component |
-| --- | --- |
-| Color | `<ColorField>`: swatch button opening a `Popover` with native picker + hex `Input` (validated `#RRGGBB`) |
-| File | `<FileDropzone accept maxSize>`: drag-and-drop + button, keyboard reachable, shows file name and errors |
-| Choice from few (≤ 5) visual options | `ToggleGroup` / radio cards (aspect ratio cards with a drawn frame) |
-| Choice from many | `Select` (or `Combobox` with search when > 10) |
-| Number with range | `Slider` + `Input type=number`, kept in sync |
-| Date range | `Popover` + `Calendar mode="range"` with presets |
+| Need                                 | Component                                                                                                |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Color                                | `<ColorField>`: swatch button opening a `Popover` with native picker + hex `Input` (validated `#RRGGBB`) |
+| File                                 | `<FileDropzone accept maxSize>`: drag-and-drop + button, keyboard reachable, shows file name and errors  |
+| Choice from few (≤ 5) visual options | `ToggleGroup` / radio cards (aspect ratio cards with a drawn frame)                                      |
+| Choice from many                     | `Select` (or `Combobox` with search when > 10)                                                           |
+| Number with range                    | `Slider` + `Input type=number`, kept in sync                                                             |
+| Date range                           | `Popover` + `Calendar mode="range"` with presets                                                         |
 
 ## Data display
 

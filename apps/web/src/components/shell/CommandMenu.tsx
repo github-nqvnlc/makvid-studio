@@ -52,7 +52,9 @@ export function CommandMenu({ allowed }: { allowed: string[] }) {
     const ctl = new AbortController();
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/projects?q=${encodeURIComponent(q.trim())}&pageSize=8`, { signal: ctl.signal });
+        const res = await fetch(`/api/projects?q=${encodeURIComponent(q.trim())}&pageSize=8`, {
+          signal: ctl.signal,
+        });
         if (!res.ok) return;
         const body = (await res.json()) as { projects: Array<{ id: string; title: string }> };
         setHits(body.projects.slice(0, 8));
@@ -74,12 +76,26 @@ export function CommandMenu({ allowed }: { allowed: string[] }) {
 
   return (
     <>
-      <Button variant="outline" size="sm" onClick={() => setOpen(true)} aria-label={t("search.button")} data-testid="open-palette" className="gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setOpen(true)}
+        aria-label={t("search.button")}
+        data-testid="open-palette"
+        className="gap-2"
+      >
         <Search className="size-4" aria-hidden />
         <span className="text-muted-foreground hidden lg:inline">{t("search.button")}</span>
-        <kbd className="bg-muted text-muted-foreground hidden rounded border px-1.5 font-mono text-[10px] lg:inline">{"Ctrl K"}</kbd>
+        <kbd className="bg-muted text-muted-foreground hidden rounded border px-1.5 font-mono text-[10px] lg:inline">
+          {"Ctrl K"}
+        </kbd>
       </Button>
-      <CommandDialog open={open} onOpenChange={setOpen} title={t("search.title")} description={t("search.placeholder")}>
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t("search.title")}
+        description={t("search.placeholder")}
+      >
         <CommandInput value={q} onValueChange={setQ} placeholder={t("search.placeholder")} />
         <CommandList>
           <CommandEmpty>{t("search.empty")}</CommandEmpty>
@@ -96,7 +112,11 @@ export function CommandMenu({ allowed }: { allowed: string[] }) {
               <CommandSeparator />
               <CommandGroup heading={t("search.projects")}>
                 {hits.map((h) => (
-                  <CommandItem key={h.id} value={`project ${h.title} ${h.id}`} onSelect={() => go(`/projects/${h.id}`)}>
+                  <CommandItem
+                    key={h.id}
+                    value={`project ${h.title} ${h.id}`}
+                    onSelect={() => go(`/projects/${h.id}`)}
+                  >
                     {h.title}
                   </CommandItem>
                 ))}

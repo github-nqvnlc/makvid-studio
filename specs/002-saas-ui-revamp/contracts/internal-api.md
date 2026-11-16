@@ -9,21 +9,21 @@ the UI maps each one to `errors.<code>`.
 
 ### `GET /api/projects` (extended, permission `view`)
 
-| Query | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `q` | string ≤ 200 | — | Accent- and case-insensitive substring of the title |
-| `status` | csv of statuses or groups (`processing`, `review`, `ready`, `attention`, `failed`, `draft`) | all | Groups expand per [data-model.md §1](../data-model.md) |
-| `aspect` | csv of `9:16`,`16:9`,`1:1`,`4:5` | all | Matches `primary_aspect` |
-| `source` | csv of `prompt`,`script`,`url`,`github`,`table`,`media` | all | |
-| `mode` | `auto` \| `review` | all | |
-| `createdBy` | uuid | — | Must be a member of the workspace; otherwise empty result |
-| `created` / `updated` | `today` \| `7d` \| `30d` \| `custom` | — | |
-| `createdFrom`,`createdTo`,`updatedFrom`,`updatedTo` | ISO date | — | Used with `custom`; inclusive days in the user's time zone (`tz` param) |
-| `tz` | IANA zone | `Asia/Ho_Chi_Minh` | For date boundaries |
-| `sort` | `updated` \| `created` \| `title` | `updated` | |
-| `dir` | `asc` \| `desc` | `desc` (`asc` for title) | |
-| `page` | int ≥ 1 | 1 | |
-| `pageSize` | int 1–100 | 24 | |
+| Query                                               | Type                                                                                        | Default                  | Notes                                                                   |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------ | ----------------------------------------------------------------------- |
+| `q`                                                 | string ≤ 200                                                                                | —                        | Accent- and case-insensitive substring of the title                     |
+| `status`                                            | csv of statuses or groups (`processing`, `review`, `ready`, `attention`, `failed`, `draft`) | all                      | Groups expand per [data-model.md §1](../data-model.md)                  |
+| `aspect`                                            | csv of `9:16`,`16:9`,`1:1`,`4:5`                                                            | all                      | Matches `primary_aspect`                                                |
+| `source`                                            | csv of `prompt`,`script`,`url`,`github`,`table`,`media`                                     | all                      |                                                                         |
+| `mode`                                              | `auto` \| `review`                                                                          | all                      |                                                                         |
+| `createdBy`                                         | uuid                                                                                        | —                        | Must be a member of the workspace; otherwise empty result               |
+| `created` / `updated`                               | `today` \| `7d` \| `30d` \| `custom`                                                        | —                        |                                                                         |
+| `createdFrom`,`createdTo`,`updatedFrom`,`updatedTo` | ISO date                                                                                    | —                        | Used with `custom`; inclusive days in the user's time zone (`tz` param) |
+| `tz`                                                | IANA zone                                                                                   | `Asia/Ho_Chi_Minh`       | For date boundaries                                                     |
+| `sort`                                              | `updated` \| `created` \| `title`                                                           | `updated`                |                                                                         |
+| `dir`                                               | `asc` \| `desc`                                                                             | `desc` (`asc` for title) |                                                                         |
+| `page`                                              | int ≥ 1                                                                                     | 1                        |                                                                         |
+| `pageSize`                                          | int 1–100                                                                                   | 24                       |                                                                         |
 
 Response `200`:
 

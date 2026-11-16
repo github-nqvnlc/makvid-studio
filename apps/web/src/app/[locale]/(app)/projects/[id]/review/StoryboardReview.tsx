@@ -57,8 +57,15 @@ export function StoryboardReview({
       <CardContent className="flex flex-col gap-4">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {scenes.map((s, i) => (
-            <figure key={s.sceneId} className={cn("m-0 flex flex-col gap-2", drop.has(s.sceneId) && "opacity-40")}>
-              <img src={`/api/projects/${projectId}/previews/${s.sceneId}`} alt={t("editor.scene", { n: i + 1 })} className="w-full rounded-md border object-cover" />
+            <figure
+              key={s.sceneId}
+              className={cn("m-0 flex flex-col gap-2", drop.has(s.sceneId) && "opacity-40")}
+            >
+              <img
+                src={`/api/projects/${projectId}/previews/${s.sceneId}`}
+                alt={t("editor.scene", { n: i + 1 })}
+                className="w-full rounded-md border object-cover"
+              />
               <figcaption className="flex flex-col gap-1 text-sm">
                 <strong>{t("editor.scene", { n: i + 1 })}</strong>
                 <span className="text-muted-foreground">{s.text}</span>

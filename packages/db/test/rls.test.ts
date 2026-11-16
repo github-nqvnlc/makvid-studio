@@ -56,6 +56,7 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("RLS by workspace", () =>
       "0004_jobs_run_id.sql",
       "0005_brand_assets.sql",
       "0006_batch_billing_api.sql",
+      "0007_project_search.sql",
     ]);
     expect(await migrate(url)).toEqual([]); // idempotent
     ({ db, close } = connect(url, 4));

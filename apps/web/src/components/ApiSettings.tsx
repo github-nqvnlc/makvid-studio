@@ -26,7 +26,15 @@ export interface HookRow {
   deliveries: Array<{ event: string; status: string; attempts: number; lastHttpStatus: number | null }>;
 }
 
-export function ApiSettings({ keys, hooks, apiEnabled }: { keys: KeyRow[]; hooks: HookRow[]; apiEnabled: boolean }) {
+export function ApiSettings({
+  keys,
+  hooks,
+  apiEnabled,
+}: {
+  keys: KeyRow[];
+  hooks: HookRow[];
+  apiEnabled: boolean;
+}) {
   const t = useTranslations("api");
   const te = useTranslations("errors");
   const router = useRouter();
@@ -79,7 +87,9 @@ export function ApiSettings({ keys, hooks, apiEnabled }: { keys: KeyRow[]; hooks
                 variant="outline"
                 size="sm"
                 className="gap-1.5"
-                onClick={() => void navigator.clipboard.writeText(secret.value).then(() => toast.success(t("copied")))}
+                onClick={() =>
+                  void navigator.clipboard.writeText(secret.value).then(() => toast.success(t("copied")))
+                }
               >
                 <Copy className="size-3.5" aria-hidden />
                 {t("copy")}
@@ -99,16 +109,31 @@ export function ApiSettings({ keys, hooks, apiEnabled }: { keys: KeyRow[]; hooks
                 <strong>{k.name}</strong>
                 <code className="text-muted-foreground font-mono text-xs">{k.prefix}_…</code>
                 <span className="text-muted-foreground flex-1 text-sm">
-                  {k.lastUsedAt ? t("lastUsed", { at: new Date(k.lastUsedAt).toLocaleString() }) : t("neverUsed")}
+                  {k.lastUsedAt
+                    ? t("lastUsed", { at: new Date(k.lastUsedAt).toLocaleString() })
+                    : t("neverUsed")}
                 </span>
-                <Button variant="outline" size="sm" onClick={() => void remove(`/api/workspace/api-keys/${k.id}`)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => void remove(`/api/workspace/api-keys/${k.id}`)}
+                >
                   {t("revoke")}
                 </Button>
               </li>
             ))}
           </ul>
           <form className="flex flex-wrap gap-2" onSubmit={(e) => void createKey(e)}>
-            <Input required maxLength={80} placeholder={t("keyName")} aria-label={t("keyName")} value={name} onChange={(e) => setName(e.target.value)} disabled={!apiEnabled} className="min-w-48 flex-1" />
+            <Input
+              required
+              maxLength={80}
+              placeholder={t("keyName")}
+              aria-label={t("keyName")}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={!apiEnabled}
+              className="min-w-48 flex-1"
+            />
             <Button type="submit" disabled={!apiEnabled}>
               {t("createKey")}
             </Button>
@@ -126,7 +151,11 @@ export function ApiSettings({ keys, hooks, apiEnabled }: { keys: KeyRow[]; hooks
               <li key={h.id} className="flex flex-col gap-1 py-2">
                 <span className="flex flex-wrap items-center gap-3">
                   <code className="min-w-0 flex-1 font-mono text-xs break-all">{h.url}</code>
-                  <Button variant="outline" size="sm" onClick={() => void remove(`/api/workspace/webhooks/${h.id}`)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void remove(`/api/workspace/webhooks/${h.id}`)}
+                  >
                     {t("remove")}
                   </Button>
                 </span>
@@ -140,7 +169,16 @@ export function ApiSettings({ keys, hooks, apiEnabled }: { keys: KeyRow[]; hooks
             ))}
           </ul>
           <form className="flex flex-wrap gap-2" onSubmit={(e) => void addHook(e)}>
-            <Input type="url" required placeholder="https://…" aria-label={t("webhookUrl")} value={url} onChange={(e) => setUrl(e.target.value)} disabled={!apiEnabled} className="min-w-48 flex-1" />
+            <Input
+              type="url"
+              required
+              placeholder="https://…"
+              aria-label={t("webhookUrl")}
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              disabled={!apiEnabled}
+              className="min-w-48 flex-1"
+            />
             <Button type="submit" disabled={!apiEnabled}>
               {t("addWebhook")}
             </Button>

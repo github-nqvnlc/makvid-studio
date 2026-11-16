@@ -1,0 +1,36 @@
+# Cloudflare Tunnel overlay: publishes the app without opening any inbound port on the host.
+#
+#   docker compose -f compose.tunnel.yaml up -d --build
+#
+# The tunnel is "remotely managed": its public hostnames are set in the Cloudflare dashboard (Zero Trust ->
+# Networks -> Tunnels), and this container only needs the tunnel token. Setup steps: docs/ops/cloudflare-tunnel.md.
+#
+#   makvid-studio.locnv.id.vn  ->  http://web:3000        (the app)
+#   makvid-s3.locnv.id.vn      ->  http://seaweedfs:8333  (signed video/avatar download links)
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:2026.11.0
+    command: ["tunnel", "--no-autoupdate", "--metrics", "0.0.0.0:2000", "run"]
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set TUNNEL_TOKEN in .env (Cloudflare dashboard -> Tunnels -> your tunnel -> token)}
+    # "edge" reaches the internet (to Cloudflare) and the web and seaweedfs services; "internal" (databases,
+    # workers) is not reachable from here.
+    networks: [edge]
+    depends_on:
+      web: { condition: service_healthy }
+      seaweedfs: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "cloudflared", "tunnel", "--metrics", "127.0.0.1:2000", "ready"]
+      interval: 15s
+      retries: 10
+    deploy: { resources: { limits: { cpus: "0.5", memory: 256m } } }
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "5" }
+
+  # Everything goes through the tunnel now: keep the host ports for local checks only (127.0.0.1).
+  web:
+    ports: !override ["127.0.0.1:${WEB_PORT:-3000}:3000"]
+  seaweedfs:
+    ports: !override ["127.0.0.1:${S3_PORT:-8333}:8333"]

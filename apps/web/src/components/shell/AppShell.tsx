@@ -29,18 +29,26 @@ export async function AppShell({ children }: { children: ReactNode }) {
       .then((u): Quota => ({ used: Number(u.used.videos ?? 0), limit: u.plan.limits.videos }))
       .catch(() => null),
     cookies(),
-    server().db.select({ image: users.image }).from(users).where(eq(users.id, v.userId)).then((r) => r[0]?.image ?? null).catch(() => null),
+    server()
+      .db.select({ image: users.image })
+      .from(users)
+      .where(eq(users.id, v.userId))
+      .then((r) => r[0]?.image ?? null)
+      .catch(() => null),
   ]);
   const defaultOpen = jar.get("sidebar_state")?.value !== "false";
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar allowed={allowed} workspaces={workspaces} quota={quota} user={{ name: v.name, email: v.email, image: me }} />
+      <AppSidebar
+        allowed={allowed}
+        workspaces={workspaces}
+        quota={quota}
+        user={{ name: v.name, email: v.email, image: me }}
+      />
       <SidebarInset id="main" className="min-w-0">
         <Topbar allowed={allowed} />
-        <div className="w-full flex-1 p-4 md:p-6 lg:p-8">
-          {children}
-        </div>
+        <div className="w-full flex-1 p-4 md:p-6 lg:p-8">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

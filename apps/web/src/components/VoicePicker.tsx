@@ -42,7 +42,10 @@ export function VoicePicker({
   const shown = useMemo(
     () =>
       voices.filter(
-        (v) => v.tier === tier && (gender === ALL || v.gender === gender) && (region === ALL || (v.region ?? "other") === region),
+        (v) =>
+          v.tier === tier &&
+          (gender === ALL || v.gender === gender) &&
+          (region === ALL || (v.region ?? "other") === region),
       ),
     [voices, tier, gender, region],
   );
@@ -61,7 +64,12 @@ export function VoicePicker({
   }
 
   return (
-    <Tabs value={tier} onValueChange={(v) => setTier(v as typeof tier)} className="flex flex-col gap-3" data-testid="voice-picker">
+    <Tabs
+      value={tier}
+      onValueChange={(v) => setTier(v as typeof tier)}
+      className="flex flex-col gap-3"
+      data-testid="voice-picker"
+    >
       <TabsList>
         {TIERS.map((x) => (
           <TabsTrigger key={x} value={x}>
@@ -71,7 +79,14 @@ export function VoicePicker({
       </TabsList>
       <p className="text-muted-foreground text-sm">{t(`tierHint.${tier}`)}</p>
       <div className="flex flex-wrap items-center gap-3">
-        <ToggleGroup type="single" value={gender} onValueChange={(v) => setGender(v || ALL)} variant="outline" size="sm" aria-label={t("gender")}>
+        <ToggleGroup
+          type="single"
+          value={gender}
+          onValueChange={(v) => setGender(v || ALL)}
+          variant="outline"
+          size="sm"
+          aria-label={t("gender")}
+        >
           <ToggleGroupItem value={ALL}>{t("all")}</ToggleGroupItem>
           <ToggleGroupItem value="female">{t("female")}</ToggleGroupItem>
           <ToggleGroupItem value="male">{t("male")}</ToggleGroupItem>
@@ -99,7 +114,13 @@ export function VoicePicker({
             ) : (
               <ul className="grid gap-2 sm:grid-cols-2">
                 {shown.map((v) => (
-                  <li key={v.id} className={cn("flex items-center gap-2 rounded-lg border p-2", value === v.id && "border-primary ring-primary ring-1")}>
+                  <li
+                    key={v.id}
+                    className={cn(
+                      "flex items-center gap-2 rounded-lg border p-2",
+                      value === v.id && "border-primary ring-primary ring-1",
+                    )}
+                  >
                     <button
                       type="button"
                       onClick={() => onChange(v.id)}
@@ -120,8 +141,18 @@ export function VoicePicker({
                         </span>
                       </span>
                     </button>
-                    <Button type="button" variant="outline" size="sm" onClick={() => listen(v.id)} className="gap-1">
-                      {playing === v.id ? <Pause className="size-3.5" aria-hidden /> : <Play className="size-3.5" aria-hidden />}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => listen(v.id)}
+                      className="gap-1"
+                    >
+                      {playing === v.id ? (
+                        <Pause className="size-3.5" aria-hidden />
+                      ) : (
+                        <Play className="size-3.5" aria-hidden />
+                      )}
                       {playing === v.id ? t("stop") : t("listen")}
                     </Button>
                   </li>

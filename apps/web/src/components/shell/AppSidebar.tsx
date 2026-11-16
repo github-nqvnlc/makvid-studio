@@ -48,7 +48,10 @@ export function AppSidebar({
   return (
     <Sidebar collapsible="icon" aria-label={t("mainNav")}>
       <SidebarHeader>
-        <Link href="/" className="px-2 pt-1 text-lg font-bold tracking-tight group-data-[collapsible=icon]:hidden">
+        <Link
+          href="/"
+          className="px-2 pt-1 text-lg font-bold tracking-tight group-data-[collapsible=icon]:hidden"
+        >
           MakVid Studio
         </Link>
         <WorkspaceSwitcher workspaces={workspaces} />
@@ -78,7 +81,10 @@ export function AppSidebar({
       </SidebarContent>
       <SidebarFooter>
         {quota && (
-          <div className="flex flex-col gap-1.5 px-2 group-data-[collapsible=icon]:hidden" data-testid="quota-meter">
+          <div
+            className="flex flex-col gap-1.5 px-2 group-data-[collapsible=icon]:hidden"
+            data-testid="quota-meter"
+          >
             <div className="flex items-baseline justify-between text-xs">
               <span className="font-medium">{t("quota.label")}</span>
               <span className={warn ? "text-destructive flex items-center gap-1" : "text-muted-foreground"}>

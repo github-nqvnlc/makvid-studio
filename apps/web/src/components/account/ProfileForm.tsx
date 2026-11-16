@@ -20,10 +20,19 @@ export function ProfileForm({ name, email, image }: { name: string; email: strin
   const t = useTranslations("account.profile");
   const router = useRouter();
   const schema = useMemo(
-    () => z.object({ name: z.string().transform((s) => s.normalize("NFC").trim()).pipe(z.string().min(1, t("nameRequired")).max(80, t("nameTooLong"))) }),
+    () =>
+      z.object({
+        name: z
+          .string()
+          .transform((s) => s.normalize("NFC").trim())
+          .pipe(z.string().min(1, t("nameRequired")).max(80, t("nameTooLong"))),
+      }),
     [t],
   );
-  const form = useForm<Values>({ resolver: zodResolver(schema) as unknown as Resolver<Values>, defaultValues: { name } });
+  const form = useForm<Values>({
+    resolver: zodResolver(schema) as unknown as Resolver<Values>,
+    defaultValues: { name },
+  });
 
   async function submit(v: Values) {
     const r = await authClient.updateUser({ name: schema.parse(v).name });
@@ -56,10 +65,23 @@ export function ProfileForm({ name, email, image }: { name: string; email: strin
             />
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium">{t("email")}</span>
-              <Input value={email} readOnly aria-readonly aria-label={t("email")} className="text-muted-foreground" />
+              <Input
+                value={email}
+                readOnly
+                aria-readonly
+                aria-label={t("email")}
+                className="text-muted-foreground"
+              />
             </div>
-            <Button type="submit" disabled={form.formState.isSubmitting} className="w-fit" data-testid="profile-save">
-              {form.formState.isSubmitting && <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden />}
+            <Button
+              type="submit"
+              disabled={form.formState.isSubmitting}
+              className="w-fit"
+              data-testid="profile-save"
+            >
+              {form.formState.isSubmitting && (
+                <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden />
+              )}
               {t("save")}
             </Button>
           </form>

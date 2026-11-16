@@ -68,9 +68,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Build web, worker and align images
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DOCKER_BUILDKIT: "1"
         run: |
           docker build -f docker/web.Dockerfile -t makvid-web:ci .
-          docker build -f docker/worker-align.Dockerfile -t makvid-align:ci .
+          docker build --secret id=github_token,env=GITHUB_TOKEN -f docker/worker-align.Dockerfile -t makvid-align:ci .
       - name: Compose file is valid
         run: cp .env.example .env && docker compose config -q
 

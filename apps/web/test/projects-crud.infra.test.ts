@@ -6,7 +6,16 @@ import { join } from "node:path";
 import { sql } from "drizzle-orm";
 import postgres from "postgres";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { connect, memberships, migrate, projects, users, withWorkspace, workspaces, type Db } from "@makvid/db";
+import {
+  connect,
+  memberships,
+  migrate,
+  projects,
+  users,
+  withWorkspace,
+  workspaces,
+  type Db,
+} from "@makvid/db";
 import { purgeProject, tombstoneProjects, type ServiceDeps } from "@makvid/pipeline";
 import type { ObjectStore } from "@makvid/storage";
 import { parseListQuery } from "../src/lib/project-query";
@@ -61,9 +70,13 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("projects CRUD with Postg
       primaryAspect: i % 2 ? "9:16" : "16:9",
       createdBy: u!.id,
     }));
-    const inserted = await withWorkspace(db, A, (tx) => tx.insert(projects).values(rows).returning({ id: projects.id }));
+    const inserted = await withWorkspace(db, A, (tx) =>
+      tx.insert(projects).values(rows).returning({ id: projects.id }),
+    );
     ids.push(...inserted.map((r) => r.id));
-    await withWorkspace(db, B, (tx) => tx.insert(projects).values({ workspaceId: B, title: "Của workspace B" }));
+    await withWorkspace(db, B, (tx) =>
+      tx.insert(projects).values({ workspaceId: B, title: "Của workspace B" }),
+    );
   }, 120_000);
 
   afterAll(async () => {
@@ -137,7 +150,10 @@ describe.runIf(process.env.MAKVID_INFRA_TESTS === "1")("projects CRUD with Postg
     expect(deletedPrefixes).toEqual([`ws/${A}/projects/${target}/`]);
     expect(existsSync(dir)).toBe(false);
     const rows = await withWorkspace(db, A, (tx) =>
-      tx.select({ id: projects.id }).from(projects).where(sql`${projects.id} = ${target}`),
+      tx
+        .select({ id: projects.id })
+        .from(projects)
+        .where(sql`${projects.id} = ${target}`),
     );
     expect(rows).toHaveLength(0);
   });

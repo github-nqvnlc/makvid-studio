@@ -108,7 +108,8 @@ export function BatchesPanel({
     router.push(`/batches/${id}`);
   }
 
-  const valid = check && !check.missingColumns.length && !check.issues.length && !check.tooManyRows && check.rows > 0;
+  const valid =
+    check && !check.missingColumns.length && !check.issues.length && !check.tooManyRows && check.rows > 0;
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
       <PageHeader title={t("title")} description={t("intro")} />
@@ -138,7 +139,9 @@ export function BatchesPanel({
                   ))}
                 </NativeSelect>
                 {tpl && (
-                  <p className="text-muted-foreground text-sm">{t("variables", { vars: tpl.variables.map((v) => v.name).join(", ") })}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {t("variables", { vars: tpl.variables.map((v) => v.name).join(", ") })}
+                  </p>
                 )}
               </div>
               <div className="flex flex-col gap-2">
@@ -157,7 +160,12 @@ export function BatchesPanel({
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="batch-name">{t("name")}</Label>
-                  <Input id="batch-name" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} />
+                  <Input
+                    id="batch-name"
+                    value={name}
+                    maxLength={120}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="batch-concurrency">{t("concurrency")}</Label>
@@ -167,7 +175,9 @@ export function BatchesPanel({
                     min={1}
                     max={maxConcurrency}
                     value={concurrency}
-                    onChange={(e) => setConcurrency(Math.max(1, Math.min(maxConcurrency, Number(e.target.value) || 1)))}
+                    onChange={(e) =>
+                      setConcurrency(Math.max(1, Math.min(maxConcurrency, Number(e.target.value) || 1)))
+                    }
                   />
                 </div>
               </div>
@@ -186,7 +196,9 @@ export function BatchesPanel({
                 <div className="flex flex-col gap-2 text-sm" data-testid="batch-check">
                   {check.missingColumns.length > 0 && (
                     <Alert variant="destructive">
-                      <AlertDescription>{t("missing", { cols: check.missingColumns.join(", ") })}</AlertDescription>
+                      <AlertDescription>
+                        {t("missing", { cols: check.missingColumns.join(", ") })}
+                      </AlertDescription>
                     </Alert>
                   )}
                   {check.tooManyRows && (
@@ -200,7 +212,11 @@ export function BatchesPanel({
                     </p>
                   ))}
                   {valid && <p>{t("rowsOk", { n: check.rows })}</p>}
-                  {check.extraColumns.length > 0 && <p className="text-muted-foreground">{t("extra", { cols: check.extraColumns.join(", ") })}</p>}
+                  {check.extraColumns.length > 0 && (
+                    <p className="text-muted-foreground">
+                      {t("extra", { cols: check.extraColumns.join(", ") })}
+                    </p>
+                  )}
                 </div>
               )}
             </>
@@ -224,11 +240,16 @@ export function BatchesPanel({
             <ul className="divide-y">
               {batches.map((b) => (
                 <li key={b.id} className="flex flex-wrap items-center gap-3 py-2">
-                  <Link href={`/batches/${b.id}`} className="min-w-0 flex-1 truncate font-medium hover:underline">
+                  <Link
+                    href={`/batches/${b.id}`}
+                    className="min-w-0 flex-1 truncate font-medium hover:underline"
+                  >
                     {b.name}
                   </Link>
                   <Badge variant="secondary">{t(`status.${b.status}` as "status.running")}</Badge>
-                  <span className="text-muted-foreground text-sm">{t("progress", { done: b.succeeded, total: b.total })}</span>
+                  <span className="text-muted-foreground text-sm">
+                    {t("progress", { done: b.succeeded, total: b.total })}
+                  </span>
                 </li>
               ))}
             </ul>

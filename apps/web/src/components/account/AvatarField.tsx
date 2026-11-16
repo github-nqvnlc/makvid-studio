@@ -76,7 +76,14 @@ export function AvatarField({ name, image }: { name: string; image: string | nul
       </Avatar>
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => input.current?.click()} data-testid="avatar-choose">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={() => input.current?.click()}
+            data-testid="avatar-choose"
+          >
             {busy && <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden />}
             {t("choose")}
           </Button>
@@ -87,7 +94,14 @@ export function AvatarField({ name, image }: { name: string; image: string | nul
           )}
         </div>
         <p className="text-muted-foreground text-xs">{t("hint")}</p>
-        <input ref={input} type="file" accept={TYPES.join(",")} hidden data-testid="avatar-input" onChange={(e) => void pick(e.target.files?.[0])} />
+        <input
+          ref={input}
+          type="file"
+          accept={TYPES.join(",")}
+          hidden
+          data-testid="avatar-input"
+          onChange={(e) => void pick(e.target.files?.[0])}
+        />
       </div>
     </div>
   );

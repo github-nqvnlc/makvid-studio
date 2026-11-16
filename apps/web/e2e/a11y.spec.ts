@@ -6,7 +6,13 @@ import { signUp } from "./helpers";
 async function check(page: Page, where: string) {
   const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
   const bad = r.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
-  const text = bad.map((v) => `${v.id} (${v.impact}): ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`);
+  const text = bad.map(
+    (v) =>
+      `${v.id} (${v.impact}): ${v.nodes
+        .slice(0, 3)
+        .map((n) => n.target.join(" "))
+        .join(" | ")}`,
+  );
   expect(text, `${where}\n${text.join("\n")}`).toEqual([]);
 }
 
@@ -30,7 +36,17 @@ for (const theme of ["light", "dark"] as const) {
     test.setTimeout(240_000);
     await signUp(page, `a11y${theme}`);
     await setTheme(page, theme);
-    for (const path of ["/", "/projects/new", "/workspace/billing", "/workspace/brand", "/workspace/assets", "/workspace/members", "/workspace/api", "/account", "/batches"]) {
+    for (const path of [
+      "/",
+      "/projects/new",
+      "/workspace/billing",
+      "/workspace/brand",
+      "/workspace/assets",
+      "/workspace/members",
+      "/workspace/api",
+      "/account",
+      "/batches",
+    ]) {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
       await check(page, `${path} ${theme}`);

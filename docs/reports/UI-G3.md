@@ -12,6 +12,7 @@ search ⌘/Ctrl+K, "New video", notification bell, language and theme), command 
 via the API, actions). `GET /api/workspace/list` feeds the switcher. At 360 px the topbar is one row.
 
 **Project management (API to UI).**
+
 - `GET /api/projects` now filters by text (accent- and case-insensitive: "dong ho" finds "Đồng Hồ"), status group, aspect,
   source, mode, creator, created/updated presets or custom day ranges (time zone aware), sort and pagination. Bad input
   returns `400 invalid`, never silently ignored.
@@ -50,13 +51,13 @@ password shown under its field, "sign out other devices" option, hidden for Goog
 
 ## Checks
 
-| Check | Result |
-| --- | --- |
-| typecheck / lint | pass |
-| Unit tests | 99 passed (new: project query parsing, avatar validation; RBAC route table updated) |
+| Check                                | Result                                                                                                                                                                                                                  |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| typecheck / lint                     | pass                                                                                                                                                                                                                    |
+| Unit tests                           | 99 passed (new: project query parsing, avatar validation; RBAC route table updated)                                                                                                                                     |
 | Infra tests (`MAKVID_INFRA_TESTS=1`) | new project CRUD test on real Postgres: accent search, filters and a deep page each under 1 s on 1 000 projects, no cross-workspace list/rename/delete, tombstone then purge; storage `deletePrefix` over 1 005 objects |
-| E2E new | `projects-crud`, `account`, `landing`, `theme-locale`, `fonts` |
-| E2E existing | see the result at the end of this file |
+| E2E new                              | `projects-crud`, `account`, `landing`, `theme-locale`, `fonts`                                                                                                                                                          |
+| E2E existing                         | see the result at the end of this file                                                                                                                                                                                  |
 
 ## Not done (deferred to UI-G4 or later)
 
@@ -72,11 +73,11 @@ password shown under its field, "sign out other devices" option, hidden for Goog
 
 Full run (16 tests) and reruns on a clean stack:
 
-| Spec | Result |
-| --- | --- |
-| `account`, `projects-crud`, `landing` (5), `theme-locale` (3), `fonts` | pass |
-| `brand`, `create-and-edit`, `no-tech-leak`, `sources` | pass (the last one only after restarting the stack: it failed once while the machine was overloaded) |
-| `m5` (plan upgrade, template, batch + ZIP, roles, admin) | **fails**: the batch of 3 videos ends as "Done with failed rows" (one row failed at the quality-check step), or the ZIP link does not appear |
+| Spec                                                                   | Result                                                                                                                                       |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `account`, `projects-crud`, `landing` (5), `theme-locale` (3), `fonts` | pass                                                                                                                                         |
+| `brand`, `create-and-edit`, `no-tech-leak`, `sources`                  | pass (the last one only after restarting the stack: it failed once while the machine was overloaded)                                         |
+| `m5` (plan upgrade, template, batch + ZIP, roles, admin)               | **fails**: the batch of 3 videos ends as "Done with failed rows" (one row failed at the quality-check step), or the ZIP link does not appear |
 
 About `m5`: it passed earlier in this session (3.0 min) before the UI-G2 changes. I did not change any batch, ZIP, quality
 check or worker code, and it was the slowest, most parallel test, so it is the first to break when the machine is

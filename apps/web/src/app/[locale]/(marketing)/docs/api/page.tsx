@@ -36,7 +36,11 @@ function Op({ method, path, op }: { method: string; path: string; op: Operation 
       {body.map(([type, c]) => (
         <p key={type} className="text-sm">
           Body: <code>{type}</code>{" "}
-          {schemaName(c.schema) && <a className="underline underline-offset-4" href={`#schema-${schemaName(c.schema)}`}>{schemaName(c.schema)}</a>}
+          {schemaName(c.schema) && (
+            <a className="underline underline-offset-4" href={`#schema-${schemaName(c.schema)}`}>
+              {schemaName(c.schema)}
+            </a>
+          )}
         </p>
       ))}
       {op.responses && (
@@ -63,7 +67,9 @@ export default async function ApiDocsPage({ params }: { params: Promise<{ locale
         </h1>
         {doc.info.description && <p>{doc.info.description}</p>}
         <p className="text-sm">
-          <a className="underline underline-offset-4" href="/api/v1/openapi.yaml">openapi.yaml</a>
+          <a className="underline underline-offset-4" href="/api/v1/openapi.yaml">
+            openapi.yaml
+          </a>
         </p>
         <h2 className="mt-4 text-xl font-semibold">Endpoints</h2>
         {Object.entries(doc.paths).flatMap(([path, item]) =>

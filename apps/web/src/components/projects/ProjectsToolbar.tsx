@@ -53,8 +53,20 @@ function DateFilter({
       </Select>
       {preset === "custom" && (
         <div className="grid grid-cols-2 gap-2">
-          <Input type="date" aria-label={t("from")} value={from ?? ""} max={to || undefined} onChange={(e) => onChange({ preset, from: e.target.value || undefined, to })} />
-          <Input type="date" aria-label={t("to")} value={to ?? ""} min={from || undefined} onChange={(e) => onChange({ preset, from, to: e.target.value || undefined })} />
+          <Input
+            type="date"
+            aria-label={t("from")}
+            value={from ?? ""}
+            max={to || undefined}
+            onChange={(e) => onChange({ preset, from: e.target.value || undefined, to })}
+          />
+          <Input
+            type="date"
+            aria-label={t("to")}
+            value={to ?? ""}
+            min={from || undefined}
+            onChange={(e) => onChange({ preset, from, to: e.target.value || undefined })}
+          />
         </div>
       )}
     </div>
@@ -91,7 +103,10 @@ export function ProjectsToolbar({
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="relative flex-1">
-        <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" aria-hidden />
+        <Search
+          className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2"
+          aria-hidden
+        />
         <Input
           type="search"
           value={text}
@@ -117,7 +132,10 @@ export function ProjectsToolbar({
                 <legend className="mb-1 text-sm font-medium">{t("filters.status")}</legend>
                 {STATUS_GROUP_KEYS.map((g) => (
                   <Label key={g} className="font-normal">
-                    <Checkbox checked={filters.status?.includes(g) ?? false} onCheckedChange={() => set({ status: toggle(filters.status, g) })} />
+                    <Checkbox
+                      checked={filters.status?.includes(g) ?? false}
+                      onCheckedChange={() => set({ status: toggle(filters.status, g) })}
+                    />
                     {t(`filters.group.${g}`)}
                   </Label>
                 ))}
@@ -127,7 +145,10 @@ export function ProjectsToolbar({
                 <div className="flex flex-wrap gap-3">
                   {ASPECTS.map((a) => (
                     <Label key={a} className="font-normal">
-                      <Checkbox checked={filters.aspect?.includes(a) ?? false} onCheckedChange={() => set({ aspect: toggle(filters.aspect, a) })} />
+                      <Checkbox
+                        checked={filters.aspect?.includes(a) ?? false}
+                        onCheckedChange={() => set({ aspect: toggle(filters.aspect, a) })}
+                      />
                       {a}
                     </Label>
                   ))}
@@ -137,14 +158,20 @@ export function ProjectsToolbar({
                 <legend className="mb-1 text-sm font-medium">{t("filters.source")}</legend>
                 {SOURCES.map((s) => (
                   <Label key={s} className="font-normal">
-                    <Checkbox checked={filters.source?.includes(s) ?? false} onCheckedChange={() => set({ source: toggle(filters.source, s) })} />
+                    <Checkbox
+                      checked={filters.source?.includes(s) ?? false}
+                      onCheckedChange={() => set({ source: toggle(filters.source, s) })}
+                    />
                     {t(`filters.sourceOpt.${s}`)}
                   </Label>
                 ))}
               </fieldset>
               <div className="flex flex-col gap-2">
                 <Label>{t("filters.mode")}</Label>
-                <Select value={filters.mode ?? ANY} onValueChange={(v) => set({ mode: v === ANY ? undefined : v })}>
+                <Select
+                  value={filters.mode ?? ANY}
+                  onValueChange={(v) => set({ mode: v === ANY ? undefined : v })}
+                >
                   <SelectTrigger aria-label={t("filters.mode")}>
                     <SelectValue />
                   </SelectTrigger>
@@ -170,7 +197,18 @@ export function ProjectsToolbar({
                 onChange={(v) => set({ updated: v.preset, updatedFrom: v.from, updatedTo: v.to })}
               />
               {n > 0 && (
-                <Button variant="ghost" size="sm" onClick={() => onChange({ q: filters.q, sort: filters.sort, dir: filters.dir, pageSize: filters.pageSize })}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    onChange({
+                      q: filters.q,
+                      sort: filters.sort,
+                      dir: filters.dir,
+                      pageSize: filters.pageSize,
+                    })
+                  }
+                >
                   <X className="size-4" aria-hidden />
                   {t("filters.clear")}
                 </Button>
@@ -189,14 +227,29 @@ export function ProjectsToolbar({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {(["updated_desc", "updated_asc", "created_desc", "created_asc", "title_asc", "title_desc"] as const).map((s) => (
+            {(
+              [
+                "updated_desc",
+                "updated_asc",
+                "created_desc",
+                "created_asc",
+                "title_asc",
+                "title_desc",
+              ] as const
+            ).map((s) => (
               <SelectItem key={s} value={s}>
                 {t(`sort.${s}`)}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <ToggleGroup type="single" value={view} onValueChange={(v) => v && onView(v as ViewMode)} variant="outline" aria-label={t("view.label")}>
+        <ToggleGroup
+          type="single"
+          value={view}
+          onValueChange={(v) => v && onView(v as ViewMode)}
+          variant="outline"
+          aria-label={t("view.label")}
+        >
           <ToggleGroupItem value="grid" aria-label={t("view.grid")}>
             <LayoutGrid className="size-4" aria-hidden />
           </ToggleGroupItem>

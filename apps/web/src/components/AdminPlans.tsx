@@ -70,15 +70,30 @@ function PlanForm({ plan }: { plan: AdminPlan }) {
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor={`usd-${plan.id}`}>{"USD"}</Label>
-              <Input id={`usd-${plan.id}`} value={usd} onChange={(e) => setUsd(e.target.value)} inputMode="decimal" />
+              <Input
+                id={`usd-${plan.id}`}
+                value={usd}
+                onChange={(e) => setUsd(e.target.value)}
+                inputMode="decimal"
+              />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor={`vnd-${plan.id}`}>{"VND"}</Label>
-              <Input id={`vnd-${plan.id}`} value={vnd} onChange={(e) => setVnd(e.target.value)} inputMode="numeric" />
+              <Input
+                id={`vnd-${plan.id}`}
+                value={vnd}
+                onChange={(e) => setVnd(e.target.value)}
+                inputMode="numeric"
+              />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor={`polar-${plan.id}`}>{t("polarProduct")}</Label>
-              <Input id={`polar-${plan.id}`} value={polar} onChange={(e) => setPolar(e.target.value)} className="font-mono" />
+              <Input
+                id={`polar-${plan.id}`}
+                value={polar}
+                onChange={(e) => setPolar(e.target.value)}
+                className="font-mono"
+              />
             </div>
           </div>
           <div className="flex flex-wrap gap-6">
@@ -91,7 +106,14 @@ function PlanForm({ plan }: { plan: AdminPlan }) {
               {t("active")}
             </Label>
           </div>
-          <Textarea rows={8} value={limits} onChange={(e) => setLimits(e.target.value)} spellCheck={false} className="font-mono text-xs" aria-label={t("limits")} />
+          <Textarea
+            rows={8}
+            value={limits}
+            onChange={(e) => setLimits(e.target.value)}
+            spellCheck={false}
+            className="font-mono text-xs"
+            aria-label={t("limits")}
+          />
           <Button type="submit" className="w-fit">
             {t("save")}
           </Button>
@@ -120,7 +142,11 @@ export function GrantPlan({ planIds }: { planIds: string[] }) {
   const [days, setDays] = useState("30");
   async function grant(e: React.FormEvent) {
     e.preventDefault();
-    const r = await postJson("/api/admin/grant", { workspaceId: ws.trim(), planId: plan, days: Number(days) });
+    const r = await postJson("/api/admin/grant", {
+      workspaceId: ws.trim(),
+      planId: plan,
+      days: Number(days),
+    });
     if (r.ok) toast.success(t("granted"));
     else toast.error(te(r.error));
     router.refresh();
@@ -129,13 +155,27 @@ export function GrantPlan({ planIds }: { planIds: string[] }) {
     <Card>
       <CardContent>
         <form className="flex flex-wrap items-center gap-2" onSubmit={(e) => void grant(e)}>
-          <Input placeholder={t("workspaceId")} aria-label={t("workspaceId")} value={ws} onChange={(e) => setWs(e.target.value)} required className="min-w-72 flex-1 font-mono" />
+          <Input
+            placeholder={t("workspaceId")}
+            aria-label={t("workspaceId")}
+            value={ws}
+            onChange={(e) => setWs(e.target.value)}
+            required
+            className="min-w-72 flex-1 font-mono"
+          />
           <NativeSelect value={plan} onChange={(e) => setPlan(e.target.value)} aria-label={t("plan")}>
             {planIds.map((p) => (
               <option key={p}>{p}</option>
             ))}
           </NativeSelect>
-          <Input type="number" min={1} value={days} onChange={(e) => setDays(e.target.value)} aria-label={t("days")} className="w-24" />
+          <Input
+            type="number"
+            min={1}
+            value={days}
+            onChange={(e) => setDays(e.target.value)}
+            aria-label={t("days")}
+            className="w-24"
+          />
           <Button type="submit" variant="outline">
             {t("grant")}
           </Button>

@@ -21,9 +21,16 @@ FROM mambaorg/micromamba:2.10.0
 RUN micromamba install -y -n base -c conda-forge python=3.11 montreal-forced-aligner=3.4.3 \
  && micromamba clean -a -y
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
-RUN mfa model download acoustic vietnamese_mfa \
- && mfa model download dictionary vietnamese_mfa \
- && mfa model download g2p vietnamese_hanoi_mfa
+# The model list comes from the GitHub API (60 requests/hour without a token, which shared CI runners exhaust).
+# Optional build secret: docker build --secret id=github_token,env=GITHUB_TOKEN ...
+RUN --mount=type=secret,id=github_token,mode=0444 \
+    T=""; [ -s /run/secrets/github_token ] && T="--github_token $(cat /run/secrets/github_token)"; \
+    for i in 1 2 3; do \
+      mfa model download acoustic vietnamese_mfa $T \
+      && mfa model download dictionary vietnamese_mfa $T \
+      && mfa model download g2p vietnamese_hanoi_mfa $T && exit 0; \
+      sleep 20; \
+    done; exit 1
 COPY --from=whisper /out/ /opt/whisper/
 WORKDIR /app
 COPY apps/worker-align/server.py ./server.py

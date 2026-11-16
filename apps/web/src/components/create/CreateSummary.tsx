@@ -52,7 +52,8 @@ export function CreateSummary({
   const limit = u?.plan.limits.videos ?? null;
   const left = u && limit !== null ? limit - (u.used.videos ?? 0) - (u.reserved.videos ?? 0) : null;
   const max = u?.plan.limits.max_video_seconds ?? null;
-  const blocked: SummaryState["blocked"] = left !== null && left <= 0 ? "videos" : max !== null && duration > max ? "duration" : null;
+  const blocked: SummaryState["blocked"] =
+    left !== null && left <= 0 ? "videos" : max !== null && duration > max ? "duration" : null;
   useEffect(() => {
     onBlocked?.(blocked);
   }, [blocked, onBlocked]);
@@ -73,7 +74,9 @@ export function CreateSummary({
           <dt className="text-muted-foreground">{t("summary.voice")}</dt>
           <dd className="truncate">{voice}</dd>
           <dt className="text-muted-foreground">{t("summary.videosLeft")}</dt>
-          <dd data-testid="videos-left">{usage === "error" ? "–" : left === null ? (u ? t("summary.unlimited") : "…") : left}</dd>
+          <dd data-testid="videos-left">
+            {usage === "error" ? "–" : left === null ? (u ? t("summary.unlimited") : "…") : left}
+          </dd>
         </dl>
         {usage === "error" && (
           <Alert>
@@ -83,8 +86,13 @@ export function CreateSummary({
         {blocked && (
           <Alert variant="destructive" data-testid="quota-block">
             <AlertDescription className="flex flex-col gap-2">
-              <span>{blocked === "videos" ? t("summary.overLimit") : t("summary.overDuration", { n: max ?? 0 })}</span>
-              <Link href="/workspace/billing" className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-fit")}>
+              <span>
+                {blocked === "videos" ? t("summary.overLimit") : t("summary.overDuration", { n: max ?? 0 })}
+              </span>
+              <Link
+                href="/workspace/billing"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-fit")}
+              >
                 {t("summary.upgrade")}
               </Link>
             </AlertDescription>

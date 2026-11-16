@@ -1,5 +1,13 @@
 "use client";
-import { AlertTriangle, CheckCircle2, CircleDashed, Hourglass, Loader2, XCircle, type LucideIcon } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  CircleDashed,
+  Hourglass,
+  Loader2,
+  XCircle,
+  type LucideIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 
@@ -19,7 +27,11 @@ export type ProjectStatus =
   | "needs_attention"
   | "failed";
 
-type Group = { variant: "default" | "secondary" | "destructive" | "outline"; icon: LucideIcon; spin?: boolean };
+type Group = {
+  variant: "default" | "secondary" | "destructive" | "outline";
+  icon: LucideIcon;
+  spin?: boolean;
+};
 
 const WORKING: Group = { variant: "secondary", icon: Loader2, spin: true };
 const WAITING: Group = { variant: "outline", icon: Hourglass };

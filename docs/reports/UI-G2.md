@@ -28,14 +28,14 @@ with two items not done (Lighthouse, hero video render; see "Not done").
 
 ## Checks
 
-| Check | Result |
-| --- | --- |
-| typecheck / lint / unit tests (78) | pass |
-| Production build | pass |
+| Check                               | Result                                                                                                                                                                                                          |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| typecheck / lint / unit tests (78)  | pass                                                                                                                                                                                                            |
+| Production build                    | pass                                                                                                                                                                                                            |
 | New e2e `landing.spec.ts` (5 tests) | pass: blocks in vi and en, pricing with Free and disabled Yearly, 404 for unknown URLs (status 404), mobile menu sheet with no horizontal scroll at 360 px, sign-up field error then sign-up, sign-out, sign-in |
-| E2E `theme-locale`, `fonts` | pass |
-| Screenshots | representative images of landing, pricing, sign-in, sign-up, 404 (full set is regenerated) in [docs/reports/ui/ui-g2/](ui/ui-g2/) |
-| Existing e2e specs | full run: 13 passed, 1 failed (`m5.spec.ts`, see below) |
+| E2E `theme-locale`, `fonts`         | pass                                                                                                                                                                                                            |
+| Screenshots                         | representative images of landing, pricing, sign-in, sign-up, 404 (full set is regenerated) in [docs/reports/ui/ui-g2/](ui/ui-g2/)                                                                               |
+| Existing e2e specs                  | full run: 13 passed, 1 failed (`m5.spec.ts`, see below)                                                                                                                                                         |
 
 ## Not done
 

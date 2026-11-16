@@ -14,7 +14,13 @@ import {
 
 type ProjectStatusValue = (typeof projects.$inferSelect)["status"];
 
-function dayRange(col: SQL, preset: string | undefined, from: string | undefined, to: string | undefined, tz: string): SQL[] {
+function dayRange(
+  col: SQL,
+  preset: string | undefined,
+  from: string | undefined,
+  to: string | undefined,
+  tz: string,
+): SQL[] {
   const out: SQL[] = [];
   const startOfToday = sql`(date_trunc('day', now() AT TIME ZONE ${tz}) AT TIME ZONE ${tz})`;
   if (preset === "today") out.push(sql`${col} >= ${startOfToday}`);
@@ -89,7 +95,11 @@ export async function listProjects(
   const dir = q.dir ?? (q.sort === "title" ? "asc" : "desc");
   const order = dir === "asc" ? asc : desc;
   const sortCol =
-    q.sort === "title" ? sql`mkv_fold(${projects.title})` : q.sort === "created" ? projects.createdAt : projects.updatedAt;
+    q.sort === "title"
+      ? sql`mkv_fold(${projects.title})`
+      : q.sort === "created"
+        ? projects.createdAt
+        : projects.updatedAt;
   const rows = await withWorkspace(db, workspaceId, (tx) =>
     tx
       .select({
@@ -102,9 +112,17 @@ export async function listProjects(
         createdAt: projects.createdAt,
         updatedAt: projects.updatedAt,
         total: sql<number>`count(*) over ()`.mapWith(Number),
-        source: sql<string | null>`(SELECT kind::text FROM source_materials s WHERE s.id = ${projects.sourceMaterialId})`,
-        thumbnailKey: sql<string | null>`(SELECT ro.thumbnail_key FROM render_outputs ro WHERE ro.project_id = ${projects.id} AND ro.thumbnail_key IS NOT NULL ORDER BY ro.created_at DESC LIMIT 1)`,
-        progress: sql<{ messageKey: string | null; fraction: number; params: Record<string, unknown> | null } | null>`CASE WHEN ${projects.status}::text IN (${sql.join(
+        source: sql<
+          string | null
+        >`(SELECT kind::text FROM source_materials s WHERE s.id = ${projects.sourceMaterialId})`,
+        thumbnailKey: sql<
+          string | null
+        >`(SELECT ro.thumbnail_key FROM render_outputs ro WHERE ro.project_id = ${projects.id} AND ro.thumbnail_key IS NOT NULL ORDER BY ro.created_at DESC LIMIT 1)`,
+        progress: sql<{
+          messageKey: string | null;
+          fraction: number;
+          params: Record<string, unknown> | null;
+        } | null>`CASE WHEN ${projects.status}::text IN (${sql.join(
           PROCESSING.map((s) => sql`${s}`),
           sql`, `,
         )}) THEN (SELECT json_build_object('messageKey', j.user_message_key, 'fraction', j.progress, 'params', j.output->'params') FROM jobs j WHERE j.project_id = ${projects.id} ORDER BY j.created_at DESC LIMIT 1) ELSE NULL END`,
@@ -120,7 +138,10 @@ export async function listProjects(
   let total = rows[0]?.total ?? 0;
   if (!rows.length && q.page > 1) {
     const [c] = await withWorkspace(db, workspaceId, (tx) =>
-      tx.select({ n: sql<number>`count(*)`.mapWith(Number) }).from(projects).where(and(...filterConditions(q))),
+      tx
+        .select({ n: sql<number>`count(*)`.mapWith(Number) })
+        .from(projects)
+        .where(and(...filterConditions(q))),
     );
     total = c?.n ?? 0;
   }
@@ -131,28 +152,33 @@ export async function listProjects(
     : [];
 
   const items = await Promise.all(
-    rows.map(
-      async (r): Promise<ProjectListItem> => ({
-        id: r.id,
-        title: r.title,
-        status: r.status,
-        statusGroup: groupOf(r.status),
-        aspect: r.aspect,
-        mode: r.mode,
-        source: r.source,
-        createdBy: r.createdBy ? { id: r.createdBy, name: names.find((n) => n.id === r.createdBy)?.name ?? "" } : null,
-        createdAt: r.createdAt.toISOString(),
-        updatedAt: r.updatedAt.toISOString(),
-        thumbnailUrl: r.thumbnailKey ? await store.signedGetUrl(r.thumbnailKey, 300).catch(() => null) : null,
-        progress: r.progress,
-      }),
-    ),
+    rows.map(async (r): Promise<ProjectListItem> => ({
+      id: r.id,
+      title: r.title,
+      status: r.status,
+      statusGroup: groupOf(r.status),
+      aspect: r.aspect,
+      mode: r.mode,
+      source: r.source,
+      createdBy: r.createdBy
+        ? { id: r.createdBy, name: names.find((n) => n.id === r.createdBy)?.name ?? "" }
+        : null,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+      thumbnailUrl: r.thumbnailKey ? await store.signedGetUrl(r.thumbnailKey, 300).catch(() => null) : null,
+      progress: r.progress,
+    })),
   );
   return { projects: items, page: q.page, pageSize: q.pageSize, total };
 }
 
 /** Ids matching a filter, in chunks (for "delete everything that matches"). */
-export async function matchingIds(db: Db, workspaceId: string, f: ProjectFilter, limit: number): Promise<string[]> {
+export async function matchingIds(
+  db: Db,
+  workspaceId: string,
+  f: ProjectFilter,
+  limit: number,
+): Promise<string[]> {
   const rows = await withWorkspace(db, workspaceId, (tx) =>
     tx
       .select({ id: projects.id })

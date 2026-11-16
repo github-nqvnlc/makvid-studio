@@ -4,7 +4,10 @@ import { TEST_PASSWORD } from "./fixtures";
 import { signUp } from "./helpers";
 
 // 1x1 PNG.
-const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64");
+const PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+  "base64",
+);
 
 test("profile: rename, avatar, password change", async ({ page }) => {
   test.setTimeout(150_000);
@@ -19,9 +22,13 @@ test("profile: rename, avatar, password change", async ({ page }) => {
   await expect(page.getByLabel("Tên hiển thị")).toHaveValue("Tên Mới Của Tôi");
 
   // A file that claims to be a picture but is not one is refused; a real picture is accepted and shown.
-  await page.getByTestId("avatar-input").setInputFiles({ name: "x.png", mimeType: "image/png", buffer: Buffer.from("not an image at all") });
+  await page
+    .getByTestId("avatar-input")
+    .setInputFiles({ name: "x.png", mimeType: "image/png", buffer: Buffer.from("not an image at all") });
   await expect(page.getByText("Không đọc được ảnh này.")).toBeVisible();
-  const saved = page.waitForResponse((r) => r.url().includes("/api/me/avatar") && r.request().method() === "POST");
+  const saved = page.waitForResponse(
+    (r) => r.url().includes("/api/me/avatar") && r.request().method() === "POST",
+  );
   await page.getByTestId("avatar-input").setInputFiles({ name: "a.png", mimeType: "image/png", buffer: PNG });
   const { image } = (await (await saved).json()) as { image: string };
   expect(image).toMatch(/^\/api\/avatars\/[0-9a-f-]{36}\?v=[0-9a-f]{8}\.webp$/);
@@ -30,7 +37,15 @@ test("profile: rename, avatar, password change", async ({ page }) => {
   const redirect = await page.request.get(image, { maxRedirects: 0 });
   expect(redirect.status()).toBe(302);
   expect(redirect.headers().location).toContain("X-Amz-Signature");
-  expect((await page.context().browser()!.newContext().then((c) => c.request.get(image, { maxRedirects: 0 }))).status()).toBe(401);
+  expect(
+    (
+      await page
+        .context()
+        .browser()!
+        .newContext()
+        .then((c) => c.request.get(image, { maxRedirects: 0 }))
+    ).status(),
+  ).toBe(401);
 
   // Wrong current password shows under that field; the right one changes it.
   await page.getByLabel("Mật khẩu hiện tại").fill("sai-mat-khau-123");

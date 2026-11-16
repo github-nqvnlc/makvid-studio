@@ -49,7 +49,10 @@ export function FileDropzone({
         setOver(false);
         take(e.dataTransfer.files[0]);
       }}
-      className={cn("flex flex-col items-center gap-2 rounded-lg border border-dashed p-6 text-center", over && "bg-accent")}
+      className={cn(
+        "flex flex-col items-center gap-2 rounded-lg border border-dashed p-6 text-center",
+        over && "bg-accent",
+      )}
     >
       <UploadCloud className="text-muted-foreground size-6" aria-hidden />
       <button type="button" className="text-sm font-medium underline" onClick={() => input.current?.click()}>
@@ -62,7 +65,13 @@ export function FileDropzone({
           {error}
         </p>
       )}
-      <input ref={input} type="file" hidden accept={accept.join(",")} onChange={(e) => take(e.target.files?.[0])} />
+      <input
+        ref={input}
+        type="file"
+        hidden
+        accept={accept.join(",")}
+        onChange={(e) => take(e.target.files?.[0])}
+      />
     </div>
   );
 }

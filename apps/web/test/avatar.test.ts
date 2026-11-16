@@ -22,7 +22,11 @@ describe("saveAvatar rejects before touching storage", () => {
     expect(await code(big)).toBe("file_too_large");
   });
   it("SVG, even though it is an allowed logo type", async () => {
-    expect(await code(new TextEncoder().encode('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"></svg>'))).toBe("file_type");
+    expect(
+      await code(
+        new TextEncoder().encode('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"></svg>'),
+      ),
+    ).toBe("file_type");
   });
   it("HTML or script pretending to be a picture", async () => {
     expect(await code(new TextEncoder().encode("<html><script>alert(1)</script></html>"))).toBe("file_type");

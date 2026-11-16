@@ -26,19 +26,19 @@ Chỉ thay đổi **tầng giao diện** của ứng dụng web. Logic nghiệp 
 
 1. Trang hồ sơ cá nhân ở User Story 9 được phép dùng thêm chức năng có sẵn của hệ thống đăng nhập (sửa hồ sơ, đổi mật khẩu) và thêm phần lưu ảnh đại diện. Không đổi cấu trúc dữ liệu: hồ sơ người dùng đã có tên, ảnh và ngôn ngữ.
 2. Quản lý dự án (User Story 5) được thêm chức năng phía máy chủ: liệt kê có tìm/lọc/sắp xếp/phân trang, đổi tên, xóa một, xóa nhiều, xóa tất cả. Xóa là vĩnh viễn (gỡ dữ liệu và file lưu trữ của dự án); mọi thao tác giữ cách ly workspace và phân quyền theo vai trò.
-Màn hình nào cần dữ liệu mà hệ thống chưa có thì hiển thị trạng thái rỗng hoặc nhãn "Sắp ra mắt", không hiển thị dữ liệu giả trông như thật, và được liệt kê trong báo cáo.
+   Màn hình nào cần dữ liệu mà hệ thống chưa có thì hiển thị trạng thái rỗng hoặc nhãn "Sắp ra mắt", không hiển thị dữ liệu giả trông như thật, và được liệt kê trong báo cáo.
 
 **Hiện trạng đã xác nhận từ mã nguồn** (bổ sung cho bảng ở mục 2 của UI_PROMPT.md):
 
-| Hạng mục | Hệ thống hiện có |
-| --- | --- |
+| Hạng mục    | Hệ thống hiện có                                                                                                                                                                                                                    |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Trang đã có | `/`, `/sign-in`, `/sign-up`, `/projects/new`, `/projects/[id]`, `/batches`, `/batches/[id]`, `/workspace/{brand,assets,members,billing,api}`, `/docs/api`, `/invite/[token]`, `/admin` (chỉ quản trị nền tảng, người khác nhận 404) |
-| Đăng nhập | Email + mật khẩu; Google khi được cấu hình. **Không có** quên mật khẩu, không có trang hồ sơ cá nhân |
-| Gói | Free / Starter (Cơ bản) / Pro, **chỉ có kỳ tháng**, có giá USD và VND. Giới hạn: số video, giây video, ký tự giọng đọc, ảnh AI, dung lượng, độ dài tối đa mỗi video, có/không tạo hàng loạt, có/không API |
-| Giọng đọc | 21 giọng, mỗi giọng có nhóm chất lượng (Standard / Pro / Ultra), giới tính, vùng miền (Bắc / Trung / Nam / không rõ) và đoạn nghe thử. Gói **không** giới hạn theo nhóm giọng |
-| Dự án | Có tên, trạng thái (14 trạng thái từ "nháp" tới "sẵn sàng", "cần chú ý", "lỗi"), tỷ lệ chính, ngày tạo/cập nhật; ảnh thumbnail có khi đã render xong; tiến độ theo thời gian thực |
-| Workspace | Một người có thể thuộc nhiều workspace và chuyển qua lại |
-| Thông báo | Không có kho thông báo riêng; chỉ có trạng thái dự án |
+| Đăng nhập   | Email + mật khẩu; Google khi được cấu hình. **Không có** quên mật khẩu, không có trang hồ sơ cá nhân                                                                                                                                |
+| Gói         | Free / Starter (Cơ bản) / Pro, **chỉ có kỳ tháng**, có giá USD và VND. Giới hạn: số video, giây video, ký tự giọng đọc, ảnh AI, dung lượng, độ dài tối đa mỗi video, có/không tạo hàng loạt, có/không API                           |
+| Giọng đọc   | 21 giọng, mỗi giọng có nhóm chất lượng (Standard / Pro / Ultra), giới tính, vùng miền (Bắc / Trung / Nam / không rõ) và đoạn nghe thử. Gói **không** giới hạn theo nhóm giọng                                                       |
+| Dự án       | Có tên, trạng thái (14 trạng thái từ "nháp" tới "sẵn sàng", "cần chú ý", "lỗi"), tỷ lệ chính, ngày tạo/cập nhật; ảnh thumbnail có khi đã render xong; tiến độ theo thời gian thực                                                   |
+| Workspace   | Một người có thể thuộc nhiều workspace và chuyển qua lại                                                                                                                                                                            |
+| Thông báo   | Không có kho thông báo riêng; chỉ có trạng thái dự án                                                                                                                                                                               |
 
 ## User Scenarios & Testing _(mandatory)_
 

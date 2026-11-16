@@ -13,7 +13,11 @@ import "../globals.css";
 export const metadata: Metadata = { title: "MakVid Studio" };
 
 // Vietnamese subset on every family (DM Sans from the theme has none, so Be Vietnam Pro fills the serif slot).
-const sans = Plus_Jakarta_Sans({ subsets: ["latin", "vietnamese"], variable: "--font-jakarta", display: "swap" });
+const sans = Plus_Jakarta_Sans({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
 const serif = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
@@ -39,7 +43,11 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const tc = await getTranslations("common");
   return (
-    <html lang={locale} suppressHydrationWarning className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={`${sans.variable} ${serif.variable} ${mono.variable}`}
+    >
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <NextIntlClientProvider>

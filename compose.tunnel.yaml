@@ -1,0 +1,7 @@
+# Same as compose.yaml plus the Cloudflare Tunnel (docs/ops/cloudflare-tunnel.md):
+#   docker compose -f compose.tunnel.yaml up -d --build      (run from the repo root; reads ./.env)
+include:
+  - path:
+      - docker/compose.yml
+      - docker/compose.tunnel.yml
+    env_file: .env

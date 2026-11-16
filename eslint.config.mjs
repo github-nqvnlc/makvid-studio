@@ -13,7 +13,8 @@ const COLOR_CLASS = {
   message: "Use a theme token, not a hex color in className.",
 };
 const LITERAL_TEXT = {
-  selector: "JSXElement > JSXText[value=/[A-Za-zÀ-ỹ]{2,}/]:not([value=/^[^A-Za-z]*(MakVid Studio|VI|EN)[^A-Za-z]*$/])",
+  selector:
+    "JSXElement > JSXText[value=/[A-Za-zÀ-ỹ]{2,}/]:not([value=/^[^A-Za-z]*(MakVid Studio|VI|EN)[^A-Za-z]*$/])",
   message: "Literal UI text: use useTranslations()/getTranslations().",
 };
 
